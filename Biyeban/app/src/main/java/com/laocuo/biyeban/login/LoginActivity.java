@@ -5,8 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.support.v7.app.ActionBar;
+//import android.os.Handler;
+//import android.support.v7.app.ActionBar;
 
 import android.os.Build;
 import android.support.v7.widget.Toolbar;
@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
+//import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -29,7 +29,7 @@ import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 
-import java.util.List;
+//import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -158,9 +158,9 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
 
     @OnClick(R.id.login_register_button)
     void attemptRegister() {
-        L.d("attemptRegister");
         BiyebanUser user = isValidUserInfo();
         if (user != null) {
+            hideKeyboard();
             user.signUp(new SaveListener<BiyebanUser>() {
                 @Override
                 public void done(BiyebanUser u, BmobException e) {
@@ -183,6 +183,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
     void attemptLogin() {
         BiyebanUser user = isValidUserInfo();
         if (user != null) {
+            hideKeyboard();
             login(user);
         }
     }
@@ -259,14 +260,14 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         }
     }
 
-    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-        ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(LoginActivity.this,
-                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-
-        mUsernameView.setAdapter(adapter);
-    }
+//    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
+//        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+//        ArrayAdapter<String> adapter =
+//                new ArrayAdapter<>(LoginActivity.this,
+//                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
+//
+//        mUsernameView.setAdapter(adapter);
+//    }
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =

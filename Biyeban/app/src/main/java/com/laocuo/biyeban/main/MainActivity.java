@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
-            user.logOut();
+//            user.logOut();
         }
     }
 }

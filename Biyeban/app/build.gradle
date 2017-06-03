@@ -5,6 +5,7 @@ apply plugin: 'org.greenrobot.greendao'
 android {
     compileSdkVersion rootProject.ext.compileSdk
     buildToolsVersion rootProject.ext.buildTools
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
         applicationId "com.laocuo.biyeban"
@@ -16,10 +17,16 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+}
+
+greendao {
+    schemaVersion 1
+    daoPackage 'com.laocuo.biyeban.greendao'
+    targetGenDir 'src/main/java'
 }
 
 dependencies {
@@ -35,18 +42,33 @@ dependencies {
     apt 'com.jakewharton:butterknife-compiler:8.2.1'
     compile 'com.jakewharton:butterknife:8.2.1'
     // rxjava
-    compile 'io.reactivex:rxjava:1.1.9'
-    compile 'io.reactivex:rxandroid:1.2.1'
-    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
+//    compile 'io.reactivex:rxjava:1.1.9'
+//    compile 'io.reactivex:rxandroid:1.2.1'
+//    compile 'com.jakewharton.rxbinding:rxbinding:0.4.0'
     // dagger
     apt 'com.google.dagger:dagger-compiler:2.6'
     compile 'com.google.dagger:dagger:2.6'
     // retrofit
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
+//    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+//    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+//    compile 'com.squareup.retrofit2:adapter-rxjava:2.1.0'
     // greendao
     compile 'org.greenrobot:greendao:3.1.0'
     // circleimageview
     compile 'de.hdodenhof:circleimageview:2.1.0'
+    // glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    //以下SDK开发者请根据需要自行选择
+    //bmob-sdk：Bmob的android sdk包，包含了Bmob的数据存储、文件等服务，以下是最新的bmob-sdk:
+    //3.5.0：请务必查看下面注释[1]
+    compile 'cn.bmob.android:bmob-sdk:3.5.0'
+    //bmob-push：Bmob的推送包
+    //compile 'cn.bmob.android:bmob-push:0.8'
+    //bmob-im：Bmob的即时通讯包，注意每个版本的im依赖特定版本的bmob-sdk，具体的依赖关系可查看下面注释[2]
+    //compile 'cn.bmob.android:bmob-im:2.0.5@aar'
+    //compile 'cn.bmob.android:bmob-sdk:3.4.7-aar'
+    //bmob-sms ：Bmob单独为短信服务提供的包
+    //compile 'cn.bmob.android:bmob-sms:1.0.1'
+    //如果你想应用能够兼容Android6.0，请添加此依赖(org.apache.http.legacy.jar)
+    compile 'cn.bmob.android:http-legacy:1.0'
 }

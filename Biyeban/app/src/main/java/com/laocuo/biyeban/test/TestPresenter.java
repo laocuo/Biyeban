@@ -2,6 +2,7 @@ package com.laocuo.biyeban.test;
 
 import android.util.Log;
 
+import com.laocuo.biyeban.base.IBaseView;
 import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.User;
 import com.laocuo.biyeban.greendao.UserDao;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
  */
 
 public class TestPresenter implements TestContact.Presentr {
-    private TestContact.View mView;
+    private IBaseView mView;
     private DaoSession mSession;
     private UserDao mSessionUserDao;
     private long index = 1;
@@ -24,11 +25,11 @@ public class TestPresenter implements TestContact.Presentr {
         //do something
         Log.d("xxxx","loadData");
 
-        mView.updateUi(query());
+        mView.updateUI();
     }
 
     @Inject
-    TestPresenter(TestContact.View view, DaoSession daoSession) {
+    TestPresenter(IBaseView view, DaoSession daoSession) {
         mView = view;
         mSession = daoSession;
         mSessionUserDao = mSession.getUserDao();

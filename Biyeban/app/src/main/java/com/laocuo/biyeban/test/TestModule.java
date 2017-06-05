@@ -1,6 +1,7 @@
 package com.laocuo.biyeban.test;
 
 import com.laocuo.biyeban.BiyebanApp;
+import com.laocuo.biyeban.base.IBaseView;
 import com.laocuo.biyeban.greendao.DaoSession;
 
 import dagger.Module;
@@ -12,13 +13,13 @@ import dagger.Provides;
 
 @Module
 public class TestModule {
-    private TestContact.View mView;
-    public TestModule(TestContact.View view) {
+    private IBaseView mView;
+    public TestModule(IBaseView view) {
         mView = view;
     }
 
     @Provides
-    public TestContact.View provideTestView() {
+    public IBaseView provideIBaseView() {
         return mView;
     }
 

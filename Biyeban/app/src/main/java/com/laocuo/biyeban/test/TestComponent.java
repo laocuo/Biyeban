@@ -1,6 +1,6 @@
 package com.laocuo.biyeban.test;
 
-import com.laocuo.biyeban.main.MainActivity;
+//import com.laocuo.biyeban.main.MainActivity;
 
 import dagger.Component;
 
@@ -10,5 +10,5 @@ import dagger.Component;
 
 @Component(modules = TestModule.class)
 public interface TestComponent {
-    void inject(MainActivity activity);
+//    void inject(MainActivity activity);
 }

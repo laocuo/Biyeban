@@ -1,9 +1,26 @@
+/*
+ *
+ *  * Copyright (C) 2017 laocuo <laocuo@163.com>
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 package com.laocuo.biyeban.base;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.Toolbar;
@@ -27,9 +44,6 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     @Nullable
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
-    @Nullable
-    @BindView(R.id.appbar_layout)
-    AppBarLayout mAppBarLayout;
     @Inject
     protected T mPresenter;
 
@@ -67,7 +81,7 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
         super.onActivityCreated(savedInstanceState);
         if (getUserVisibleHint() && mRootView != null && !mIsMulti) {
             mIsMulti = true;
-            doLoadData(false);
+            getData(false);
         }
     }
 
@@ -75,10 +89,15 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     public void setUserVisibleHint(boolean isVisibleToUser) {
         if (isVisibleToUser && isVisible() && mRootView != null && !mIsMulti) {
             mIsMulti = true;
-            doLoadData(false);
+            getData(false);
         } else {
             super.setUserVisibleHint(isVisibleToUser);
         }
+    }
+
+    @Override
+    public void updateUI() {
+
     }
 
     /**
@@ -97,10 +116,10 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
      */
     private void initSwipeRefresh() {
         if (mSwipeRefresh != null) {
-            SwipeRefreshHelper.init(mSwipeRefresh, mAppBarLayout, new SwipeRefreshLayout.OnRefreshListener() {
+            SwipeRefreshHelper.init(mSwipeRefresh, null, new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    doLoadData(true);
+                    getData(true);
                 }
             });
         }
@@ -131,6 +150,6 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
      * 更新视图控件
      * @param isRefresh 新增参数，用来判断是否为下拉刷新调用，下拉刷新的时候不应该再显示加载界面和异常界面
      */
-    protected abstract void doLoadData(boolean isRefresh);
+    protected abstract void getData(boolean isRefresh);
 
 }

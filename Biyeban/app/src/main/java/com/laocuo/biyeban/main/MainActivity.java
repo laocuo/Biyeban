@@ -1,13 +1,34 @@
+/*
+ *
+ *  * Copyright (C) 2017 laocuo <laocuo@163.com>
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 package com.laocuo.biyeban.main;
 
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
+import com.laocuo.biyeban.base.ViewPagerAdapter;
 import com.laocuo.biyeban.login.BiyebanUser;
 import com.laocuo.biyeban.main.chatroom.ChatRoomFragment;
 import com.laocuo.biyeban.main.contacts.ContactsFragment;
@@ -23,12 +44,16 @@ import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements ViewPager.OnPageChangeListener {
     @Inject
-    MainViewPagerAdapter mMainViewPagerAdapter;
+    ViewPagerAdapter mViewPagerAdapter;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
+    private long mExitTime = 0;
     private List<Integer> mNaviList = new ArrayList<>();
     private List<Fragment> mFragmentList = new ArrayList<>();
     private List<String> mTitleList = new ArrayList<>();
@@ -69,8 +94,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
 
     @Override
     protected void doInit() {
+        initToolBar(mToolbar, false, R.string.app_name);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        mViewPager.setAdapter(mMainViewPagerAdapter);
+        mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
 
         mNaviList.add(R.id.navigation_freshnews);
@@ -90,7 +116,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
 
     @Override
     protected void doLoadData() {
-        mMainViewPagerAdapter.setItems(mFragmentList, mTitleList);
+        mViewPagerAdapter.setItems(mFragmentList, mTitleList);
     }
 
     @Override
@@ -108,6 +134,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     }
 
     @Override
+    public void onBackPressed() {
+        _exit();
+    }
+
+    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
@@ -120,5 +151,17 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    /**
+     * 退出
+     */
+    private void _exit() {
+        if (System.currentTimeMillis() - mExitTime > 2000) {
+            Toast.makeText(this, "再按一次退出程序", Toast.LENGTH_SHORT).show();
+            mExitTime = System.currentTimeMillis();
+        } else {
+            finish();
+        }
     }
 }

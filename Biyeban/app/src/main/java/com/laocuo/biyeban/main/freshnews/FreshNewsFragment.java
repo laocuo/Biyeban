@@ -1,32 +1,57 @@
+/*
+ *
+ *  * Copyright (C) 2017 laocuo <laocuo@163.com>
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
 package com.laocuo.biyeban.main.freshnews;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.View;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.SnackbarUtil;
+import com.laocuo.recycler.helper.RecyclerViewHelper;
+import com.laocuo.recycler.listener.OnRequestDataListener;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
-/**
- * Created by hoperun on 6/5/17.
- */
 
-public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter> {
+public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
+        implements IFreshNewsView{
     private static final String TAG = "FreshNews";
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
-    @BindView(R.id.tool_bar)
-    Toolbar mToolbar;
+
+    @Inject
+    FreshNewsListAdapter mAdapter;
+
     @BindView(R.id.freshnews_list)
     RecyclerView mRecyclerView;
+    @BindView(R.id.fab)
+    FloatingActionButton mFloatingActionButton;
 
     public static Fragment newInstance(String resId) {
         FreshNewsFragment fragment = new FreshNewsFragment();
@@ -45,22 +70,6 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter> {
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.freshnews_menu, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_publish:
-                debug("menu_publish");
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
     protected int getLayoutId() {
         return R.layout.fragment_freshnews;
     }
@@ -75,24 +84,50 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter> {
 
     @Override
     protected void doInit() {
-        initToolBar(mToolbar, false, mTitle);
-        setHasOptionsMenu(true);
+        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, true, mAdapter);
+        mAdapter.setRequestDataListener(new OnRequestDataListener() {
+            @Override
+            public void onLoadMore() {
+//                mPresenter.loadMoreData();
+            }
+        });
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                SnackbarUtil.showShortSnackbar(view, "Replace with your own action");
+            }
+        });
     }
 
     @Override
-    protected void doLoadData(boolean isRefresh) {
-        debug("doLoadData="+isRefresh);
+    protected void getData(boolean isRefresh) {
+        debug("getData="+isRefresh);
         if (isRefresh == true) {
-            finishSwipeRefresh();
+            mPresenter.loadMoreData();
+        } else {
+            mPresenter.loadData();
         }
-    }
-
-    @Override
-    public void updateUI() {
-
     }
 
     private void debug(String log) {
         L.d(TAG+"-"+log);
+    }
+
+    @Override
+    public void loadData(List<FreshNewsItem> data) {
+        mAdapter.updateItems(data);
+    }
+
+    @Override
+    public void loadMoreData(List<FreshNewsItem> data) {
+        mAdapter.addItems(data);
+        finishSwipeRefresh();
+    }
+
+    @Override
+    public void loadNoData() {
+
     }
 }

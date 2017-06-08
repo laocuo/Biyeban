@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:custom="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/list_bg">
+
+    <TextView
+        android:layout_marginTop="@dimen/menu_margin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="@dimen/menu_padding"
+        android:text="@string/class_name"
+        android:background="@android:color/white"
+        android:textAppearance="@android:style/TextAppearance.Material.Small"/>
+    <EditText
+        android:id="@+id/edit_class_name"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:paddingStart="@dimen/menu_padding"
+        android:paddingEnd="@dimen/menu_padding"
+        android:hint="input graduation class name"
+        android:background="@android:color/white"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/menu_padding"
+            android:layout_marginEnd="@dimen/menu_padding"
+            android:background="@android:color/darker_gray"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/select_gradu_year"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/menu_padding"
+        android:background="@android:color/white">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/gradu_year"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+        <TextView
+            android:id="@+id/gradu_year"
+            android:drawableEnd="@drawable/ic_ab_back_holo_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1976"
+            android:textColor="#4aa4a4"
+            android:layout_alignParentEnd="true"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+    </RelativeLayout>
+    <com.laocuo.biyeban.widget.EasyPickerView
+        android:id="@+id/year_pick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:visibility="gone"
+        custom:epvMaxShowNum="6"
+        custom:epvRecycleMode="true"
+        custom:epvTextColor="#4aa4a4"
+        custom:epvTextMaxScale="2.0"
+        custom:epvTextMinAlpha="0.35"
+        custom:epvTextPadding="10dp"
+        custom:epvTextSize="18sp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="@dimen/menu_padding"
+            android:layout_marginEnd="@dimen/menu_padding"
+            android:background="@android:color/darker_gray"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/select_district"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/menu_padding"
+        android:background="@android:color/white">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/district"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+        <TextView
+            android:id="@+id/district"
+            android:drawableEnd="@drawable/ic_ab_back_holo_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="江苏省\n南京市\n秦淮区"
+            android:textColor="#4aa4a4"
+            android:layout_alignParentEnd="true"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/create_class"
+        android:layout_marginTop="@dimen/menu_margin"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="@string/create"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:textAppearance="@android:style/TextAppearance.Material.Medium"
+        android:background="@drawable/button_bg"/>
+</LinearLayout>

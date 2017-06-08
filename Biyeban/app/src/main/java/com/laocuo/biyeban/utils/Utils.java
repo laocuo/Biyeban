@@ -19,6 +19,35 @@
 package com.laocuo.biyeban.utils;
 
 
-public class Utils {
+import android.content.Intent;
 
+import com.laocuo.biyeban.base.BaseActivity;
+import com.laocuo.biyeban.graduation.GraduationActivity;
+import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.login.LoginActivity;
+import com.laocuo.biyeban.main.MainActivity;
+
+import cn.bmob.v3.BmobUser;
+
+public class Utils {
+    public static void enterMain(BaseActivity activity) {
+        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+        if (user != null) {
+            if (user.getGraduClass() == null) {
+                activity.startActivity(new Intent(activity, GraduationActivity.class));
+            } else {
+                activity.startActivity(new Intent(activity, MainActivity.class));
+            }
+        } else {
+            activity.startActivity(new Intent(activity, LoginActivity.class));
+        }
+//            overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
+    }
+
+    public static void logOut() {
+        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+        if (user != null) {
+            user.logOut();
+        }
+    }
 }

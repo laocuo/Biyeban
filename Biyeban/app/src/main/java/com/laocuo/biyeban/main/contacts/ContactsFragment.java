@@ -71,9 +71,4 @@ public class ContactsFragment extends BaseFragment {
     protected void getData(boolean isRefresh) {
 
     }
-
-    @Override
-    public void updateUI() {
-
-    }
 }

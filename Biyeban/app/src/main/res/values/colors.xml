@@ -18,13 +18,14 @@
   -->
 
 <resources>
-    <color name="colorPrimary">#434760</color>
-    <color name="colorPrimaryDark">#36394d</color>
-    <color name="colorAccent">#5773bc</color>
+    <color name="colorPrimary">#2a3342</color>
+    <color name="colorPrimaryDark">#212934</color>
+    <color name="colorAccent">#FF4081</color>
 
     <color name="colorPane">#c22f36</color>
     <color name="colorPanel">#535352</color>
     <color name="colorPanelText">@android:color/darker_gray</color>
     <color name="colorScrollbar">@color/colorPrimary</color>
     <color name="colorBg">#88b7acac</color>
+    <color name="list_bg">#fcf5f0f0</color>
 </resources>

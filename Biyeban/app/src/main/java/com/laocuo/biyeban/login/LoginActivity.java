@@ -22,7 +22,6 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.Intent;
 //import android.os.Handler;
 //import android.support.v7.app.ActionBar;
 
@@ -42,10 +41,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.base.BaseActivity;
-import com.laocuo.biyeban.main.MainActivity;
 import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
+import com.laocuo.biyeban.utils.Utils;
 
 //import java.util.List;
 
@@ -95,7 +95,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
     }
 
     @Override
-    protected void doLoadData() {
+    protected void getData(boolean isRefresh) {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
             L.d("onStart getCurrentUser=" + user.getUsername());
@@ -229,7 +229,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         L.d("login success");
         setResult(1);
         finish();
-        startActivity(new Intent(LoginActivity.this, MainActivity.class));
+        Utils.enterMain(LoginActivity.this);
     }
 
     private boolean isUsernameValid(String username) {
@@ -299,11 +299,6 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
             attemptLogin();
         }
         return false;
-    }
-
-    @Override
-    public void updateUI() {
-
     }
 }
 

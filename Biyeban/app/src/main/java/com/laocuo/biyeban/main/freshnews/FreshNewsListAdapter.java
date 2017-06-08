@@ -37,7 +37,7 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
 
     @Override
     protected void attachItemType() {
-        addItemType(FreshNewsItem.ITEM_TYPE_NORMAL, R.layout.adapter_freshnews_list);
+        addItemType(FreshNewsItem.ITEM_TYPE_NORMAL, R.layout.freshnews_list_item);
     }
 
     @Override

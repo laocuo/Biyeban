@@ -30,6 +30,7 @@ import android.view.ViewGroup;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.utils.SwipeRefreshHelper;
+import com.laocuo.biyeban.widget.EmptyLayout;
 
 import javax.inject.Inject;
 
@@ -41,6 +42,10 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     /**
      * 资源的ID一定要一样
      */
+    @Nullable
+    @BindView(R.id.empty_layout)
+    EmptyLayout mEmptyLayout;
+
     @Nullable
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout mSwipeRefresh;
@@ -95,11 +100,6 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
         }
     }
 
-    @Override
-    public void updateUI() {
-
-    }
-
     /**
      * 初始化 Toolbar
      *
@@ -125,11 +125,39 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
         }
     }
 
-    protected void finishSwipeRefresh() {
+    @Override
+    public void showLoading() {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_LOADING);
+            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, false);
+        }
+    }
+
+    @Override
+    public void hideLoading() {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.hide();
+            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, true);
+            SwipeRefreshHelper.controlRefresh(mSwipeRefresh, false);
+        }
+    }
+
+    @Override
+    public void showNetError(final EmptyLayout.OnRetryListener onRetryListener) {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_NO_NET);
+            mEmptyLayout.setRetryListener(onRetryListener);
+            SwipeRefreshHelper.enableRefresh(mSwipeRefresh, false);
+        }
+    }
+
+    @Override
+    public void finishRefresh() {
         if (mSwipeRefresh != null) {
             SwipeRefreshHelper.controlRefresh(mSwipeRefresh, false);
         }
     }
+
     /**
      * 绑定布局文件
      * @return  布局文件ID

@@ -22,14 +22,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.base.ViewPagerAdapter;
-import com.laocuo.biyeban.login.BiyebanUser;
 import com.laocuo.biyeban.main.chatroom.ChatRoomFragment;
 import com.laocuo.biyeban.main.contacts.ContactsFragment;
 import com.laocuo.biyeban.main.freshnews.FreshNewsFragment;
@@ -40,14 +38,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import cn.bmob.v3.BmobUser;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements ViewPager.OnPageChangeListener {
     @Inject
     ViewPagerAdapter mViewPagerAdapter;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+//    @BindView(R.id.toolbar)
+//    Toolbar mToolbar;
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
     @BindView(R.id.navigation)
@@ -94,7 +91,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
 
     @Override
     protected void doInit() {
-        initToolBar(mToolbar, false, R.string.app_name);
+//        initToolBar(mToolbar, false, R.string.app_name);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -115,22 +112,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     }
 
     @Override
-    protected void doLoadData() {
+    protected void getData(boolean isRefresh) {
         mViewPagerAdapter.setItems(mFragmentList, mTitleList);
-    }
-
-    @Override
-    public void updateUI() {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
-        if (user != null) {
-//            user.logOut();
-        }
     }
 
     @Override

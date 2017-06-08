@@ -31,12 +31,15 @@ public class FreshNewsPresenter implements IBasePresenter {
     private List<FreshNewsItem> mFreshNewsItems = new ArrayList<>();
     private List<FreshNewsItem> mFreshNewsMoreItems = new ArrayList<>();
     private int index = 0;
+
     @Override
     public void loadData() {
-        for (int i=0;i<10;i++) {
+        mIFreshNewsView.showLoading();
+        for (int i=0;i<20;i++) {
             mFreshNewsItems.add(new FreshNewsItem(FreshNewsItem.ITEM_TYPE_NORMAL,
                     "Normal"+Integer.toString(i)));
         }
+        mIFreshNewsView.hideLoading();
         mIFreshNewsView.loadData(mFreshNewsItems);
     }
 

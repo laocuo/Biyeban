@@ -18,20 +18,16 @@
 
 package com.laocuo.biyeban.welcome;
 
-import android.content.Intent;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.BiyebanApp;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
-import com.laocuo.biyeban.login.BiyebanUser;
-import com.laocuo.biyeban.login.LoginActivity;
-import com.laocuo.biyeban.main.MainActivity;
+import com.laocuo.biyeban.utils.Utils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import cn.bmob.v3.Bmob;
-import cn.bmob.v3.BmobUser;
 
 public class SplashActivity extends BaseActivity {
     @BindView(R.id.wel_txt)
@@ -68,15 +64,15 @@ public class SplashActivity extends BaseActivity {
         //.setFileExpiration(2500)
         //.build();
         //Bmob.initialize(config);
+        updateUI();
     }
 
     @Override
-    protected void doLoadData() {
+    protected void getData(boolean isRefresh) {
         mTips.postDelayed(mTimeRunnable, 1000);
     }
 
-    @Override
-    public void updateUI() {
+    private void updateUI() {
         mTips.setText("SKIP "+timeleft);
     }
 
@@ -110,13 +106,7 @@ public class SplashActivity extends BaseActivity {
         if (!mIsSkip) {
             mIsSkip = true;
             finish();
-            final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
-            if (user != null) {
-                startActivity(new Intent(SplashActivity.this, MainActivity.class));
-            } else {
-                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            }
-//            overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
+            Utils.enterMain(SplashActivity.this);
         }
     }
 }

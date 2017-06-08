@@ -16,29 +16,19 @@
  *
  */
 
-package com.laocuo.biyeban.login;
+package com.laocuo.biyeban.bmob;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.BmobObject;
 
 
-public class BiyebanUser extends BmobUser {
-    private String alias;
-    private BmobFile avatar;
+public class GraduClass extends BmobObject {
+    private String admin;
 
-    public String getAlias() {
-        return alias;
+    public String getAdmin() {
+        return admin;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
-    }
-
-    public BmobFile getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(BmobFile avatar) {
-        this.avatar = avatar;
+    public void setAdmin(String admin) {
+        this.admin = admin;
     }
 }

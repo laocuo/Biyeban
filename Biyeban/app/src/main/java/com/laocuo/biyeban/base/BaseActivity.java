@@ -22,20 +22,29 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.utils.SwipeRefreshHelper;
+import com.laocuo.biyeban.widget.EmptyLayout;
+
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatActivity implements IBaseView{
-    protected abstract int getLayoutId();
-    protected abstract void doInject();
-    protected abstract void doInit();
-    protected abstract void doLoadData();
+    @Nullable
+    @BindView(R.id.empty_layout)
+    protected EmptyLayout mEmptyLayout;
+
+    @Nullable
+    @BindView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeRefresh;
 
     @Inject
     protected T mPresenter;
@@ -52,7 +61,7 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
     @Override
     protected void onStart() {
         super.onStart();
-        doLoadData();
+        getData(false);
     }
 
     /**
@@ -70,6 +79,49 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
 
     protected void initToolBar(Toolbar toolbar, boolean homeAsUpEnabled, int resTitle) {
         initToolBar(toolbar, homeAsUpEnabled, getString(resTitle));
+    }
+
+    /**
+     * 初始化下拉刷新
+     */
+    private void initSwipeRefresh() {
+        if (mSwipeRefresh != null) {
+            SwipeRefreshHelper.init(mSwipeRefresh, null, new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    getData(true);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void showLoading() {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_LOADING);
+        }
+    }
+
+    @Override
+    public void hideLoading() {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.hide();
+        }
+    }
+
+    @Override
+    public void showNetError(final EmptyLayout.OnRetryListener onRetryListener) {
+        if (mEmptyLayout != null) {
+            mEmptyLayout.setEmptyStatus(EmptyLayout.STATUS_NO_NET);
+            mEmptyLayout.setRetryListener(onRetryListener);
+        }
+    }
+
+    @Override
+    public void finishRefresh() {
+        if (mSwipeRefresh != null) {
+            SwipeRefreshHelper.controlRefresh(mSwipeRefresh, false);
+        }
     }
 
     /**
@@ -141,4 +193,26 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * 绑定布局文件
+     * @return  布局文件ID
+     */
+    protected abstract int getLayoutId();
+
+    /**
+     * Dagger 注入
+     */
+    protected abstract void doInject();
+
+    /**
+     * 初始化视图控件
+     */
+    protected abstract void doInit();
+
+    /**
+     * 更新视图控件
+     * @param isRefresh 新增参数，用来判断是否为下拉刷新调用，下拉刷新的时候不应该再显示加载界面和异常界面
+     */
+    protected abstract void getData(boolean isRefresh);
 }

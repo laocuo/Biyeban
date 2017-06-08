@@ -72,9 +72,4 @@ public class ChatRoomFragment extends BaseFragment {
     protected void getData(boolean isRefresh) {
 
     }
-
-    @Override
-    public void updateUI() {
-
-    }
 }

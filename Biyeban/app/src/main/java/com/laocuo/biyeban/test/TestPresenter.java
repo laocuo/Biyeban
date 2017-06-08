@@ -18,12 +18,21 @@
 
 package com.laocuo.biyeban.test;
 
+
 import android.util.Log;
+
+import rx.Observable;
+import rx.Subscriber;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action0;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 import com.laocuo.biyeban.base.IBaseView;
 import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.User;
 import com.laocuo.biyeban.greendao.UserDao;
+import com.laocuo.biyeban.utils.L;
 
 import java.util.List;
 
@@ -38,13 +47,53 @@ public class TestPresenter implements TestContact.Presentr {
     private DaoSession mSession;
     private UserDao mSessionUserDao;
     private long index = 1;
+
     @Override
     public void loadData() {
         //do something
         Log.d("xxxx","loadData");
+        Observable.from(new Integer[]{1, 2, 3, 4})
+                .subscribeOn(Schedulers.io())
+                .doOnSubscribe(new Action0() {
+                    @Override
+                    public void call() {
+                        mView.showLoading();
+                    }
+                })
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .compose(mTransformer)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<String>() {
+                    @Override
+                    public void onCompleted() {
+                        mView.hideLoading();
+                    }
 
-        mView.updateUI();
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        L.d(s+"\n");
+                    }
+                });
     }
+
+    private Observable.Transformer<Integer, String> mTransformer =
+            new Observable.Transformer<Integer, String>() {
+                @Override
+                public Observable<String> call(Observable<Integer> observable) {
+                    return observable
+                            .map(new Func1<Integer, String>() {
+                                @Override
+                                public String call(Integer integer) {
+                                    return integer.toString();
+                                }
+                            });
+                }
+            };
 
     @Inject
     TestPresenter(IBaseView view, DaoSession daoSession) {

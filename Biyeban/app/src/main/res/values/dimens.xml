@@ -26,4 +26,7 @@
     <dimen name="toolbar_height">56dp</dimen>
 
     <dimen name="fab_margin">16dp</dimen>
+
+    <dimen name="menu_padding">20dp</dimen>
+    <dimen name="menu_margin">20dp</dimen>
 </resources>

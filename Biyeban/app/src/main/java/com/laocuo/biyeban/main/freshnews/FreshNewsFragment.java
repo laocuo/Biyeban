@@ -29,6 +29,7 @@ import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
+import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 import com.laocuo.recycler.listener.OnRequestDataListener;
 
@@ -97,6 +98,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 SnackbarUtil.showShortSnackbar(view, "Replace with your own action");
+                Utils.logOut();
             }
         });
     }
@@ -123,7 +125,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     @Override
     public void loadMoreData(List<FreshNewsItem> data) {
         mAdapter.addItems(data);
-        finishSwipeRefresh();
+        finishRefresh();
     }
 
     @Override

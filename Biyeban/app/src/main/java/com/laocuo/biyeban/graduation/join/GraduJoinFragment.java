@@ -19,10 +19,36 @@
 package com.laocuo.biyeban.graduation.join;
 
 
-import com.laocuo.biyeban.R;
-import com.laocuo.biyeban.base.BaseFragment;
+import android.support.v7.widget.SearchView;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
-public class GraduJoinFragment extends BaseFragment {
+import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.base.BaseActivity;
+import com.laocuo.biyeban.base.BaseFragment;
+import com.laocuo.biyeban.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import butterknife.BindView;
+
+public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implements
+        SearchView.OnQueryTextListener, IGraduJoinView, AdapterView.OnItemClickListener {
+
+    @BindView(R.id.search_class)
+    SearchView mSearchView;
+    @BindView(R.id.class_list)
+    ListView mListView;
+    @BindView(R.id.empty_content)
+    LinearLayout mEmptyLayout;
+
+    private List<HashMap<String, String>> mClassList = new ArrayList<>();
+    private SimpleAdapter simpleAdapter;
 
     public static GraduJoinFragment newInstance() {
         GraduJoinFragment fragment = new GraduJoinFragment();
@@ -36,16 +62,71 @@ public class GraduJoinFragment extends BaseFragment {
 
     @Override
     protected void doInject() {
-
+        DaggerGraduJoinComponent.builder()
+                .graduJoinModule(new GraduJoinModule(this))
+                .build()
+                .inject(this);
     }
 
     @Override
     protected void doInit() {
-
+//        mSearchView.setIconifiedByDefault(false);
+        mSearchView.onActionViewExpanded();
+//        mSearchView.setSubmitButtonEnabled(true);
+        mSearchView.setOnQueryTextListener(this);
+        mListView.setEmptyView(mEmptyLayout);
+        mListView.setTextFilterEnabled(true);
+        simpleAdapter = new SimpleAdapter(mContext, mClassList,
+                android.R.layout.simple_list_item_1,
+                new String[]{"name"},
+                new int[]{android.R.id.text1});
+        mListView.setAdapter(simpleAdapter);
+        mListView.setOnItemClickListener(this);
     }
 
     @Override
     protected void getData(boolean isRefresh) {
+        mPresenter.loadData();
+    }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        mListView.setFilterText(newText);
+        return false;
+    }
+
+    @Override
+    public void loadData(List<HashMap<String, String>> data) {
+        mClassList.clear();
+        mClassList.addAll(data);
+        simpleAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void loadMoreData(List<HashMap<String, String>> data) {
+
+    }
+
+    @Override
+    public void loadNoData() {
+
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mPresenter.joinGraduClass(position);
+    }
+
+    @Override
+    public void joinGraduClass(boolean ret) {
+        if (ret == true) {
+            //todo jump into mainactivity
+            Utils.enterMain((BaseActivity) getActivity());
+        }
     }
 }

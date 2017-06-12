@@ -18,6 +18,7 @@
 
 package com.laocuo.biyeban.base;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -57,6 +58,7 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     private View mRootView;
     private boolean mIsMulti = false;
 
+    protected ProgressDialog mProgressDialog;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -155,6 +157,24 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     public void finishRefresh() {
         if (mSwipeRefresh != null) {
             SwipeRefreshHelper.controlRefresh(mSwipeRefresh, false);
+        }
+    }
+
+    @Override
+    public void showProgress() {
+        if (mProgressDialog != null) {
+            if (mProgressDialog.isShowing() == false) {
+                mProgressDialog.show();
+            }
+        }
+    }
+
+    @Override
+    public void hideProgress() {
+        if (mProgressDialog != null) {
+            if (mProgressDialog.isShowing() == true) {
+                mProgressDialog.hide();
+            }
         }
     }
 

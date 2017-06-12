@@ -48,4 +48,8 @@ public interface IBaseView {
      * 完成刷新, 新增控制刷新
      */
     void finishRefresh();
+
+    void showProgress();
+
+    void hideProgress();
 }

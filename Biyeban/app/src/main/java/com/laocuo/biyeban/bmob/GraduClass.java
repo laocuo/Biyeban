@@ -18,11 +18,17 @@
 
 package com.laocuo.biyeban.bmob;
 
+import java.util.ArrayList;
+
 import cn.bmob.v3.BmobObject;
 
 
 public class GraduClass extends BmobObject {
     private String admin;
+    private String className;
+    private String graduYear;
+    private String district;
+    private ArrayList<String> classmates;
 
     public String getAdmin() {
         return admin;
@@ -30,5 +36,37 @@ public class GraduClass extends BmobObject {
 
     public void setAdmin(String admin) {
         this.admin = admin;
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    public String getGraduYear() {
+        return graduYear;
+    }
+
+    public void setGraduYear(String graduYear) {
+        this.graduYear = graduYear;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public ArrayList<String> getClassmates() {
+        return classmates;
+    }
+
+    public void setClassmates(ArrayList<String> classmates) {
+        this.classmates = classmates;
     }
 }

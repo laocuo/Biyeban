@@ -58,22 +58,26 @@
             android:layout_alignParentEnd="true"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
     </RelativeLayout>
-    <com.laocuo.biyeban.widget.EasyPickerView
-        android:id="@+id/year_pick"
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingStart="40dp"
-        android:paddingEnd="40dp"
-        android:visibility="gone"
-        custom:epvMaxShowNum="6"
-        custom:epvRecycleMode="true"
-        custom:epvTextColor="#4aa4a4"
-        custom:epvTextMaxScale="2.0"
-        custom:epvTextMinAlpha="0.35"
-        custom:epvTextPadding="10dp"
-        custom:epvTextSize="18sp"/>
-
+        android:background="@android:color/white">
+        <com.laocuo.biyeban.widget.EasyPickerView
+            android:id="@+id/year_pick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:paddingStart="100dp"
+            android:paddingEnd="100dp"
+            android:visibility="gone"
+            custom:epvMaxShowNum="6"
+            custom:epvRecycleMode="true"
+            custom:epvTextColor="#4aa4a4"
+            custom:epvTextMaxScale="2.0"
+            custom:epvTextMinAlpha="0.35"
+            custom:epvTextPadding="10dp"
+            custom:epvTextSize="18sp"/>
+    </FrameLayout>
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

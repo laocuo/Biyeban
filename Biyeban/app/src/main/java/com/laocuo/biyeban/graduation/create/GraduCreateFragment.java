@@ -19,6 +19,7 @@
 package com.laocuo.biyeban.graduation.create;
 
 
+import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.view.View;
 import android.widget.Button;
@@ -29,13 +30,21 @@ import android.widget.TextView;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 
+import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.bmob.GraduClass;
+import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.widget.EasyPickerView;
 import com.lljjcoder.citypickerview.widget.CityPicker;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 public class GraduCreateFragment extends BaseFragment {
 
@@ -76,6 +85,7 @@ public class GraduCreateFragment extends BaseFragment {
     protected void doInit() {
         initYearPicker();
         initCityPicker();
+        mProgressDialog = new ProgressDialog(mContext);
     }
 
     @Override
@@ -134,9 +144,6 @@ public class GraduCreateFragment extends BaseFragment {
                 mDistrict.setText(citySelected[0] + "\n"
                         + citySelected[1] + "\n"
                         + citySelected[2]);
-//                mDistrict.setText(citySelected[0]
-//                        + citySelected[1]
-//                        + citySelected[2]);
             }
 
             @Override
@@ -144,5 +151,37 @@ public class GraduCreateFragment extends BaseFragment {
 
             }
         });
+    }
+
+    @OnClick(R.id.create_class)
+    void createClass() {
+        BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+        if (user != null) {
+            showProgress();
+            ArrayList<String> classmates = new ArrayList<>();
+            String name = mEditName.getText().toString();
+            String year = mGraduYear.getText().toString();
+            String district = mDistrict.getText().toString();
+            classmates.add(user.getObjectId());
+            GraduClass graduClass = new GraduClass();
+            graduClass.setAdmin(user.getObjectId());
+            graduClass.setClassName(name);
+            graduClass.setGraduYear(year);
+            graduClass.setDistrict(district);
+            graduClass.setClassmates(classmates);
+            graduClass.save(new SaveListener<String>() {
+                @Override
+                public void done(String s, BmobException e) {
+                    hideProgress();
+                    mProgressDialog.hide();
+                    if (e == null) {
+                        //success, jump to MainActivity
+                        SnackbarUtil.showShortSnackbar(mCreateClass, "班级创建成功");
+                    } else {
+                        L.d(e.toString());
+                    }
+                }
+            });
+        }
     }
 }

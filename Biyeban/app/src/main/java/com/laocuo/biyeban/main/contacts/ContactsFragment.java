@@ -36,11 +36,8 @@ public class ContactsFragment extends BaseFragment {
     @BindView(R.id.contacts_list)
     RecyclerView mRecyclerView;
 
-    public static Fragment newInstance(String resId) {
+    public static ContactsFragment newInstance() {
         ContactsFragment fragment = new ContactsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(TYPE_KEY, resId);
-        fragment.setArguments(bundle);
         return fragment;
     }
 

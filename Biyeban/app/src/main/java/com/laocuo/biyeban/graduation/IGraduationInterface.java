@@ -25,4 +25,5 @@ public interface IGraduationInterface extends IBaseView{
     void switchToCreate();
     void switchToJoin();
     void switchToBack();
+    void switchToMain();
 }

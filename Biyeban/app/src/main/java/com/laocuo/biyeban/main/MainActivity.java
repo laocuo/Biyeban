@@ -18,10 +18,13 @@
 
 package com.laocuo.biyeban.main;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -31,6 +34,7 @@ import com.laocuo.biyeban.base.ViewPagerAdapter;
 import com.laocuo.biyeban.main.chatroom.ChatRoomFragment;
 import com.laocuo.biyeban.main.contacts.ContactsFragment;
 import com.laocuo.biyeban.main.freshnews.FreshNewsFragment;
+import com.laocuo.biyeban.settings.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +47,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     @Inject
     ViewPagerAdapter mViewPagerAdapter;
 
-//    @BindView(R.id.toolbar)
-//    Toolbar mToolbar;
+    @Inject
+    FreshNewsFragment mFreshNewsFragment;
+    @Inject
+    ContactsFragment mContactsFragment;
+    @Inject
+    ChatRoomFragment mChatRoomFragment;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
     @BindView(R.id.viewpager)
     ViewPager mViewPager;
     @BindView(R.id.navigation)
@@ -77,6 +88,21 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     };
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_settings) {
+            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.activity_main;
     }
@@ -91,7 +117,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
 
     @Override
     protected void doInit() {
-//        initToolBar(mToolbar, false, R.string.app_name);
+        initToolBar(mToolbar, false, R.string.app_name);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -100,15 +126,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
         mNaviList.add(R.id.navigation_contacts);
         mNaviList.add(R.id.navigation_chatroom);
 
-        String title1 = getResources().getString(R.string.title_freshnews);
-        mTitleList.add(title1);
-        mFragmentList.add(FreshNewsFragment.newInstance(title1));
-        String title2 = getResources().getString(R.string.title_contacts);
-        mTitleList.add(title2);
-        mFragmentList.add(ContactsFragment.newInstance(title2));
-        String title3 = getResources().getString(R.string.title_chatroom);
-        mTitleList.add(title3);
-        mFragmentList.add(ChatRoomFragment.newInstance(title3));
+        mTitleList.add(getResources().getString(R.string.title_freshnews));
+        mFragmentList.add(mFreshNewsFragment);
+        mTitleList.add(getResources().getString(R.string.title_contacts));
+        mFragmentList.add(mContactsFragment);
+        mTitleList.add(getResources().getString(R.string.title_chatroom));
+        mFragmentList.add(mChatRoomFragment);
     }
 
     @Override

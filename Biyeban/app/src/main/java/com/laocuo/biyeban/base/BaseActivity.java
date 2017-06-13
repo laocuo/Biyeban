@@ -137,10 +137,10 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
     }
 
     @Override
-    public void hideProgress() {
+    public void dismissProgress() {
         if (mProgressDialog != null) {
             if (mProgressDialog.isShowing() == true) {
-                mProgressDialog.hide();
+                mProgressDialog.dismiss();
             }
         }
     }

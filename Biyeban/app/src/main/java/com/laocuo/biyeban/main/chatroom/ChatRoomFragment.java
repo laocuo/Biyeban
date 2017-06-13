@@ -37,11 +37,8 @@ public class ChatRoomFragment extends BaseFragment {
     @BindView(R.id.chatroom_list)
     RecyclerView mRecyclerView;
 
-    public static Fragment newInstance(String resId) {
+    public static ChatRoomFragment newInstance() {
         ChatRoomFragment fragment = new ChatRoomFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(TYPE_KEY, resId);
-        fragment.setArguments(bundle);
         return fragment;
     }
 

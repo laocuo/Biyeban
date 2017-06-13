@@ -31,6 +31,8 @@
         <activity android:name=".main.MainActivity"/>
         <activity android:name=".login.LoginActivity"/>
         <activity android:name=".graduation.GraduationActivity"/>
+        <activity android:name=".settings.SettingsActivity"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

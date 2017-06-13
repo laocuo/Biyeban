@@ -21,6 +21,7 @@ package com.laocuo.biyeban.graduation.create;
 
 import android.app.ProgressDialog;
 import android.graphics.Color;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -32,21 +33,25 @@ import com.laocuo.biyeban.base.BaseFragment;
 
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.GraduClass;
+import com.laocuo.biyeban.graduation.IGraduationInterface;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.widget.EasyPickerView;
 import com.lljjcoder.citypickerview.widget.CityPicker;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class GraduCreateFragment extends BaseFragment {
+    private IGraduationInterface mIGraduationInterface;
 
     @BindView(R.id.edit_class_name)
     EditText mEditName;
@@ -66,8 +71,9 @@ public class GraduCreateFragment extends BaseFragment {
     final ArrayList<String> yearList = new ArrayList<>();
     private CityPicker cityPicker;
 
-    public static GraduCreateFragment newInstance() {
+    public static GraduCreateFragment newInstance(IGraduationInterface anInterface) {
         GraduCreateFragment fragment = new GraduCreateFragment();
+        fragment.setIGraduationInterface(anInterface);
         return fragment;
     }
 
@@ -83,9 +89,9 @@ public class GraduCreateFragment extends BaseFragment {
 
     @Override
     protected void doInit() {
+        mProgressDialog = new ProgressDialog(mContext);
         initYearPicker();
         initCityPicker();
-        mProgressDialog = new ProgressDialog(mContext);
     }
 
     @Override
@@ -109,7 +115,7 @@ public class GraduCreateFragment extends BaseFragment {
 
     private void initYearPicker() {
         for (int i = 1976; i < 2026; i++)
-            yearList.add("" + i);
+            yearList.add("" + i + "届");
         mYearPicker.setDataList(yearList);
         mYearPicker.setOnScrollChangedListener(new EasyPickerView.OnScrollChangedListener() {
             @Override
@@ -141,8 +147,8 @@ public class GraduCreateFragment extends BaseFragment {
         cityPicker.setOnCityItemClickListener(new CityPicker.OnCityItemClickListener() {
             @Override
             public void onSelected(String... citySelected) {
-                mDistrict.setText(citySelected[0] + "\n"
-                        + citySelected[1] + "\n"
+                mDistrict.setText(citySelected[0]
+                        + citySelected[1]
                         + citySelected[2]);
             }
 
@@ -155,11 +161,15 @@ public class GraduCreateFragment extends BaseFragment {
 
     @OnClick(R.id.create_class)
     void createClass() {
+        String name = mEditName.getText().toString();
+        if (TextUtils.isEmpty(name)) {
+            SnackbarUtil.showShortSnackbar(mCreateClass, "班级名不能为空");
+            return;
+        }
         BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
             showProgress();
             ArrayList<String> classmates = new ArrayList<>();
-            String name = mEditName.getText().toString();
             String year = mGraduYear.getText().toString();
             String district = mDistrict.getText().toString();
             classmates.add(user.getObjectId());
@@ -172,16 +182,52 @@ public class GraduCreateFragment extends BaseFragment {
             graduClass.save(new SaveListener<String>() {
                 @Override
                 public void done(String s, BmobException e) {
-                    hideProgress();
-                    mProgressDialog.hide();
                     if (e == null) {
-                        //success, jump to MainActivity
                         SnackbarUtil.showShortSnackbar(mCreateClass, "班级创建成功");
+                        BmobQuery<GraduClass> query = new BmobQuery<>();
+                        query.getObject(s, new QueryListener<GraduClass>() {
+                            @Override
+                            public void done(GraduClass aClass, BmobException e) {
+                                if (e == null) {
+                                    updateCurrentUser(aClass);
+                                } else {
+                                    L.d(e.toString());
+                                    dismissProgress();
+                                }
+                            }
+                        });
                     } else {
                         L.d(e.toString());
+                        dismissProgress();
                     }
                 }
             });
         }
+    }
+
+    private void updateCurrentUser(GraduClass gc) {
+        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+        if (user != null) {
+            user.setGraduClass(gc);
+            BiyebanUser u = new BiyebanUser();
+            u.setGraduClass(gc);
+            u.update(user.getObjectId(), new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e == null) {
+                        dismissProgress();
+                        //success, jump to MainActivity
+                        mIGraduationInterface.switchToMain();
+                    } else {
+                        L.d(e.toString());
+                        dismissProgress();
+                    }
+                }
+            });
+        }
+    }
+
+    public void setIGraduationInterface(IGraduationInterface IGraduationInterface) {
+        mIGraduationInterface = IGraduationInterface;
     }
 }

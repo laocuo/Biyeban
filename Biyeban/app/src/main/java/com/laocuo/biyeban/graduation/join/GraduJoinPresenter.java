@@ -62,7 +62,9 @@ public class GraduJoinPresenter implements IGraduJoinPresenter {
         mClassList.clear();
         for (GraduClass gc : list) {
             HashMap<String, String> item = new HashMap<>();
-            item.put("name", gc.getObjectId());
+            item.put("name", gc.getClassName());
+            item.put("district", gc.getDistrict());
+            item.put("year", gc.getGraduYear());
             mClassList.add(item);
         }
     }
@@ -84,9 +86,13 @@ public class GraduJoinPresenter implements IGraduJoinPresenter {
 
     @Override
     public void joinGraduClass(int pos) {
+        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         final GraduClass gc = gradu_list.get(pos);
         String objId = gc.getObjectId();
+        ArrayList<String> classmates = gc.getClassmates();
+        classmates.add(user.getObjectId());
         GraduClass graduClass = new GraduClass();
+        graduClass.setClassmates(classmates);
         graduClass.update(objId, new UpdateListener() {
             @Override
             public void done(BmobException e) {
@@ -103,7 +109,6 @@ public class GraduJoinPresenter implements IGraduJoinPresenter {
     private void updateCurrentUser(GraduClass gc) {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
-            user.setGraduClass(gc);
             BiyebanUser u = new BiyebanUser();
             u.setGraduClass(gc);
             u.update(user.getObjectId(), new UpdateListener() {

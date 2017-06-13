@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:key="pref_key_user"
+        android:title="@string/user_settings">
+        <com.laocuo.biyeban.main.me.AvatarPreference
+            android:key="pref_key_user_avatar"
+            android:dependency="pref_key_login_status"/>
+        <EditTextPreference
+            android:key="pref_key_user_alias"
+            android:title="@string/alias"
+            android:dependency="pref_key_login_status"/>
+        <SwitchPreference
+            android:key="pref_key_login_status"
+            android:title="@string/login"
+            android:summary="@string/login_switch"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/other">
+        <PreferenceScreen
+            android:key="pref_key_about"
+            android:title="@string/about"/>
+    </PreferenceCategory>
+</PreferenceScreen>

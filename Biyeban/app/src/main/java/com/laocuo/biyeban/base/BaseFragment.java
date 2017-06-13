@@ -170,10 +170,10 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     }
 
     @Override
-    public void hideProgress() {
+    public void dismissProgress() {
         if (mProgressDialog != null) {
             if (mProgressDialog.isShowing() == true) {
-                mProgressDialog.hide();
+                mProgressDialog.dismiss();
             }
         }
     }

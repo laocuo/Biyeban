@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="80dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="60dp"
+        android:layout_marginEnd="100dp">
+        <TextView
+            android:id="@+id/gradu_class_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:textColor="@color/colorPrimary"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="4dp"
+            android:text="XX中学高三X班"/>
+
+        <TextView
+            android:id="@+id/gradu_district"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
+            android:textColor="@android:color/darker_gray"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="4dp"
+            android:maxLines="3"
+            android:maxLength="12"
+            android:text="XX省XX市XX区"/>
+
+        <TextView
+            android:id="@+id/gradu_year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@android:style/TextAppearance.Material.Small"
+            android:textColor="@android:color/darker_gray"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="4dp"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="4dp"
+            android:text="XXXX届"/>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/join_class"
+        android:layout_width="60dp"
+        android:layout_height="40dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="20dp"
+        android:layout_centerVertical="true"
+        android:text="@string/join"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:background="@drawable/button_background"/>
+</RelativeLayout>

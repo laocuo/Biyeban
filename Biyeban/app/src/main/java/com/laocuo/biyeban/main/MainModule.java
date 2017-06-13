@@ -22,6 +22,9 @@ import android.support.v4.app.FragmentManager;
 
 import com.laocuo.biyeban.base.IBaseView;
 import com.laocuo.biyeban.base.ViewPagerAdapter;
+import com.laocuo.biyeban.main.chatroom.ChatRoomFragment;
+import com.laocuo.biyeban.main.contacts.ContactsFragment;
+import com.laocuo.biyeban.main.freshnews.FreshNewsFragment;
 
 import dagger.Module;
 import dagger.Provides;
@@ -47,5 +50,20 @@ public class MainModule {
     @Provides
     public ViewPagerAdapter provideMainViewPagerAdapter() {
         return new ViewPagerAdapter(mMainActivity.getSupportFragmentManager());
+    }
+
+    @Provides
+    FreshNewsFragment provideFreshNewsFragment() {
+        return FreshNewsFragment.newInstance();
+    }
+
+    @Provides
+    ContactsFragment provideContactsFragment() {
+        return ContactsFragment.newInstance();
+    }
+
+    @Provides
+    ChatRoomFragment provideChatRoomFragment() {
+        return ChatRoomFragment.newInstance();
     }
 }

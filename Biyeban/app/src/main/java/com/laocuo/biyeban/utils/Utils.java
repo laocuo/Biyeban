@@ -30,6 +30,8 @@ import com.laocuo.biyeban.main.MainActivity;
 import cn.bmob.v3.BmobUser;
 
 public class Utils {
+    private static final String AVATAR = "avatar.jpg";
+
     public static void enterMain(BaseActivity activity) {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {

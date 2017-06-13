@@ -44,11 +44,11 @@ public class GraduationModule {
 
     @Provides
     GraduCreateFragment provideGraduCreateFragment() {
-        return GraduCreateFragment.newInstance();
+        return GraduCreateFragment.newInstance(mInterface);
     }
 
     @Provides
     GraduJoinFragment provideGraduJoinFragment() {
-        return GraduJoinFragment.newInstance();
+        return GraduJoinFragment.newInstance(mInterface);
     }
 }

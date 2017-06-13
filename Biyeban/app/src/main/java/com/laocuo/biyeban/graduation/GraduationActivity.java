@@ -25,6 +25,7 @@ import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.graduation.create.GraduCreateFragment;
 import com.laocuo.biyeban.graduation.main.GraduMainFragment;
 import com.laocuo.biyeban.graduation.join.GraduJoinFragment;
+import com.laocuo.biyeban.utils.Utils;
 
 import javax.inject.Inject;
 
@@ -38,8 +39,8 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
     @Inject
     GraduJoinFragment   mGraduJoinFragment;
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+//    @BindView(R.id.toolbar)
+//    Toolbar mToolbar;
 
     @Override
     protected int getLayoutId() {
@@ -56,7 +57,6 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
 
     @Override
     protected void doInit() {
-        initToolBar(mToolbar, false, R.string.gradu_class);
         addFragment(R.id.container, mGraduMainFragment);
     }
 
@@ -78,5 +78,11 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
     @Override
     public void switchToBack() {
         //do nothing
+    }
+
+    @Override
+    public void switchToMain() {
+        Utils.enterMain(this);
+        finish();
     }
 }

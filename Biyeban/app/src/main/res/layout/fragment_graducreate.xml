@@ -53,7 +53,7 @@
             android:drawableEnd="@drawable/ic_ab_back_holo_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1976"
+            android:text="1976届"
             android:textColor="#4aa4a4"
             android:layout_alignParentEnd="true"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
@@ -106,8 +106,10 @@
             android:drawableEnd="@drawable/ic_ab_back_holo_light"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="江苏省\n南京市\n秦淮区"
+            android:text="江苏省南京市秦淮区"
             android:textColor="#4aa4a4"
+            android:maxLines="3"
+            android:maxWidth="200dp"
             android:layout_alignParentEnd="true"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
     </RelativeLayout>
@@ -123,5 +125,5 @@
         android:textColor="@android:color/white"
         android:gravity="center"
         android:textAppearance="@android:style/TextAppearance.Material.Medium"
-        android:background="@drawable/button_bg"/>
+        android:background="@drawable/button_background"/>
 </LinearLayout>

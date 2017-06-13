@@ -54,11 +54,8 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     @BindView(R.id.fab)
     FloatingActionButton mFloatingActionButton;
 
-    public static Fragment newInstance(String resId) {
+    public static FreshNewsFragment newInstance() {
         FreshNewsFragment fragment = new FreshNewsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString(TYPE_KEY, resId);
-        fragment.setArguments(bundle);
         return fragment;
     }
 

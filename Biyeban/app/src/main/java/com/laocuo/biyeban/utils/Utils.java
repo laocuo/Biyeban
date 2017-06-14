@@ -52,4 +52,9 @@ public class Utils {
             user.logOut();
         }
     }
+
+    public static BiyebanUser getCurrentUser() {
+        BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+        return user;
+    }
 }

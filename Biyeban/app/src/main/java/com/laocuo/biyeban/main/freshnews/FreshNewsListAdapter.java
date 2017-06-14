@@ -44,13 +44,13 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
     protected void convert(BaseViewHolder holder, FreshNewsItem item) {
         switch (item.getItemType()) {
             case FreshNewsItem.ITEM_TYPE_NORMAL:
-                _handleNewsNormal(holder, item.getContent());
+                _handleNewsNormal(holder, item);
                 break;
         }
     }
 
-    private void _handleNewsNormal(final BaseViewHolder holder, final String content) {
+    private void _handleNewsNormal(final BaseViewHolder holder, final FreshNewsItem item) {
         TextView tv = holder.getView(R.id.test_info);
-        tv.setText(content);
+        tv.setText(item.getContent());
     }
 }

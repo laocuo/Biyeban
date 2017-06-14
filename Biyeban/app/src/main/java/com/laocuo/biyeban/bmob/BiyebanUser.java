@@ -26,6 +26,7 @@ public class BiyebanUser extends BmobUser {
     private String alias;
     private BmobFile avatar;
     private GraduClass graduClass;
+    private Boolean canChat;
 
     public String getAlias() {
         return alias;
@@ -49,5 +50,13 @@ public class BiyebanUser extends BmobUser {
 
     public void setGraduClass(GraduClass graduClass) {
         this.graduClass = graduClass;
+    }
+
+    public Boolean getCanChat() {
+        return canChat;
+    }
+
+    public void setCanChat(Boolean canChat) {
+        this.canChat = canChat;
     }
 }

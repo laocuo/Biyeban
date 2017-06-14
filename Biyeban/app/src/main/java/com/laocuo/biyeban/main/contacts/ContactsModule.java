@@ -16,12 +16,29 @@
  *
  */
 
-package com.laocuo.biyeban.main.freshnews;
+package com.laocuo.biyeban.main.contacts;
 
-import com.laocuo.biyeban.base.ILoadDataView;
+import android.content.Context;
 
-import java.util.List;
+import dagger.Module;
+import dagger.Provides;
 
 
-public interface IFreshNewsView extends ILoadDataView<List<FreshNewsItem>>{
+@Module
+public class ContactsModule {
+    private ContactsFragment mContactsFragment;
+
+    public ContactsModule(ContactsFragment fragment) {
+        mContactsFragment = fragment;
+    }
+
+    @Provides
+    IContactsView provideIContactsView() {
+        return (IContactsView)mContactsFragment;
+    }
+
+    @Provides
+    Context provideContext() {
+        return mContactsFragment.getContext();
+    }
 }

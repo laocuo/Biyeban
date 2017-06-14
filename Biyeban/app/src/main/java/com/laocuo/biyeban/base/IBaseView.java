@@ -49,7 +49,5 @@ public interface IBaseView {
      */
     void finishRefresh();
 
-    void showProgress();
-
-    void dismissProgress();
+    void showProgress(boolean show);
 }

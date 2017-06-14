@@ -106,7 +106,7 @@ public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implemen
 
     @Override
     protected void getData(boolean isRefresh) {
-        showProgress();
+        showProgress(true);
         mPresenter.loadData();
     }
 
@@ -131,7 +131,7 @@ public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implemen
 
     @Override
     public void loadData(List<HashMap<String, String>> data) {
-        dismissProgress();
+        showProgress(false);
         mClassList.clear();
         mClassList.addAll(data);
         simpleAdapter.notifyDataSetChanged();
@@ -154,13 +154,13 @@ public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implemen
 
     private void joinGraduClass(int position) {
         L.d("onItemClick : "+position);
-        showProgress();
+        showProgress(true);
         mPresenter.joinGraduClass(position);
     }
 
     @Override
     public void joinGraduClass(boolean ret) {
-        dismissProgress();
+        showProgress(false);
         if (ret == true) {
             //todo jump into mainactivity
             mIGraduationInterface.switchToMain();

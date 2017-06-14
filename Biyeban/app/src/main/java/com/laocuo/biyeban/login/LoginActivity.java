@@ -164,7 +164,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
+            displayProgress(true);
 //            mAuthTask = new UserLoginTask(username, password);
 //            mAuthTask.execute((Void) null);
             BiyebanUser user = new BiyebanUser();
@@ -179,10 +179,11 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         BiyebanUser user = isValidUserInfo();
         if (user != null) {
             hideKeyboard();
+            user.setCanChat(true);
             user.signUp(new SaveListener<BiyebanUser>() {
                 @Override
                 public void done(BiyebanUser u, BmobException e) {
-                    showProgress(false);
+                    displayProgress(false);
                     if (e == null) {
                         //TODO success
                         SnackbarUtil.showShortSnackbar(mLoginFormView, "register success!");
@@ -216,7 +217,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
                     L.d("login ok u=" + u.getUsername());
                     enterMainMenu();
                 } else {
-                    showProgress(false);
+                    displayProgress(false);
                     mPasswordView.requestFocus();
                     SnackbarUtil.showShortSnackbar(mLoginFormView, e.getMessage());
                     L.d(e.toString());
@@ -246,7 +247,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
      * Shows the progress UI and hides the login form.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
+    private void displayProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
         // for very easy animations. If available, use these APIs to fade-in
         // the progress spinner.

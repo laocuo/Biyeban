@@ -16,12 +16,12 @@
  *
  */
 
-package com.laocuo.biyeban.main.freshnews;
-
-import com.laocuo.biyeban.base.ILoadDataView;
-
-import java.util.List;
+package com.laocuo.biyeban.main.contacts;
 
 
-public interface IFreshNewsView extends ILoadDataView<List<FreshNewsItem>>{
+import dagger.Component;
+
+@Component(modules = ContactsModule.class)
+        public interface ContactsComponent {
+    void inject(ContactsFragment fragment);
 }

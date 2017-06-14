@@ -32,6 +32,7 @@ import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.bmob.Chat;
 import com.laocuo.biyeban.bmob.GraduClass;
 import com.laocuo.biyeban.graduation.IGraduationInterface;
 import com.laocuo.biyeban.utils.L;
@@ -168,7 +169,7 @@ public class GraduCreateFragment extends BaseFragment {
         }
         BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
-            showProgress();
+            showProgress(true);
             ArrayList<String> classmates = new ArrayList<>();
             String year = mGraduYear.getText().toString();
             String district = mDistrict.getText().toString();
@@ -189,16 +190,15 @@ public class GraduCreateFragment extends BaseFragment {
                             @Override
                             public void done(GraduClass aClass, BmobException e) {
                                 if (e == null) {
+                                    createGraduClassChatRoom(aClass.getAdmin(), aClass.getObjectId());
                                     updateCurrentUser(aClass);
                                 } else {
                                     L.d(e.toString());
-                                    dismissProgress();
                                 }
                             }
                         });
                     } else {
                         L.d(e.toString());
-                        dismissProgress();
                     }
                 }
             });
@@ -214,13 +214,12 @@ public class GraduCreateFragment extends BaseFragment {
             u.update(user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
+                    showProgress(false);
                     if (e == null) {
-                        dismissProgress();
                         //success, jump to MainActivity
                         mIGraduationInterface.switchToMain();
                     } else {
                         L.d(e.toString());
-                        dismissProgress();
                     }
                 }
             });
@@ -229,5 +228,17 @@ public class GraduCreateFragment extends BaseFragment {
 
     public void setIGraduationInterface(IGraduationInterface IGraduationInterface) {
         mIGraduationInterface = IGraduationInterface;
+    }
+
+    private void createGraduClassChatRoom(String userObjId, String roomName) {
+        Chat chat = new Chat(userObjId, roomName);
+        chat.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e != null) {
+                    L.d(e.toString());
+                }
+            }
+        });
     }
 }

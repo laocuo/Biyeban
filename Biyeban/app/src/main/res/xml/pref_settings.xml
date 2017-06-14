@@ -2,7 +2,7 @@
     <PreferenceCategory
         android:key="pref_key_user"
         android:title="@string/user_settings">
-        <com.laocuo.biyeban.main.me.AvatarPreference
+        <com.laocuo.biyeban.settings.AvatarPreference
             android:key="pref_key_user_avatar"
             android:dependency="pref_key_login_status"/>
         <EditTextPreference

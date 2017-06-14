@@ -16,12 +16,12 @@
  *
  */
 
-package com.laocuo.biyeban.main.freshnews;
+package com.laocuo.biyeban.main.contacts;
 
-import com.laocuo.biyeban.base.ILoadDataView;
+import com.laocuo.biyeban.base.IBasePresenter;
 
-import java.util.List;
+import java.util.ArrayList;
 
-
-public interface IFreshNewsView extends ILoadDataView<List<FreshNewsItem>>{
+public interface IContactsPresenter extends IBasePresenter {
+    void setClassMates(ArrayList<String> classMates);
 }

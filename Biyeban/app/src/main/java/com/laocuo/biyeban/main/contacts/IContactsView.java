@@ -16,12 +16,12 @@
  *
  */
 
-package com.laocuo.biyeban.main.freshnews;
+package com.laocuo.biyeban.main.contacts;
+
 
 import com.laocuo.biyeban.base.ILoadDataView;
 
 import java.util.List;
 
-
-public interface IFreshNewsView extends ILoadDataView<List<FreshNewsItem>>{
+public interface IContactsView extends ILoadDataView<List<ContactsItem>> {
 }

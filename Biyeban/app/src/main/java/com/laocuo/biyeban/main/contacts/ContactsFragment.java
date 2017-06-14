@@ -20,19 +20,29 @@ package com.laocuo.biyeban.main.contacts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
+import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.Utils;
+import com.laocuo.recycler.helper.RecyclerViewHelper;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
 
-public class ContactsFragment extends BaseFragment {
+public class ContactsFragment extends BaseFragment<ContactsPresenter>
+        implements IContactsView{
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
+
+    @Inject
+    ContactsListAdapter mAdapter;
+
     @BindView(R.id.contacts_list)
     RecyclerView mRecyclerView;
 
@@ -47,6 +57,7 @@ public class ContactsFragment extends BaseFragment {
         if (getArguments() != null) {
             mTitle = getArguments().getString(TYPE_KEY);
         }
+        L.d("ContactsFragment:onCreate");
     }
 
     @Override
@@ -56,16 +67,39 @@ public class ContactsFragment extends BaseFragment {
 
     @Override
     protected void doInject() {
-
+        DaggerContactsComponent.builder()
+                .contactsModule(new ContactsModule(this))
+                .build()
+                .inject(this);
     }
 
     @Override
     protected void doInit() {
-
+        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, true, mAdapter);
+        mPresenter.setClassMates(Utils.getCurrentUser().getGraduClass().getClassmates());
     }
 
     @Override
     protected void getData(boolean isRefresh) {
+        if (isRefresh == true) {
+//            mPresenter.loadMoreData();
+        } else {
+            mPresenter.loadData();
+        }
+    }
+
+    @Override
+    public void loadData(List<ContactsItem> data) {
+        mAdapter.updateItems(data);
+    }
+
+    @Override
+    public void loadMoreData(List<ContactsItem> data) {
+
+    }
+
+    @Override
+    public void loadNoData() {
 
     }
 }

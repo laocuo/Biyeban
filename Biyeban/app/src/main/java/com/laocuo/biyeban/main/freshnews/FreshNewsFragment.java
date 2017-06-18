@@ -95,14 +95,13 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
                 SnackbarUtil.showShortSnackbar(view, "Replace with your own action");
-                Utils.logOut();
             }
         });
     }
 
     @Override
     protected void getData(boolean isRefresh) {
-        debug("getData="+isRefresh);
+        debug("FreshNewsFragment getData="+isRefresh);
         if (isRefresh == true) {
             mPresenter.loadMoreData();
         } else {

@@ -50,7 +50,7 @@ public class ContactsPresenter implements IContactsPresenter {
         }
         count = 0;
         length = mClassMates.size();
-        L.d("loadData:"+mClassMates.toString());
+        L.d("ContactsPresenter loadData:"+mClassMates.toString());
         for (String objId : mClassMates) {
             BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
             query.getObject(objId, new QueryListener<BiyebanUser>() {

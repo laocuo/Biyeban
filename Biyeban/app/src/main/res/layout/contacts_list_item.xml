@@ -8,9 +8,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingStart="15dp"
-        android:background="#eae7e9"
-        android:textSize="16sp"
-        android:visibility="gone"/>
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        android:background="#62eae7e9"
+        android:textSize="14sp"
+        android:text="A"
+        android:visibility="visible"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,9 +21,9 @@
         android:background="@drawable/contact_item_bg">
         <ImageView
             android:id="@+id/avatar"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_margin="10dp"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_margin="6dp"
             android:src="@drawable/user"/>
         <TextView
             android:id="@+id/alias"
@@ -30,6 +33,6 @@
             android:layout_gravity="center_vertical"
             android:text="Alias"
             android:textAppearance="@android:style/TextAppearance.Material"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
     </LinearLayout>
 </LinearLayout>

@@ -121,7 +121,13 @@ public class ChatRoomFragment extends BaseFragment {
 
     @Override
     protected void getData(boolean isRefresh) {
-        chat_init();
+        L.d("ChatRoomFragment:getData isRefresh="+isRefresh);
+        if (isRefresh == true) {
+//            mPresenter.loadMoreData();
+            finishRefresh();
+        } else {
+            chat_init();
+        }
     }
 
     @Override

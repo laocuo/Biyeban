@@ -190,6 +190,7 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
     /**
      * 更新视图控件
      * @param isRefresh 新增参数，用来判断是否为下拉刷新调用，下拉刷新的时候不应该再显示加载界面和异常界面
+     * isRefresh: true SwipeRefresh; false onActivityCreated refresh
      */
     protected abstract void getData(boolean isRefresh);
 

@@ -24,6 +24,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
+import com.laocuo.biyeban.bmob.GraduClass;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
@@ -33,6 +34,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 
 
 public class ContactsFragment extends BaseFragment<ContactsPresenter>
@@ -57,7 +61,6 @@ public class ContactsFragment extends BaseFragment<ContactsPresenter>
         if (getArguments() != null) {
             mTitle = getArguments().getString(TYPE_KEY);
         }
-        L.d("ContactsFragment:onCreate");
     }
 
     @Override
@@ -75,16 +78,27 @@ public class ContactsFragment extends BaseFragment<ContactsPresenter>
 
     @Override
     protected void doInit() {
-        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, true, mAdapter);
-        mPresenter.setClassMates(Utils.getCurrentUser().getGraduClass().getClassmates());
+        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, false, mAdapter);
     }
 
     @Override
     protected void getData(boolean isRefresh) {
+        L.d("ContactsFragment:getData isRefresh="+isRefresh);
         if (isRefresh == true) {
 //            mPresenter.loadMoreData();
+            finishRefresh();
         } else {
-            mPresenter.loadData();
+            GraduClass graduClass = Utils.getCurrentUser().getGraduClass();
+            String graduclass = graduClass.getObjectId();
+            BmobQuery<GraduClass> query = new BmobQuery<GraduClass>();
+            query.getObject(graduclass, new QueryListener<GraduClass>() {
+
+                        @Override
+                        public void done(GraduClass aClass, BmobException e) {
+                            mPresenter.setClassMates(aClass.getClassmates());
+                            mPresenter.loadData();
+                        }
+                    });
         }
     }
 

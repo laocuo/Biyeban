@@ -7,9 +7,30 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/contacts_list"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
+        android:layout_height="match_parent">
+        <include layout="@layout/layout_common_empty"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/contacts_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <com.laocuo.biyeban.widget.CityNavigateView
+            android:id="@+id/contacts_navigate"
+            android:layout_width="28dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            app:textSize="14"
+            app:unselected_color="@color/colorPrimary"
+            app:selected_color="@color/colorAccent"/>
+        <TextView
+            android:id="@+id/chief"
+            android:layout_width="@dimen/city_chief_size"
+            android:layout_height="@dimen/city_chief_size"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="@dimen/city_chief_font_size"
+            android:background="@drawable/city_chief_bg"
+            android:visibility="invisible"/>
+    </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

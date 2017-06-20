@@ -55,4 +55,8 @@ public class ContactsItem extends MultiItemEntity {
     public String getPinyin() {
         return pinyin;
     }
+
+    public String getFirstPinYin() {
+        return pinyin.substring(0,1);
+    }
 }

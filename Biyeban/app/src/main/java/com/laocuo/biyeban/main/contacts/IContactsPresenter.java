@@ -20,8 +20,6 @@ package com.laocuo.biyeban.main.contacts;
 
 import com.laocuo.biyeban.base.IBasePresenter;
 
-import java.util.ArrayList;
-
 public interface IContactsPresenter extends IBasePresenter {
-    void setClassMates(ArrayList<String> classMates);
+    void getClassMates();
 }

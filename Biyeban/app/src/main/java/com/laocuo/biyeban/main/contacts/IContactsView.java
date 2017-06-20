@@ -22,6 +22,8 @@ package com.laocuo.biyeban.main.contacts;
 import com.laocuo.biyeban.base.ILoadDataView;
 
 import java.util.List;
+import java.util.Set;
 
 public interface IContactsView extends ILoadDataView<List<ContactsItem>> {
+    void loadNavigatorData(List<String> naviHeads,Set<String> naviHeadsSet);
 }

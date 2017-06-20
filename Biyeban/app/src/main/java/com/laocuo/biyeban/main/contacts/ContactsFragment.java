@@ -20,27 +20,27 @@ package com.laocuo.biyeban.main.contacts;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
-import com.laocuo.biyeban.bmob.GraduClass;
 import com.laocuo.biyeban.utils.L;
-import com.laocuo.biyeban.utils.Utils;
+import com.laocuo.biyeban.widget.CityNavigateView;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
 
 
 public class ContactsFragment extends BaseFragment<ContactsPresenter>
-        implements IContactsView{
+        implements IContactsView, CityNavigateView.onTouchListener {
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
 
@@ -49,6 +49,13 @@ public class ContactsFragment extends BaseFragment<ContactsPresenter>
 
     @BindView(R.id.contacts_list)
     RecyclerView mRecyclerView;
+    @BindView(R.id.contacts_navigate)
+    CityNavigateView mNavigateView;
+    @BindView(R.id.chief)
+    TextView mChiefView;
+
+    private List<ContactsItem> mContactsItemList;
+    private LinearLayoutManager layoutManager;
 
     public static ContactsFragment newInstance() {
         ContactsFragment fragment = new ContactsFragment();
@@ -79,6 +86,9 @@ public class ContactsFragment extends BaseFragment<ContactsPresenter>
     @Override
     protected void doInit() {
         RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, false, mAdapter);
+        mNavigateView.setListener(this);
+        layoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -88,22 +98,15 @@ public class ContactsFragment extends BaseFragment<ContactsPresenter>
 //            mPresenter.loadMoreData();
             finishRefresh();
         } else {
-            GraduClass graduClass = Utils.getCurrentUser().getGraduClass();
-            String graduclass = graduClass.getObjectId();
-            BmobQuery<GraduClass> query = new BmobQuery<GraduClass>();
-            query.getObject(graduclass, new QueryListener<GraduClass>() {
-
-                        @Override
-                        public void done(GraduClass aClass, BmobException e) {
-                            mPresenter.setClassMates(aClass.getClassmates());
-                            mPresenter.loadData();
-                        }
-                    });
+            showLoading();
+            mPresenter.getClassMates();
         }
     }
 
     @Override
     public void loadData(List<ContactsItem> data) {
+        hideLoading();
+        mContactsItemList = data;
         mAdapter.updateItems(data);
     }
 
@@ -116,4 +119,41 @@ public class ContactsFragment extends BaseFragment<ContactsPresenter>
     public void loadNoData() {
 
     }
+
+    @Override
+    public void loadNavigatorData(List<String> naviHeads, Set<String> naviHeadsSet) {
+        mNavigateView.setContent(naviHeads);
+    }
+
+    @Override
+    public void showChiefView(String text, boolean show) {
+        if (show) {
+            mChiefView.setText(text);
+            mChiefView.setVisibility(View.VISIBLE);
+            int selectPosition = 0;
+            for (int i = 0; i < mContactsItemList.size(); i++) {
+                if (mContactsItemList.get(i).getFirstPinYin().equals(text)) {
+                    selectPosition = i;
+                    break;
+                }
+            }
+            scroll2Position(selectPosition);
+        } else {
+            mChiefView.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void scroll2Position(int index) {
+        int firstPosition = layoutManager.findFirstVisibleItemPosition();
+        int lastPosition = layoutManager.findLastVisibleItemPosition();
+        if (index <= firstPosition) {
+            mRecyclerView.scrollToPosition(index);
+        } else if (index <= lastPosition) {
+            int top = mRecyclerView.getChildAt(index - firstPosition).getTop();
+            mRecyclerView.scrollBy(0, top);
+        } else {
+            mRecyclerView.scrollToPosition(index);
+        }
+    }
+
 }

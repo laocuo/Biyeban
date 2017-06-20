@@ -6,6 +6,18 @@
     <item
         android:id="@+id/menu_settings"
         android:title="@string/setting"
+        android:icon="@drawable/ic_menu_start_conversation"
         app:showAsAction="never"/>
 
+    <item
+        android:id="@+id/menu_add"
+        android:title="@string/setting"
+        android:icon="@drawable/ic_menu_start_conversation"
+        app:showAsAction="never"/>
+
+    <item
+        android:id="@+id/menu_remove"
+        android:title="@string/setting"
+        android:icon="@drawable/ic_menu_start_conversation"
+        app:showAsAction="never"/>
 </menu>

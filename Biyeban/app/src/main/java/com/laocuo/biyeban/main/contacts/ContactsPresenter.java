@@ -21,14 +21,17 @@ package com.laocuo.biyeban.main.contacts;
 import android.text.TextUtils;
 
 import com.github.promeg.pinyinhelper.Pinyin;
-import com.laocuo.biyeban.base.IBasePresenter;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.bmob.GraduClass;
 import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -41,6 +44,8 @@ public class ContactsPresenter implements IContactsPresenter {
     private IContactsView mIContactsView;
     private ArrayList<String> mClassMates;
     private List<ContactsItem> mContactsList = new ArrayList<>();
+    private List<String> mNaviHeads = new ArrayList<String>();
+    private Set<String> mNaviHeadsSet = new LinkedHashSet<>();
     private int count, length;
 
     @Override
@@ -92,7 +97,18 @@ public class ContactsPresenter implements IContactsPresenter {
                     return t.getPinyin().compareTo(t1.getPinyin());
                 }
             });
+            updateNavigatorData(mContactsList);
             mIContactsView.loadData(mContactsList);
+            mIContactsView.loadNavigatorData(mNaviHeads, mNaviHeadsSet);
+        }
+    }
+
+    private void updateNavigatorData(List<ContactsItem> list) {
+        for (ContactsItem c : mContactsList) {
+            mNaviHeadsSet.add(c.getPinyin().substring(0,1));
+        }
+        for (String s : mNaviHeadsSet) {
+            mNaviHeads.add(s);
         }
     }
 
@@ -107,7 +123,18 @@ public class ContactsPresenter implements IContactsPresenter {
     }
 
     @Override
-    public void setClassMates(ArrayList<String> classMates) {
-        mClassMates = classMates;
+    public void getClassMates() {
+        GraduClass graduClass = Utils.getCurrentUser().getGraduClass();
+        String graduclass = graduClass.getObjectId();
+        BmobQuery<GraduClass> query = new BmobQuery<GraduClass>();
+        query.getObject(graduclass, new QueryListener<GraduClass>() {
+
+            @Override
+            public void done(GraduClass aClass, BmobException e) {
+                mClassMates = aClass.getClassmates();
+                loadData();
+            }
+        });
+
     }
 }

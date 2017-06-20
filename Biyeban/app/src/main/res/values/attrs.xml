@@ -33,4 +33,10 @@
         <attr name="epvRecycleMode" format="boolean"/>
         <attr name="epvMaxShowNum" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="CityNavigateViewTheme">
+        <attr name="textSize" format="float"/>
+        <attr name="selected_color" format="color"/>
+        <attr name="unselected_color" format="color"/>
+    </declare-styleable>
 </resources>

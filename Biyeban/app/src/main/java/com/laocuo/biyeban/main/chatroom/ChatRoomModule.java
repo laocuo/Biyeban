@@ -16,12 +16,36 @@
  *
  */
 
-package com.laocuo.biyeban.main.contacts;
+package com.laocuo.biyeban.main.chatroom;
+
+import android.content.Context;
+
+import com.laocuo.biyeban.utils.Utils;
+
+import dagger.Module;
+import dagger.Provides;
 
 
-import dagger.Component;
+@Module
+public class ChatRoomModule {
+    private ChatRoomFragment mChatRoomFragment;
 
-@Component(modules = ContactsModule.class)
-public interface ContactsComponent {
-    void inject(ContactsFragment fragment);
+    public ChatRoomModule(ChatRoomFragment fragment) {
+        mChatRoomFragment = fragment;
+    }
+
+    @Provides
+    Context provideContext() {
+        return mChatRoomFragment.getContext();
+    }
+
+    @Provides
+    String provideString() {
+        return Utils.getCurrentUser().getUsername();
+    }
+
+    @Provides
+    IChatRoomView provideIChatRoomView() {
+        return (IChatRoomView)mChatRoomFragment;
+    }
 }

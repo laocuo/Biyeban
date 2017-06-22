@@ -16,12 +16,17 @@
  *
  */
 
-package com.laocuo.biyeban.main.contacts;
+package com.laocuo.biyeban.main.chatroom;
 
 
-import dagger.Component;
+import com.laocuo.biyeban.base.ILoadDataView;
+import com.laocuo.biyeban.bmob.Chat;
 
-@Component(modules = ContactsModule.class)
-public interface ContactsComponent {
-    void inject(ContactsFragment fragment);
+import java.util.List;
+
+public interface IChatRoomView extends ILoadDataView<List<Chat>> {
+    void recvMessage(Chat chat);
+    void stopOrallowChatResult(boolean b);
+    void sendMsg(boolean b);
+    void chatForbidden();
 }

@@ -33,10 +33,15 @@
             android:text="发送"/>
     </LinearLayout>
 
-    <ListView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@id/ll_bottom"
-        android:id="@+id/lv_data"/>
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/ll_bottom">
+        <include layout="@layout/layout_common_empty"/>
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/ll_bottom"
+            android:id="@+id/lv_data"/>
+    </FrameLayout>
 </RelativeLayout>

@@ -22,9 +22,6 @@ package com.laocuo.biyeban.test;
 
 import dagger.Component;
 
-/**
- * Created by hoperun on 5/26/17.
- */
 
 @Component(modules = TestModule.class)
 public interface TestComponent {

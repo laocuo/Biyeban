@@ -38,9 +38,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-/**
- * Created by hoperun on 5/26/17.
- */
 
 public class TestPresenter implements TestContact.Presentr {
     private IBaseView mView;

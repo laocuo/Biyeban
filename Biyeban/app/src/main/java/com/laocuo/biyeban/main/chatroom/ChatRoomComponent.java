@@ -16,12 +16,11 @@
  *
  */
 
-package com.laocuo.biyeban.main.contacts;
-
+package com.laocuo.biyeban.main.chatroom;
 
 import dagger.Component;
 
-@Component(modules = ContactsModule.class)
-public interface ContactsComponent {
-    void inject(ContactsFragment fragment);
+@Component(modules = ChatRoomModule.class)
+public interface ChatRoomComponent {
+    void inject(ChatRoomFragment fragment);
 }

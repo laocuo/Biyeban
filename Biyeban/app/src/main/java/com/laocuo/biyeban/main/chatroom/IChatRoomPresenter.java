@@ -16,12 +16,14 @@
  *
  */
 
-package com.laocuo.biyeban.main.contacts;
+package com.laocuo.biyeban.main.chatroom;
+
+import com.laocuo.biyeban.base.IBasePresenter;
 
 
-import dagger.Component;
-
-@Component(modules = ContactsModule.class)
-public interface ContactsComponent {
-    void inject(ContactsFragment fragment);
+public interface IChatRoomPresenter extends IBasePresenter {
+    void listenTable();
+    void unlistenTable();
+    void stopOrallowChat(boolean b, String userObjId);
+    void sendMsg(String name, String content);
 }

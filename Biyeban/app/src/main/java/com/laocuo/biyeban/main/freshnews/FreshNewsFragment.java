@@ -18,6 +18,7 @@
 
 package com.laocuo.biyeban.main.freshnews;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +28,7 @@ import android.view.View;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
+import com.laocuo.biyeban.publish.PublishActivity;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.Utils;
@@ -94,7 +96,8 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
             public void onClick(View view) {
 //                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                        .setAction("Action", null).show();
-                SnackbarUtil.showShortSnackbar(view, "Replace with your own action");
+//                SnackbarUtil.showShortSnackbar(view, "Replace with your own action");
+                startActivity(new Intent(getActivity(), PublishActivity.class));
             }
         });
     }

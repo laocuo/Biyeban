@@ -34,6 +34,7 @@
         <activity android:name=".graduation.GraduationActivity"/>
         <activity android:name=".settings.SettingsActivity"
             android:theme="@style/AppTheme"/>
+        <activity android:name=".publish.PublishActivity"/>
     </application>
 
 </manifest>

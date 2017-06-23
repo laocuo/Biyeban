@@ -35,7 +35,7 @@
     <style name="common_btn_style">
         <item name="android:layout_width">63dp</item>
         <item name="android:layout_height">35dp</item>
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">12sp</item>
         <item name="android:gravity">center</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:background">@drawable/button_bg</item>
@@ -45,6 +45,11 @@
         <item name="android:layout_width">81dp</item>
         <item name="android:layout_height">45dp</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">@drawable/button_bg</item>
+    </style>
+
+    <style name="common_btn_style_small" parent="@style/common_btn_style">
+        <item name="android:layout_width">45dp</item>
+        <item name="android:layout_height">25dp</item>
+        <item name="android:textSize">10sp</item>
     </style>
 </resources>

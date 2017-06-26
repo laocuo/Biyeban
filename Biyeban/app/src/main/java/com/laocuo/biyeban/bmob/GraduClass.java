@@ -29,6 +29,8 @@ public class GraduClass extends BmobObject {
     private String graduYear;
     private String district;
     private ArrayList<String> classmates;
+    private String chatRoomTableName;
+    private String freshNewsTableName;
 
     public String getAdmin() {
         return admin;
@@ -68,5 +70,21 @@ public class GraduClass extends BmobObject {
 
     public void setClassmates(ArrayList<String> classmates) {
         this.classmates = classmates;
+    }
+
+    public String getChatRoomTableName() {
+        return chatRoomTableName;
+    }
+
+    public void setChatRoomTableName(String chatRoomTableName) {
+        this.chatRoomTableName = chatRoomTableName;
+    }
+
+    public String getFreshNewsTableName() {
+        return freshNewsTableName;
+    }
+
+    public void setFreshNewsTableName(String freshNewsTableName) {
+        this.freshNewsTableName = freshNewsTableName;
     }
 }

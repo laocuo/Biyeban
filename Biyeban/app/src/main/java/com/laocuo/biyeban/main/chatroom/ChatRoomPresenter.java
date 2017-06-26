@@ -53,11 +53,12 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     private String chatRoomName;
     private String avatar_url;
     private List<Chat> messages = new ArrayList<>();
+    private boolean isListenTable = false;
 
     @Override
     public void loadData() {
         mIChatRoomView.showLoading();
-        chatRoomName = user.getGraduClass().getObjectId();
+        chatRoomName = user.getGraduClass().getChatRoomTableName();
         L.d("chatRoomName = "+chatRoomName);
         messages.clear();
         BmobQuery bmobQuery = new BmobQuery(chatRoomName);
@@ -142,6 +143,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
             public void onConnectCompleted(Exception e) {
                 // TODO Auto-generated method stub
                 if(data.isConnected()){
+                    isListenTable = true;
                     data.subTableUpdate(chatRoomName);
                 }
             }
@@ -150,7 +152,10 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
 
     @Override
     public void unlistenTable() {
-        data.unsubTableUpdate(chatRoomName);
+        if (isListenTable) {
+            isListenTable = false;
+            data.unsubTableUpdate(chatRoomName);
+        }
     }
 
     @Override

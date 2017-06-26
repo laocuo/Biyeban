@@ -104,7 +104,6 @@ public class CityNavigateView extends View {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-
         int action = ev.getAction();
         int y = (int) ev.getY();
         switch (action) {

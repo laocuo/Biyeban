@@ -33,10 +33,12 @@ import com.laocuo.biyeban.base.BaseFragment;
 
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
+import com.laocuo.biyeban.bmob.FreshNews;
 import com.laocuo.biyeban.bmob.GraduClass;
 import com.laocuo.biyeban.graduation.IGraduationInterface;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
+import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.biyeban.widget.EasyPickerView;
 import com.lljjcoder.citypickerview.widget.CityPicker;
 
@@ -191,6 +193,7 @@ public class GraduCreateFragment extends BaseFragment {
                             public void done(GraduClass aClass, BmobException e) {
                                 if (e == null) {
                                     createGraduClassChatRoom(aClass.getAdmin(), aClass.getObjectId());
+                                    createGraduClassFreshNews(aClass.getAdmin(), aClass.getObjectId());
                                     updateCurrentUser(aClass);
                                 } else {
                                     L.d(e.toString());
@@ -230,9 +233,21 @@ public class GraduCreateFragment extends BaseFragment {
         mIGraduationInterface = IGraduationInterface;
     }
 
-    private void createGraduClassChatRoom(String userObjId, String roomName) {
-        Chat chat = new Chat(userObjId, roomName);
+    private void createGraduClassChatRoom(String user_obj, String class_obj) {
+        Chat chat = new Chat(user_obj, class_obj + Utils.CHATROOM);
         chat.save(new SaveListener<String>() {
+            @Override
+            public void done(String s, BmobException e) {
+                if (e != null) {
+                    L.d(e.toString());
+                }
+            }
+        });
+    }
+
+    private void createGraduClassFreshNews(String user_obj, String class_obj) {
+        FreshNews freshNews = new FreshNews(user_obj, class_obj + Utils.FRESHNEWS);
+        freshNews.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
                 if (e != null) {

@@ -20,15 +20,16 @@ package com.laocuo.biyeban.publish.news;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.publish.IPublishInterface;
+import com.laocuo.biyeban.utils.L;
 
 
-public class PublishNewsFragment extends BaseFragment {
+public class PublishNewsFragment extends BaseFragment implements View.OnClickListener {
     private IPublishInterface mIPublishInterface;
     private ActionBar mActionBar;
 
@@ -55,6 +56,7 @@ public class PublishNewsFragment extends BaseFragment {
         mActionBar.setDisplayShowTitleEnabled(false);
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setCustomView(R.layout.send_button);
+        mActionBar.getCustomView().findViewById(R.id.btn_send).setOnClickListener(this);
     }
 
     @Override
@@ -64,5 +66,10 @@ public class PublishNewsFragment extends BaseFragment {
 
     public void setIPublishInterface(IPublishInterface i) {
         mIPublishInterface = i;
+    }
+
+    @Override
+    public void onClick(View v) {
+        L.d("PublishNewsFragment Send");
     }
 }

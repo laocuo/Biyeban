@@ -30,6 +30,8 @@ import com.laocuo.biyeban.main.MainActivity;
 import cn.bmob.v3.BmobUser;
 
 public class Utils {
+    public static final String CHATROOM = "_chatroom";
+    public static final String FRESHNEWS = "_freshnews";
     private static final String AVATAR = "avatar.jpg";
 
     public static void enterMain(BaseActivity activity) {

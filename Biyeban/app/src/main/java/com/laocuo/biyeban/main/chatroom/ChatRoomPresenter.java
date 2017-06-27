@@ -50,7 +50,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     private IChatRoomView mIChatRoomView;
     private BmobRealTimeData data = new BmobRealTimeData();
     private BiyebanUser user = Utils.getCurrentUser();
-    private String chatRoomName;
+    private String chatRoomTableName;
     private String avatar_url;
     private List<Chat> messages = new ArrayList<>();
     private boolean isListenTable = false;
@@ -58,10 +58,10 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     @Override
     public void loadData() {
         mIChatRoomView.showLoading();
-        chatRoomName = user.getGraduClass().getChatRoomTableName();
-        L.d("chatRoomName = "+chatRoomName);
+        chatRoomTableName = user.getGraduClass().getObjectId() + Utils.CHATROOM;
+        L.d("chatRoomName = "+chatRoomTableName);
         messages.clear();
-        BmobQuery bmobQuery = new BmobQuery(chatRoomName);
+        BmobQuery bmobQuery = new BmobQuery(chatRoomTableName);
         bmobQuery.order("-createdAt");
         bmobQuery.setLimit(20);
         bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
@@ -82,7 +82,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                         String content = data.optString("content");
                         String avatar = data.optString("avatar");
                         String time = data.optString("time");
-                        Chat chat = new Chat(name, content, username, chatRoomName);
+                        Chat chat = new Chat(name, content, username, chatRoomTableName);
                         if (avatar != null && !TextUtils.isEmpty(avatar)) {
                             chat.setAvatar(avatar);
                         }
@@ -127,7 +127,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                     String avatar = data.optString("avatar");
                     String time = data.optString("time");
 //                    L.d("UPDATETABLE:name="+name+" content="+content);
-                    Chat chat = new Chat(name, content, username, chatRoomName);
+                    Chat chat = new Chat(name, content, username, chatRoomTableName);
                     if (avatar != null && !TextUtils.isEmpty(avatar)) {
                         chat.setAvatar(avatar);
                     }
@@ -144,7 +144,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                 // TODO Auto-generated method stub
                 if(data.isConnected()){
                     isListenTable = true;
-                    data.subTableUpdate(chatRoomName);
+                    data.subTableUpdate(chatRoomTableName);
                 }
             }
         });
@@ -154,7 +154,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     public void unlistenTable() {
         if (isListenTable) {
             isListenTable = false;
-            data.unsubTableUpdate(chatRoomName);
+            data.unsubTableUpdate(chatRoomTableName);
         }
     }
 
@@ -187,28 +187,23 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                     if (canChat.booleanValue() == true) {
                         sendMsg(name, content, biyebanUser.getUsername(), biyebanUser.getObjectId());
                         return;
+                    } else {
+                        mIChatRoomView.chatForbidden();
                     }
                 } else {
                     L.d(e.toString());
                 }
-                mIChatRoomView.chatForbidden();
             }
         });
     }
 
-    private String getCurrentTime() {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        String time = format.format(new Date(System.currentTimeMillis()));
-        return time;
-    }
-
     private void sendMsg(String name, String msg, String username, String objId){
-        Chat chat = new Chat(name, msg, username, chatRoomName);
+        Chat chat = new Chat(name, msg, username, chatRoomTableName);
         if (!TextUtils.isEmpty(avatar_url)) {
             chat.setAvatar(avatar_url);
         }
         chat.setUserObjectId(objId);
-        chat.setTime(getCurrentTime());
+        chat.setTime(Utils.getCurrentTime());
         chat.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {

@@ -106,7 +106,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     protected void getData(boolean isRefresh) {
         debug("FreshNewsFragment getData="+isRefresh);
         if (isRefresh == true) {
-            mPresenter.loadMoreData();
+            mPresenter.swipeRefresh();
         } else {
             mPresenter.loadData();
         }

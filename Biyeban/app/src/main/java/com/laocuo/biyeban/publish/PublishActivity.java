@@ -60,4 +60,9 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements I
     protected void getData(boolean isRefresh) {
 
     }
+
+    @Override
+    public void exit() {
+        finish();
+    }
 }

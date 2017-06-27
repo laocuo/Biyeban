@@ -20,15 +20,41 @@ package com.laocuo.biyeban.main.freshnews;
 
 import com.laocuo.recycler.entity.MultiItemEntity;
 
+import java.util.ArrayList;
+
 
 public class FreshNewsItem extends MultiItemEntity {
     public static final int ITEM_TYPE_NORMAL = 1;
-    private String mContent;
-    public FreshNewsItem(int itemType, String content) {
+    private String userObjectId;
+    private String content;
+    private String time;
+    private ArrayList<String> pics = null;
+
+    public FreshNewsItem(int itemType,
+                         String userObjectId,
+                         String content,
+                         String time,
+                         ArrayList<String> pics) {
         super(itemType);
-        mContent = content;
+        this.userObjectId = userObjectId;
+        this.content = content;
+        this.time = time;
+        this.pics = pics;
     }
+
+    public String getUserObjectId() {
+        return userObjectId;
+    }
+
     public String getContent() {
-        return mContent;
+        return content;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public ArrayList<String> getPics() {
+        return pics;
     }
 }

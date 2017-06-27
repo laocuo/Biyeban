@@ -27,6 +27,9 @@ import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.login.LoginActivity;
 import com.laocuo.biyeban.main.MainActivity;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import cn.bmob.v3.BmobUser;
 
 public class Utils {
@@ -58,5 +61,11 @@ public class Utils {
     public static BiyebanUser getCurrentUser() {
         BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         return user;
+    }
+
+    public static String getCurrentTime() {
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        String time = format.format(new Date(System.currentTimeMillis()));
+        return time;
     }
 }

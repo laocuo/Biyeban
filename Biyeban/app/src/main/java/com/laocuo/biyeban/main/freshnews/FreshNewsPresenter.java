@@ -18,44 +18,87 @@
 
 package com.laocuo.biyeban.main.freshnews;
 
-import com.laocuo.biyeban.base.IBasePresenter;
 
+import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.Utils;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
-public class FreshNewsPresenter implements IBasePresenter {
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
+
+public class FreshNewsPresenter implements IFreshNewsPresenter {
     private IFreshNewsView mIFreshNewsView;
     private List<FreshNewsItem> mFreshNewsItems = new ArrayList<>();
     private List<FreshNewsItem> mFreshNewsMoreItems = new ArrayList<>();
     private int index = 0;
+    private BiyebanUser user = Utils.getCurrentUser();
+    private String freshNewsTableName;
 
     @Override
     public void loadData() {
         mIFreshNewsView.showLoading();
-        for (int i=0;i<20;i++) {
-            mFreshNewsItems.add(new FreshNewsItem(FreshNewsItem.ITEM_TYPE_NORMAL,
-                    "Normal"+Integer.toString(i)));
-        }
-        mIFreshNewsView.hideLoading();
-        mIFreshNewsView.loadData(mFreshNewsItems);
+        freshNewsTableName = user.getGraduClass().getObjectId() + Utils.FRESHNEWS;
+        L.d("freshNewsTableName = "+freshNewsTableName);
+        mFreshNewsItems.clear();
+        BmobQuery bmobQuery = new BmobQuery(freshNewsTableName);
+        bmobQuery.order("-createdAt");
+        bmobQuery.setLimit(20);
+        bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
+
+            @Override
+            public void done(JSONArray array, BmobException e) {
+                if (e == null) {
+                    int len = array.length();
+                    L.d("array.length()"+len);
+                    for (int i=0;i<len;i++) {
+                        JSONObject data = null;
+                        try {
+                            data = array.getJSONObject(i);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                        L.d(i+"data:"+data.toString());
+                        mFreshNewsItems.add(new FreshNewsItem(
+                                FreshNewsItem.ITEM_TYPE_NORMAL,
+                                data.optString("userObjectId"),
+                                data.optString("content"),
+                                data.optString("time"),
+                                null));
+                    }
+                    if (mFreshNewsItems.size() > 0) {
+                        mIFreshNewsView.loadData(mFreshNewsItems);
+                    }
+                } else {
+                    L.d(e.toString());
+                }
+                mIFreshNewsView.hideLoading();
+            }
+        });
+
     }
 
     @Override
     public void loadMoreData() {
-        mFreshNewsMoreItems.clear();
-        for (int i=0;i<4;i++) {
-            mFreshNewsMoreItems.add(new FreshNewsItem(FreshNewsItem.ITEM_TYPE_NORMAL,
-                    "More"+Integer.toString(index)));
-            index++;
-        }
-        mIFreshNewsView.loadMoreData(mFreshNewsMoreItems);
+
     }
 
     @Inject
     FreshNewsPresenter(IFreshNewsView view) {
         mIFreshNewsView = view;
+    }
+
+    @Override
+    public void swipeRefresh() {
+        loadData();
     }
 }

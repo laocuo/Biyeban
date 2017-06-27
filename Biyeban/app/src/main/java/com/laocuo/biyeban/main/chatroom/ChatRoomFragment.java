@@ -187,6 +187,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
 
     @Override
     public void chatForbidden() {
+        showProgress(false);
         SnackbarUtil.showShortSnackbar(mLayout, "禁言");
     }
 

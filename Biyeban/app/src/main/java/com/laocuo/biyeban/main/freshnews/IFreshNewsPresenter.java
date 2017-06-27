@@ -16,11 +16,11 @@
  *
  */
 
-package com.laocuo.biyeban.publish;
-
-import com.laocuo.biyeban.base.IBaseView;
+package com.laocuo.biyeban.main.freshnews;
 
 
-public interface IPublishInterface extends IBaseView {
-    void exit();
+import com.laocuo.biyeban.base.IBasePresenter;
+
+public interface IFreshNewsPresenter extends IBasePresenter {
+    void swipeRefresh();
 }

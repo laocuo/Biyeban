@@ -68,7 +68,7 @@ public class ContactsPresenter implements IContactsPresenter {
                         mContactsList.add(new ContactsItem(ContactsItem.ITEM_TYPE_NORMAL,
                                 avatar,
                                 alias,
-                                transformPinYin(alias),
+                                transformPinYin(alias).toUpperCase(),
                                 user.getObjectId()));
                     } else {
                         L.d(e.toString());

@@ -36,9 +36,9 @@ import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
-import com.laocuo.biyeban.utils.Utils;
 
 import java.util.List;
 
@@ -52,7 +52,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     implements IChatRoomView {
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
-    private BiyebanUser user = Utils.getCurrentUser();
+    private BiyebanUser user = BmobUtils.getCurrentUser();
 
     @BindView(R.id.lv_data)
     ListView lv_data;

@@ -23,6 +23,7 @@ import android.text.TextUtils;
 
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.Utils;
 
@@ -30,9 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -49,7 +48,7 @@ import cn.bmob.v3.listener.ValueEventListener;
 public class ChatRoomPresenter implements IChatRoomPresenter {
     private IChatRoomView mIChatRoomView;
     private BmobRealTimeData data = new BmobRealTimeData();
-    private BiyebanUser user = Utils.getCurrentUser();
+    private BiyebanUser user = BmobUtils.getCurrentUser();
     private String chatRoomTableName;
     private String avatar_url;
     private List<Chat> messages = new ArrayList<>();

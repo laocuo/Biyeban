@@ -35,6 +35,15 @@
         <activity android:name=".settings.SettingsActivity"
             android:theme="@style/AppTheme"/>
         <activity android:name=".publish.PublishActivity"/>
+        <activity android:name=".crop.ClipImageActivity"
+                  android:theme="@style/AppTheme"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.biyeban.Crop" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="image/*" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -80,51 +80,11 @@ public class FactoryInterface {
         return ret;
     }
 
-//    public static Drawable getAvatar(Context context) {
-//        BitmapDrawable d = null;
-//        String path = getAvatarPath(context);
-//        File file = new File(path);
-//        if (file.exists()) {
-//            d = new BitmapDrawable(context.getResources(), BitmapFactory.decodeFile(path));
-//        } else {
-//            d = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.perm_group_personal_info));
-//        }
-//        return d;
-//    }
-//
-//    public static Drawable getAnotherAvatar(Context context) {
-//        BitmapDrawable d = null;
-//        String path = getAnotherAvatarPath(context);
-//        File file = new File(path);
-//        if (file.exists()) {
-//            d = new BitmapDrawable(context.getResources(), BitmapFactory.decodeFile(path));
-//        } else {
-//            d = new BitmapDrawable(context.getResources(), BitmapFactory.decodeResource(context.getResources(), R.drawable.perm_group_personal_info));
-//        }
-//        return d;
-//    }
-
     public static String getAvatarPath(Context context) {
         String path = context.getFilesDir()+"/"+AVATAR;
         L.d("getAvatarPath:"+path);
         return path;
     }
-//
-//    public static String getAnotherAvatarPath(Context context) {
-//        String path = context.getFilesDir()+"/"+ANOTHER_AVATAR;
-//        L.d("getAnotherAvatarPath:"+path);
-//        return path;
-//    }
-//
-//    public static Dialog createProgressDialog(Context context) {
-//        View v = LayoutInflater.from(context).inflate(R.layout.progress, null);
-//        ImageView progress = (ImageView) v.findViewById(R.id.progress_img);
-//        progress.setAnimation(AnimationUtils.loadAnimation(context,R.anim.progress_animation));
-//        Dialog dialog = new Dialog(context, R.style.ProgressTheme);
-//        dialog.setCancelable(false);
-//        dialog.setContentView(v);
-//        return dialog;
-//    }
 
     public static void setAvatar(Context context, BiyebanUser user, ImageView imageview) {
         BmobFile avatar = user.getAvatar();
@@ -145,6 +105,18 @@ public class FactoryInterface {
                     .placeholder(R.drawable.user)
                     .crossFade()
                     .into(imageview);
+        }
+    }
+
+    public static void setImage(Context context, String url, ImageView imageview) {
+        if (url != null && !TextUtils.isEmpty(url)) {
+            Glide.with(context)
+                    .load(url)
+                    .placeholder(R.drawable.icon)
+                    .crossFade()
+                    .into(imageview);
+        } else {
+            imageview.setImageResource(R.drawable.icon);
         }
     }
 }

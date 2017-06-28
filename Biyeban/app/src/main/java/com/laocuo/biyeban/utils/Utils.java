@@ -51,18 +51,6 @@ public class Utils {
 //            overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
     }
 
-    public static void logOut() {
-        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
-        if (user != null) {
-            user.logOut();
-        }
-    }
-
-    public static BiyebanUser getCurrentUser() {
-        BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
-        return user;
-    }
-
     public static String getCurrentTime() {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String time = format.format(new Date(System.currentTimeMillis()));

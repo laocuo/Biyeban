@@ -20,6 +20,7 @@ package com.laocuo.biyeban.main.freshnews;
 
 
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.Utils;
 
@@ -41,7 +42,7 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     private List<FreshNewsItem> mFreshNewsItems = new ArrayList<>();
     private List<FreshNewsItem> mFreshNewsMoreItems = new ArrayList<>();
     private int index = 0;
-    private BiyebanUser user = Utils.getCurrentUser();
+    private BiyebanUser user = BmobUtils.getCurrentUser();
     private String freshNewsTableName;
 
     @Override

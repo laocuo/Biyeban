@@ -10,10 +10,9 @@ import android.widget.ImageView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.biyeban.utils.L;
-
-import cn.bmob.v3.BmobUser;
 
 
 public class AvatarPreference extends Preference {
@@ -42,7 +41,7 @@ public class AvatarPreference extends Preference {
 
     public void updateAvatar() {
         L.d("updateAvatar");
-        BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+        BiyebanUser user = BmobUtils.getCurrentUser();
         if (user != null) {
             FactoryInterface.setAvatar(mContext, user, mAvatar);
         }

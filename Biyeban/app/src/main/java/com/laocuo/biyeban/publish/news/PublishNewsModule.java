@@ -16,36 +16,30 @@
  *
  */
 
-package com.laocuo.biyeban.main.chatroom;
+package com.laocuo.biyeban.publish.news;
+
 
 import android.content.Context;
 
-import com.laocuo.biyeban.utils.BmobUtils;
 
 import dagger.Module;
 import dagger.Provides;
 
-
 @Module
-public class ChatRoomModule {
-    private ChatRoomFragment mChatRoomFragment;
+public class PublishNewsModule {
+    private PublishNewsFragment mPublishNewsFragment;
 
-    public ChatRoomModule(ChatRoomFragment fragment) {
-        mChatRoomFragment = fragment;
+    public PublishNewsModule(PublishNewsFragment fragment) {
+        mPublishNewsFragment = fragment;
+    }
+
+    @Provides
+    IPublishNewsInterface provideIPublishNewsInterface() {
+        return (IPublishNewsInterface)mPublishNewsFragment;
     }
 
     @Provides
     Context provideContext() {
-        return mChatRoomFragment.getContext();
-    }
-
-    @Provides
-    String provideString() {
-        return BmobUtils.getCurrentUser().getUsername();
-    }
-
-    @Provides
-    IChatRoomView provideIChatRoomView() {
-        return (IChatRoomView)mChatRoomFragment;
+        return mPublishNewsFragment.getContext();
     }
 }

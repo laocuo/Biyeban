@@ -43,7 +43,7 @@ import butterknife.BindView;
 
 
 public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
-        implements IFreshNewsView{
+        implements IFreshNewsView, OnRequestDataListener {
     private static final String TAG = "FreshNews";
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
@@ -84,13 +84,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 
     @Override
     protected void doInit() {
-        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, true, mAdapter);
-        mAdapter.setRequestDataListener(new OnRequestDataListener() {
-            @Override
-            public void onLoadMore() {
-//                mPresenter.loadMoreData();
-            }
-        });
+        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, true, mAdapter, this);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -130,5 +124,10 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     @Override
     public void loadNoData() {
 
+    }
+
+    @Override
+    public void onLoadMore() {
+        mPresenter.loadMoreData();
     }
 }

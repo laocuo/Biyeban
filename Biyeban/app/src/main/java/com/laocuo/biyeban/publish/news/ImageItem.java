@@ -16,36 +16,30 @@
  *
  */
 
-package com.laocuo.biyeban.main.chatroom;
-
-import android.content.Context;
-
-import com.laocuo.biyeban.utils.BmobUtils;
-
-import dagger.Module;
-import dagger.Provides;
+package com.laocuo.biyeban.publish.news;
 
 
-@Module
-public class ChatRoomModule {
-    private ChatRoomFragment mChatRoomFragment;
+import com.laocuo.recycler.entity.MultiItemEntity;
 
-    public ChatRoomModule(ChatRoomFragment fragment) {
-        mChatRoomFragment = fragment;
+public class ImageItem  extends MultiItemEntity {
+    public static final int ITEM_TYPE_NORMAL = 1;
+
+    private String mImgUrl;
+
+    public ImageItem(int itemType) {
+        this(itemType, "");
     }
 
-    @Provides
-    Context provideContext() {
-        return mChatRoomFragment.getContext();
+    public ImageItem(int itemType, String url) {
+        super(itemType);
+        mImgUrl = url;
     }
 
-    @Provides
-    String provideString() {
-        return BmobUtils.getCurrentUser().getUsername();
+    public String getImgUrl() {
+        return mImgUrl;
     }
 
-    @Provides
-    IChatRoomView provideIChatRoomView() {
-        return (IChatRoomView)mChatRoomFragment;
+    public void setImgUrl(String imgUrl) {
+        mImgUrl = imgUrl;
     }
 }

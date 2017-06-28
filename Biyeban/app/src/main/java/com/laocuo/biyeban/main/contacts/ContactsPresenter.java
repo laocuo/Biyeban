@@ -23,8 +23,8 @@ import android.text.TextUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.GraduClass;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
-import com.laocuo.biyeban.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -124,7 +124,7 @@ public class ContactsPresenter implements IContactsPresenter {
 
     @Override
     public void getClassMates() {
-        GraduClass graduClass = Utils.getCurrentUser().getGraduClass();
+        GraduClass graduClass = BmobUtils.getCurrentUser().getGraduClass();
         String graduclass = graduClass.getObjectId();
         BmobQuery<GraduClass> query = new BmobQuery<GraduClass>();
         query.getObject(graduclass, new QueryListener<GraduClass>() {

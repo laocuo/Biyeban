@@ -36,9 +36,11 @@ import android.view.MenuItem;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.login.LoginActivity;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
+import com.laocuo.biyeban.utils.UploadBmobFileListener;
 
 import java.io.File;
 
@@ -46,7 +48,6 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
-import cn.bmob.v3.listener.UploadFileListener;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -179,7 +180,7 @@ public class SettingsActivity extends AppCompatActivity {
                         if ((Boolean) value == true) {
                             startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
                         } else {
-                            BiyebanUser.logOut();
+                            BmobUtils.logOut();
                             mAlias.setSummary(getActivity().getResources().getString(R.string.unset));
                         }
                     }
@@ -204,7 +205,7 @@ public class SettingsActivity extends AppCompatActivity {
                 SnackbarUtil.showShortSnackbar(getView(), "can not include \"admin\"");
                 return;
             }
-            final BiyebanUser currentUser = BmobUser.getCurrentUser(BiyebanUser.class);
+            BiyebanUser currentUser = BmobUtils.getCurrentUser();
             String current_alias = currentUser.getAlias();
             if (current_alias == null || !current_alias.equals(alias)) {
                 showProgress(true);
@@ -215,31 +216,33 @@ public class SettingsActivity extends AppCompatActivity {
                     public void done(BmobException e) {
                         if (e != null) {
                             L.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
+                        } else {
+                            mAlias.setSummary(alias);
                         }
-                        mAlias.setSummary(alias);
                         showProgress(false);
                     }
                 });
             }
         }
 
+        private void deleteCurrentAvatar() {
+            BmobFile avatar = BmobUtils.getCurrentUser().getAvatar();
+            String current_url = avatar == null ? "" : avatar.getFileUrl();
+            BmobUtils.deleteBmobFile(current_url);
+        }
+
         private void uploadAvatar() {
             String path = FactoryInterface.getAvatarPath(getActivity());
-            final BmobFile bmobFile = new BmobFile(new File(path));
-            bmobFile.uploadblock(new UploadFileListener() {
+            BmobUtils.uploadBmobFile(new File(path), new UploadBmobFileListener() {
                 @Override
-                public void done(BmobException e) {
-                    if (e == null) {
-                        L.i("文件上传成功，返回的名称--" + bmobFile.getFileUrl());
-//                        mAvatarUrl = bmobFile.getFileUrl();
-//                        SharedPreferences.Editor editor = sp.edit();
-//                        editor.putString(AVATAR_URL, mAvatarUrl);
-//                        editor.commit();
-                        insertObject(bmobFile);
-                    } else {
-                        L.i("bmob", "上传失败：" + e.getMessage() + "," + e.getErrorCode());
-                        showProgress(false);
-                    }
+                public void success(BmobFile f) {
+                    deleteCurrentAvatar();
+                    updateCurrentAvatar(f);
+                }
+
+                @Override
+                public void fail() {
+                    showProgress(false);
                 }
             });
         }
@@ -248,42 +251,22 @@ public class SettingsActivity extends AppCompatActivity {
             L.d("saveAndUpdateAvatar");
             showProgress(true);
             if (FactoryInterface.saveAvatar(getActivity(), b)) {
-                final BiyebanUser currentUser = BmobUser.getCurrentUser(BiyebanUser.class);
-                BmobFile avatar = currentUser.getAvatar();
-                final String current_url = avatar == null ? "" : avatar.getFileUrl();
-                if (!TextUtils.isEmpty(current_url)) {
-                    //delete old avatar first
-                    BmobFile bmobFile = new BmobFile();
-                    bmobFile.setUrl(current_url);
-                    bmobFile.delete(new UpdateListener() {
-                        @Override
-                        public void done(BmobException e) {
-                            if (e != null) {
-                                L.i("bmob", "文件删除失败：" + e.getMessage() + "," + e.getErrorCode());
-                            } else {
-                                L.d("delete old avatar success");
-                            }
-                            uploadAvatar();
-                        }
-                    });
-                } else {
-                    uploadAvatar();
-                }
+                uploadAvatar();
             } else {
                 showProgress(false);
             }
         }
 
-        private void insertObject(final BmobFile obj){
-            final BiyebanUser currentUser = BmobUser.getCurrentUser(BiyebanUser.class);
+        private void updateCurrentAvatar(final BmobFile f){
             BiyebanUser user = new BiyebanUser();
-            user.setAvatar(obj);
-            user.update(currentUser.getObjectId(), new UpdateListener() {
+            user.setAvatar(f);
+            user.update(BmobUtils.getCurrentUser().getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
                     if (e != null) {
                         L.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
                     } else {
+                        L.d("bmob", "更新成功");
                         mAvatar.updateAvatar();
                     }
                     showProgress(false);
@@ -327,7 +310,7 @@ public class SettingsActivity extends AppCompatActivity {
                 case SELECT_PORTRAIT:
                     L.d("SELECT_PORTRAIT: data = " + data);
                     if (data != null) {
-                        Intent i = new Intent("android.intent.action.jumpjump.Crop");
+                        Intent i = new Intent("android.intent.action.biyeban.Crop");
                         i.setType("image/*");
                         i.putExtra("CROP_URI", data.getData().toString());
                         startActivityForResult(i,CROP_PORTRAIT);

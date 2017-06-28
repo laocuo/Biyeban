@@ -19,37 +19,53 @@
 package com.laocuo.biyeban.publish.news;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.FreshNews;
 import com.laocuo.biyeban.publish.IPublishInterface;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.Utils;
+import com.laocuo.recycler.helper.RecyclerViewHelper;
+import com.laocuo.recycler.listener.OnRecyclerViewItemClickListener;
+
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
 
-public class PublishNewsFragment extends BaseFragment implements View.OnClickListener {
+public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
+        implements View.OnClickListener, IPublishNewsInterface, OnRecyclerViewItemClickListener {
+    private static final int SELECT_IMAGE = 1;
     private IPublishInterface mIPublishInterface;
     private ActionBar mActionBar;
-    private BiyebanUser user = Utils.getCurrentUser();
+    private BiyebanUser user = BmobUtils.getCurrentUser();
     private String freshNewsTableName;
 
+    @Inject
+    PublishImageListAdapter mAdapter;
+
     @BindView(R.id.container)
-    LinearLayout mLinearLayout;
+    FrameLayout mLinearLayout;
     @BindView(R.id.content)
     EditText mContent;
+    @BindView(R.id.images)
+    RecyclerView mRecyclerView;
 
     public static PublishNewsFragment newInstance(IPublishInterface anInterface) {
         PublishNewsFragment fragment = new PublishNewsFragment();
@@ -64,7 +80,10 @@ public class PublishNewsFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void doInject() {
-
+        DaggerPublishNewsComponent.builder()
+                .publishNewsModule(new PublishNewsModule(this))
+                .build()
+                .inject(this);
     }
 
     @Override
@@ -77,11 +96,13 @@ public class PublishNewsFragment extends BaseFragment implements View.OnClickLis
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setCustomView(R.layout.send_button);
         mActionBar.getCustomView().findViewById(R.id.btn_send).setOnClickListener(this);
+        RecyclerViewHelper.initRecyclerViewH(mContext, mRecyclerView, true, mAdapter);
+        mAdapter.setOnItemClickListener(this);
     }
 
     @Override
     protected void getData(boolean isRefresh) {
-
+        mAdapter.addLastItem(new ImageItem(ImageItem.ITEM_TYPE_NORMAL));
     }
 
     public void setIPublishInterface(IPublishInterface i) {
@@ -112,6 +133,41 @@ public class PublishNewsFragment extends BaseFragment implements View.OnClickLis
                     }
                 }
             });
+        }
+    }
+
+    private int mSelectPosition;
+
+    @Override
+    public void onItemClick(View view, int position) {
+        mSelectPosition = position;
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+//        intent.putExtra("position", position);
+        startActivityForResult(intent, SELECT_IMAGE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SELECT_IMAGE:
+                if (data != null) {
+//                    int pos = data.getIntExtra("position", 0);
+                    int pos = mSelectPosition;
+                    L.d("SELECT_IMAGE: pos = " + pos);
+                    L.d("SELECT_IMAGE: URI = " + data.getData().toString());
+                    List<ImageItem> mImageItemList = mAdapter.getData();
+                    boolean isLast = mImageItemList.size() == pos + 1;
+                    mImageItemList.get(pos).setImgUrl(data.getData().toString());
+                    if (isLast == true && pos < 3) {
+                        mAdapter.addLastItem(new ImageItem(ImageItem.ITEM_TYPE_NORMAL));
+                    }
+                    mAdapter.notifyDataSetChanged();
+                }
+                break;
+            default:
+                break;
         }
     }
 }

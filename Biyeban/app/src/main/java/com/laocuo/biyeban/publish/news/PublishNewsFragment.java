@@ -20,18 +20,19 @@ package com.laocuo.biyeban.publish.news;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.bmob.BiyebanUser;
-import com.laocuo.biyeban.bmob.FreshNews;
 import com.laocuo.biyeban.publish.IPublishInterface;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
@@ -40,13 +41,12 @@ import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 import com.laocuo.recycler.listener.OnRecyclerViewItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
 
 
 public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
@@ -88,6 +88,7 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
 
     @Override
     protected void doInit() {
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mProgressDialog = new ProgressDialog(mContext);
         freshNewsTableName = user.getGraduClass().getObjectId() + Utils.FRESHNEWS;
         setHasOptionsMenu(true);
@@ -96,8 +97,9 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
         mActionBar.setDisplayShowCustomEnabled(true);
         mActionBar.setCustomView(R.layout.send_button);
         mActionBar.getCustomView().findViewById(R.id.btn_send).setOnClickListener(this);
-        RecyclerViewHelper.initRecyclerViewH(mContext, mRecyclerView, true, mAdapter);
+        RecyclerViewHelper.initRecyclerViewH(mContext, mRecyclerView, false, mAdapter);
         mAdapter.setOnItemClickListener(this);
+        mPresenter.setParam(user.getObjectId(), freshNewsTableName);
     }
 
     @Override
@@ -113,26 +115,21 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
     public void onClick(View v) {
         L.d("PublishNewsFragment Send");
         String content = mContent.getText().toString();
-        if (TextUtils.isEmpty(content)) {
+        if (TextUtils.isEmpty(content) && mAdapter.getData().size() < 2) {
             SnackbarUtil.showShortSnackbar(mLinearLayout, "内容不能为空");
         } else {
             showProgress(true);
-            FreshNews freshNews = new FreshNews(user.getObjectId(), freshNewsTableName);
-            freshNews.setContent(content);
-            freshNews.setTime(Utils.getCurrentTime());
-            freshNews.save(new SaveListener<String>() {
-                @Override
-                public void done(String s, BmobException e) {
-                    if (e == null) {
-                        SnackbarUtil.showShortSnackbar(mLinearLayout, "发送成功");
-                        mIPublishInterface.exit();
-                    } else {
-                        showProgress(false);
-                        L.d(e.toString());
-                        SnackbarUtil.showShortSnackbar(mLinearLayout, "发送失败");
+            List<ImageItem> mImageItemList = mAdapter.getData();
+            List<String> mImagesPath = null;
+            if (mImageItemList.size() > 1) {
+                mImagesPath = new ArrayList<>();
+                for (ImageItem item : mImageItemList) {
+                    if (!TextUtils.isEmpty(item.getImgPath())) {
+                        mImagesPath.add(item.getImgPath());
                     }
                 }
-            });
+            }
+            mPresenter.publish(content, mImagesPath);
         }
     }
 
@@ -155,11 +152,12 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
                 if (data != null) {
 //                    int pos = data.getIntExtra("position", 0);
                     int pos = mSelectPosition;
-                    L.d("SELECT_IMAGE: pos = " + pos);
-                    L.d("SELECT_IMAGE: URI = " + data.getData().toString());
+                    Uri uri = data.getData();
+                    L.d("SELECT_IMAGE: URI = " + uri.toString());
                     List<ImageItem> mImageItemList = mAdapter.getData();
                     boolean isLast = mImageItemList.size() == pos + 1;
-                    mImageItemList.get(pos).setImgUrl(data.getData().toString());
+                    mImageItemList.get(pos).setImgUrl(uri.toString());
+                    mImageItemList.get(pos).setImgPath(Utils.getImageAbsolutePath(getContext(), uri));
                     if (isLast == true && pos < 3) {
                         mAdapter.addLastItem(new ImageItem(ImageItem.ITEM_TYPE_NORMAL));
                     }
@@ -168,6 +166,17 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
                 break;
             default:
                 break;
+        }
+    }
+
+    @Override
+    public void publishResult(boolean ret) {
+        if (ret == true) {
+            SnackbarUtil.showShortSnackbar(mLinearLayout, "发送成功");
+            mIPublishInterface.exit();
+        } else {
+            showProgress(false);
+            SnackbarUtil.showShortSnackbar(mLinearLayout, "发送失败");
         }
     }
 }

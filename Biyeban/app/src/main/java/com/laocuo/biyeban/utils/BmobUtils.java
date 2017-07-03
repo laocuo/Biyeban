@@ -24,11 +24,13 @@ import android.text.TextUtils;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 
 import java.io.File;
+import java.util.List;
 
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadBatchListener;
 import cn.bmob.v3.listener.UploadFileListener;
 
 public class BmobUtils {
@@ -73,6 +75,33 @@ public class BmobUtils {
                     L.d("bmob", "文件上传失败：" + e.getMessage() + "," + e.getErrorCode());
                     l.fail();
                 }
+            }
+        });
+    }
+
+    public static void uploadBmobFiles(List<String> files, final UploadBmobFilesListener l) {
+        L.d("bmob", "uploadBmobFiles:"+files.toString());
+        final int size = files.size();
+        String[] filePaths = files.toArray(new String[size]);
+        BmobFile.uploadBatch(filePaths, new UploadBatchListener() {
+            @Override
+            public void onSuccess(List<BmobFile> list, List<String> list1) {
+                if (list1.size() == size) {
+                    //TODO upload all files complete
+                    L.i("bmob", "文件上传成功，返回的名称--" + list1.toString());
+                    l.success(list1);
+                }
+            }
+
+            @Override
+            public void onProgress(int i, int i1, int i2, int i3) {
+                L.d("bmob", "uploadBmobFiles:"+i+"/"+i2);
+            }
+
+            @Override
+            public void onError(int i, String s) {
+                L.d("bmob", "文件上传失败：" + s);
+                l.fail();
             }
         });
     }

@@ -16,11 +16,25 @@
  *
  */
 
-package com.laocuo.biyeban.publish.news;
+package com.laocuo.biyeban.bigimage;
+
+import com.laocuo.biyeban.base.IBasePresenter;
+
+import javax.inject.Inject;
 
 
-import com.laocuo.biyeban.base.IBaseView;
+public class BigImagePresenter implements IBasePresenter {
+    @Override
+    public void loadData() {
 
-public interface IPublishNewsInterface extends IBaseView{
-    void publishResult(boolean ret);
+    }
+
+    @Override
+    public void loadMoreData() {
+
+    }
+
+    @Inject
+    BigImagePresenter() {
+    }
 }

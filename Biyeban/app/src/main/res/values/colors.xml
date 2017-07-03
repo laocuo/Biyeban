@@ -9,8 +9,7 @@
     <color name="colorPanel">#535352</color>
     <color name="colorPanelText">@android:color/darker_gray</color>
     <color name="colorScrollbar">@color/colorPrimary</color>
-    <color name="colorBg">#88b7acac</color>
-    <color name="list_bg">#fcf5f0f0</color>
+    <color name="colorBg">#eaeaea</color>
 
     <color name="cityhead_background">#66444444</color>
 </resources>

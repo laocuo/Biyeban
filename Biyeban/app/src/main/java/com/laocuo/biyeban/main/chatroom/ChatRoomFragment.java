@@ -78,6 +78,20 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        L.d("ChatRoomFragment onPause");
+        mPresenter.unlistenTable();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        L.d("ChatRoomFragment onResume");
+        mPresenter.listenTable();
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_chatroom;
     }
@@ -196,7 +210,6 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
         mChatListAdapter.setChatList(data);
         lv_data.setAdapter(mChatListAdapter);
         refrestList();
-        mPresenter.listenTable();
     }
 
     @Override

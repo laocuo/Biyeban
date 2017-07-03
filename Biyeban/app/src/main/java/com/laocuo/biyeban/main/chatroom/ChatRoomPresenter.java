@@ -53,12 +53,11 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     private String avatar_url;
     private List<Chat> messages = new ArrayList<>();
     private boolean isListenTable = false;
+    private ChatValueEventListener mChatValueEventListener = null;
 
     @Override
     public void loadData() {
         mIChatRoomView.showLoading();
-        chatRoomTableName = user.getGraduClass().getObjectId() + Utils.CHATROOM;
-        L.d("chatRoomName = "+chatRoomTableName);
         messages.clear();
         BmobQuery bmobQuery = new BmobQuery(chatRoomTableName);
         bmobQuery.order("-createdAt");
@@ -107,51 +106,28 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     @Inject
     ChatRoomPresenter(IChatRoomView view) {
         mIChatRoomView = view;
+        chatRoomTableName = user.getGraduClass().getObjectId() + Utils.CHATROOM;
+        L.d("chatRoomName = "+chatRoomTableName);
     }
 
     @Override
     public void listenTable() {
-        BmobFile avatar = user.getAvatar();
-        avatar_url = avatar == null ? "" : avatar.getFileUrl();
-        data.start(new ValueEventListener() {
-
-            @Override
-            public void onDataChange(JSONObject arg0) {
-                // TODO Auto-generated method stub
-                if(BmobRealTimeData.ACTION_UPDATETABLE.equals(arg0.optString("action"))){
-                    JSONObject data = arg0.optJSONObject("data");
-                    String name = data.optString("name");
-                    String username = data.optString("username");
-                    String content = data.optString("content");
-                    String avatar = data.optString("avatar");
-                    String time = data.optString("time");
-//                    L.d("UPDATETABLE:name="+name+" content="+content);
-                    Chat chat = new Chat(name, content, username, chatRoomTableName);
-                    if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                        chat.setAvatar(avatar);
-                    }
-                    //use remote time
-                    chat.setTime(time);
-                    //use local time
-//                    chat.setTime(getCurrentTime());
-                    mIChatRoomView.recvMessage(chat);
-                }
+        if (!isListenTable) {
+            isListenTable = true;
+            L.d("listenTable = "+chatRoomTableName);
+            if (mChatValueEventListener == null) {
+                BmobFile avatar = user.getAvatar();
+                avatar_url = avatar == null ? "" : avatar.getFileUrl();
+                mChatValueEventListener = new ChatValueEventListener();
             }
-
-            @Override
-            public void onConnectCompleted(Exception e) {
-                // TODO Auto-generated method stub
-                if(data.isConnected()){
-                    isListenTable = true;
-                    data.subTableUpdate(chatRoomTableName);
-                }
-            }
-        });
+            data.start(mChatValueEventListener);
+        }
     }
 
     @Override
     public void unlistenTable() {
         if (isListenTable) {
+            L.d("unlistenTable = "+chatRoomTableName);
             isListenTable = false;
             data.unsubTableUpdate(chatRoomTableName);
         }
@@ -214,5 +190,40 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                 }
             }
         });
+    }
+
+    private class ChatValueEventListener implements ValueEventListener {
+
+        @Override
+        public void onDataChange(JSONObject arg0) {
+            // TODO Auto-generated method stub
+            if(BmobRealTimeData.ACTION_UPDATETABLE.equals(arg0.optString("action"))){
+                JSONObject data = arg0.optJSONObject("data");
+                String name = data.optString("name");
+                String username = data.optString("username");
+                String content = data.optString("content");
+                String avatar = data.optString("avatar");
+                String time = data.optString("time");
+//                    L.d("UPDATETABLE:name="+name+" content="+content);
+                Chat chat = new Chat(name, content, username, chatRoomTableName);
+                if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                    chat.setAvatar(avatar);
+                }
+                //use remote time
+                chat.setTime(time);
+                //use local time
+//                    chat.setTime(getCurrentTime());
+                mIChatRoomView.recvMessage(chat);
+            }
+        }
+
+        @Override
+        public void onConnectCompleted(Exception e) {
+            // TODO Auto-generated method stub
+            if(data.isConnected()){
+                isListenTable = true;
+                data.subTableUpdate(chatRoomTableName);
+            }
+        }
     }
 }

@@ -16,11 +16,13 @@
  *
  */
 
-package com.laocuo.biyeban.publish.news;
+package com.laocuo.biyeban.utils;
 
 
-import com.laocuo.biyeban.base.IBaseView;
+import java.util.List;
 
-public interface IPublishNewsInterface extends IBaseView{
-    void publishResult(boolean ret);
+
+public abstract class UploadBmobFilesListener {
+    public abstract void success(List<String> files);
+    public abstract void fail();
 }

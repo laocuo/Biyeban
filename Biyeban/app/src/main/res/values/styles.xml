@@ -41,6 +41,10 @@
         <item name="android:background">@drawable/button_bg</item>
     </style>
 
+    <style name="common_btn_style_green" parent="common_btn_style">
+        <item name="android:background">@drawable/button_bg_green</item>
+    </style>
+
     <style name="common_btn_style_big" parent="@style/common_btn_style">
         <item name="android:layout_width">81dp</item>
         <item name="android:layout_height">45dp</item>

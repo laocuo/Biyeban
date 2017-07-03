@@ -19,6 +19,7 @@
 package com.laocuo.biyeban.main.freshnews;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -38,10 +39,12 @@ import cn.bmob.v3.listener.QueryListener;
 
 
 public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsItem> {
+    private Context mContext;
 
     @Inject
     public FreshNewsListAdapter(Context context) {
         super(context);
+        mContext = context;
     }
 
     @Override
@@ -59,10 +62,13 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
     }
 
     private void _handleNewsNormal(final BaseViewHolder holder, final FreshNewsItem item) {
+        bindCommonItems(holder, item);
         TextView c = holder.getView(R.id.tv_content);
-        c.setText(item.getContent());
-        TextView t = holder.getView(R.id.tv_time);
-        t.setText(item.getTime());
+        RecyclerView r = holder.getView(R.id.images);
+        item.bindNormal(mContext, c,r);
+    }
+
+    private void bindCommonItems(final BaseViewHolder holder, final FreshNewsItem item) {
         final TextView n = holder.getView(R.id.tv_name);
         final ImageView a = holder.getView(R.id.tv_avatar);
         if (!TextUtils.isEmpty(item.getUserObjectId())) {
@@ -86,5 +92,8 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
                 }
             });
         }
+
+        TextView t = holder.getView(R.id.tv_time);
+        t.setText(item.getTime());
     }
 }

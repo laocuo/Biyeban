@@ -16,11 +16,10 @@
  *
  */
 
-package com.laocuo.biyeban.publish.news;
+package com.laocuo.biyeban.bigimage;
 
 
 import com.laocuo.biyeban.base.IBaseView;
 
-public interface IPublishNewsInterface extends IBaseView{
-    void publishResult(boolean ret);
+public interface IBigImageInterface extends IBaseView{
 }

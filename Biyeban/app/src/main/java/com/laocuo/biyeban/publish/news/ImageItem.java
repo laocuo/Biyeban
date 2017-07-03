@@ -25,6 +25,7 @@ public class ImageItem  extends MultiItemEntity {
     public static final int ITEM_TYPE_NORMAL = 1;
 
     private String mImgUrl;
+    private String mImgPath;
 
     public ImageItem(int itemType) {
         this(itemType, "");
@@ -41,5 +42,13 @@ public class ImageItem  extends MultiItemEntity {
 
     public void setImgUrl(String imgUrl) {
         mImgUrl = imgUrl;
+    }
+
+    public String getImgPath() {
+        return mImgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        mImgPath = imgPath;
     }
 }

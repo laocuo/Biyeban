@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape>
-            <gradient android:startColor="#212934" android:endColor="#212934"
+            <gradient android:startColor="#43874c" android:endColor="#356b3c"
                       android:angle="270"/>
             <corners android:radius="4dp"/>
         </shape>
@@ -12,7 +12,7 @@
 
     <item>
         <shape>
-            <gradient android:startColor="#2a3342" android:endColor="#2a3342"
+            <gradient android:startColor="#4e9c58" android:endColor="#43874c"
                       android:angle="270"/>
             <corners android:radius="4dp"/>
         </shape>

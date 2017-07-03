@@ -44,6 +44,7 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
+        <activity android:name=".bigimage.BigImageActivity"/>
     </application>
 
 </manifest>

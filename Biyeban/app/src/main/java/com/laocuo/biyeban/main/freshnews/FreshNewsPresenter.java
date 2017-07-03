@@ -48,8 +48,6 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     @Override
     public void loadData() {
         mIFreshNewsView.showLoading();
-        freshNewsTableName = user.getGraduClass().getObjectId() + Utils.FRESHNEWS;
-        L.d("freshNewsTableName = "+freshNewsTableName);
         mFreshNewsItems.clear();
         BmobQuery bmobQuery = new BmobQuery(freshNewsTableName);
         bmobQuery.order("-createdAt");
@@ -60,7 +58,6 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
             public void done(JSONArray array, BmobException e) {
                 if (e == null) {
                     int len = array.length();
-                    L.d("array.length()"+len);
                     for (int i=0;i<len;i++) {
                         JSONObject data = null;
                         try {
@@ -68,13 +65,28 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        L.d(i+"data:"+data.toString());
+//                        L.d(i+" data:"+data.toString());
+                        ArrayList<String> imgs = null;
+                        JSONArray pics = data.optJSONArray("pics");
+                        if (pics != null && pics.length() > 0) {
+                            imgs = new ArrayList<>();
+                            for (int j = 0;j < pics.length();j++) {
+                                try {
+                                    String img = (String) pics.get(j);
+                                    if (img != null) {
+                                        imgs.add(img);
+                                    }
+                                } catch (JSONException e1) {
+                                    e1.printStackTrace();
+                                }
+                            }
+                        }
                         mFreshNewsItems.add(new FreshNewsItem(
                                 FreshNewsItem.ITEM_TYPE_NORMAL,
                                 data.optString("userObjectId"),
                                 data.optString("content"),
                                 data.optString("time"),
-                                null));
+                                imgs));
                     }
                     if (mFreshNewsItems.size() > 0) {
                         mIFreshNewsView.loadData(mFreshNewsItems);
@@ -96,6 +108,8 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     @Inject
     FreshNewsPresenter(IFreshNewsView view) {
         mIFreshNewsView = view;
+        freshNewsTableName = user.getGraduClass().getObjectId() + Utils.FRESHNEWS;
+        L.d("freshNewsTableName = "+freshNewsTableName);
     }
 
     @Override

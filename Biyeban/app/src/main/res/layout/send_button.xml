@@ -6,7 +6,7 @@
     android:layout_height="wrap_content">
     <Button
         android:id="@+id/btn_send"
-        style="@style/common_btn_style"
+        style="@style/common_btn_style_green"
         android:text="发送"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="20dp"/>

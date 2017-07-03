@@ -16,11 +16,12 @@
  *
  */
 
-package com.laocuo.biyeban.publish.news;
+package com.laocuo.biyeban.bigimage;
 
 
-import com.laocuo.biyeban.base.IBaseView;
+import dagger.Component;
 
-public interface IPublishNewsInterface extends IBaseView{
-    void publishResult(boolean ret);
+@Component(modules = BigImageModule.class)
+public interface BigImageComponent {
+    void inject(BigImageActivity activity);
 }

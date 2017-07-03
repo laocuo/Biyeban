@@ -18,9 +18,12 @@
 
 package com.laocuo.biyeban.publish.news;
 
+import com.laocuo.biyeban.base.IBasePresenter;
 
-import com.laocuo.biyeban.base.IBaseView;
+import java.util.List;
 
-public interface IPublishNewsInterface extends IBaseView{
-    void publishResult(boolean ret);
+
+public interface IPublishNewsPresenter extends IBasePresenter {
+    void setParam(String userObjId, String freshNewsTableName);
+    void publish(String content, List<String> mImageUrls);
 }

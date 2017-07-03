@@ -18,7 +18,14 @@
 
 package com.laocuo.biyeban.main.freshnews;
 
+import android.content.Context;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.View;
+import android.widget.TextView;
+
 import com.laocuo.recycler.entity.MultiItemEntity;
+import com.laocuo.recycler.helper.RecyclerViewHelper;
 
 import java.util.ArrayList;
 
@@ -29,6 +36,7 @@ public class FreshNewsItem extends MultiItemEntity {
     private String content;
     private String time;
     private ArrayList<String> pics = null;
+    private FreshNewsImagesAdapter mImgsAdapter = null;
 
     public FreshNewsItem(int itemType,
                          String userObjectId,
@@ -46,15 +54,29 @@ public class FreshNewsItem extends MultiItemEntity {
         return userObjectId;
     }
 
-    public String getContent() {
-        return content;
-    }
-
     public String getTime() {
         return time;
     }
 
-    public ArrayList<String> getPics() {
-        return pics;
+    public void bindNormal(Context context, TextView c, RecyclerView r) {
+        if (!TextUtils.isEmpty(content)) {
+            c.setText(content);
+            c.setVisibility(View.VISIBLE);
+        } else {
+            c.setText("");
+            c.setVisibility(View.GONE);
+        }
+        if (pics != null && pics.size() > 0) {
+            if (mImgsAdapter == null) {
+                mImgsAdapter = new FreshNewsImagesAdapter(context);
+            }
+            RecyclerViewHelper.initRecyclerViewH(context, r, false, mImgsAdapter);
+            mImgsAdapter.setData(pics);
+        } else {
+            if (mImgsAdapter != null) {
+                mImgsAdapter.setData(null);
+            }
+            r.setAdapter(null);
+        }
     }
 }

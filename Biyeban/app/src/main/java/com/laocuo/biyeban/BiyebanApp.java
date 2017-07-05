@@ -34,6 +34,7 @@ public class BiyebanApp extends Application {
     private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
     private String ApplicationID = "b623f2f510d079549ae09e7031664748";
+    private int uploadImgsMax = 3;
 
     @Override
     public void onCreate() {
@@ -50,6 +51,10 @@ public class BiyebanApp extends Application {
             instance = new BiyebanApp();
         }
         return instance;
+    }
+
+    public int getUploadImgsMax() {
+        return uploadImgsMax;
     }
 
     private void setDatabase() {

@@ -86,7 +86,7 @@ public class PublishNewsPresenter implements IPublishNewsPresenter {
     private void submit(String content, ArrayList<String> pics) {
         FreshNews freshNews = new FreshNews(userObjId, freshNewsTableName);
         freshNews.setContent(content);
-        freshNews.setTime(Utils.getCurrentTime());
+        freshNews.setTime(Utils.getCurrentDate());
         if (pics != null && pics.size() > 0) {
             freshNews.setPics(pics);
         }

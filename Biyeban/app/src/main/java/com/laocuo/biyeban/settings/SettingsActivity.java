@@ -18,7 +18,9 @@
 
 package com.laocuo.biyeban.settings;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
@@ -50,6 +52,12 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class SettingsActivity extends AppCompatActivity {
+
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.slide_right_entry, R.anim.hold);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -328,5 +336,11 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
             }
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_right_exit);
     }
 }

@@ -18,20 +18,15 @@
 
 package com.laocuo.biyeban.main.freshnews;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.publish.PublishActivity;
-import com.laocuo.biyeban.utils.L;
-import com.laocuo.biyeban.utils.SnackbarUtil;
-import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 import com.laocuo.recycler.listener.OnRequestDataListener;
 
@@ -44,7 +39,6 @@ import butterknife.BindView;
 
 public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         implements IFreshNewsView, OnRequestDataListener {
-    private static final String TAG = "FreshNews";
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
 
@@ -88,23 +82,18 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getActivity(), PublishActivity.class));
+                PublishActivity.launch(mContext);
             }
         });
     }
 
     @Override
     protected void getData(boolean isRefresh) {
-        debug("FreshNewsFragment getData="+isRefresh);
         if (isRefresh == true) {
             mPresenter.swipeRefresh();
         } else {
             mPresenter.loadData();
         }
-    }
-
-    private void debug(String log) {
-        L.d(TAG+"-"+log);
     }
 
     @Override

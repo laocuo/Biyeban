@@ -27,6 +27,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.utils.SwipeRefreshHelper;
@@ -196,6 +197,15 @@ public abstract class BaseActivity<T extends IBasePresenter> extends AppCompatAc
         } else {
             // 存在则弹出在它上面的所有fragment，并显示对应fragment
             getSupportFragmentManager().popBackStack(tag, 0);
+        }
+    }
+
+    protected void hideStatusBar(boolean b) {
+        View v = getWindow().getDecorView();
+        if (b) {
+            v.setSystemUiVisibility(View.INVISIBLE);
+        } else {
+            v.setSystemUiVisibility(View.VISIBLE);
         }
     }
 

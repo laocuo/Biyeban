@@ -30,6 +30,7 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 
+import com.laocuo.biyeban.BiyebanApp;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.bmob.BiyebanUser;
@@ -158,7 +159,7 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
                     boolean isLast = mImageItemList.size() == pos + 1;
                     mImageItemList.get(pos).setImgUrl(uri.toString());
                     mImageItemList.get(pos).setImgPath(Utils.getImageAbsolutePath(getContext(), uri));
-                    if (isLast == true && pos < 3) {
+                    if (isLast == true && pos < BiyebanApp.getInstance().getUploadImgsMax() - 1) {
                         mAdapter.addLastItem(new ImageItem(ImageItem.ITEM_TYPE_NORMAL));
                     }
                     mAdapter.notifyDataSetChanged();

@@ -18,6 +18,9 @@
 
 package com.laocuo.biyeban.graduation;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 
 import com.laocuo.biyeban.R;
@@ -41,6 +44,12 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
 
 //    @BindView(R.id.toolbar)
 //    Toolbar mToolbar;
+
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, GraduationActivity.class);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.fade_entry, R.anim.hold);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -84,5 +93,11 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
     public void switchToMain() {
         Utils.enterMain(this);
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.fade_exit);
     }
 }

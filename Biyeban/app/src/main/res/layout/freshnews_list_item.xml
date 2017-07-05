@@ -16,7 +16,7 @@
         android:layout_toEndOf="@+id/tv_avatar"
         android:layout_marginStart="12dp"
         android:id="@+id/tv_name"
-        android:textSize="14sp"
+        android:textSize="15sp"
         android:textColor="@color/colorPrimaryDark"/>
 
     <TextView
@@ -42,12 +42,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/tv_time"
-        android:layout_below="@id/images"
-        android:layout_marginTop="8dp"
-        android:layout_centerHorizontal="true"
-        android:textSize="12sp"
-        android:textStyle="normal"
-        android:textColor="@color/colorPrimary"
-        android:background="@color/colorBg"
-        android:padding="2dp"/>
+        android:layout_below="@id/tv_name"
+        android:layout_alignStart="@+id/tv_name"
+        android:layout_marginTop="10dp"
+        android:textSize="14sp"
+        android:textColor="@android:color/darker_gray"/>
 </RelativeLayout>

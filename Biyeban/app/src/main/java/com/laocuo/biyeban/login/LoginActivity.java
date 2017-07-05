@@ -21,10 +21,12 @@ package com.laocuo.biyeban.login;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 //import android.os.Handler;
 //import android.support.v7.app.ActionBar;
 
+import android.content.Intent;
 import android.os.Build;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -76,6 +78,12 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
     View mLoginFormView;
 
 //    private Handler mHandler = new Handler();
+
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.fade_entry, R.anim.hold);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -300,6 +308,12 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
             attemptLogin();
         }
         return false;
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.fade_exit);
     }
 }
 

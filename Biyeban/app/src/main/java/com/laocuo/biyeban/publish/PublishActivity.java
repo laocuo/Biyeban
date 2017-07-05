@@ -18,6 +18,9 @@
 
 package com.laocuo.biyeban.publish;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.Toolbar;
 
 import com.laocuo.biyeban.R;
@@ -30,12 +33,17 @@ import butterknife.BindView;
 
 
 public class PublishActivity extends BaseActivity<PublishPresenter> implements IPublishInterface{
-
     @Inject
     PublishNewsFragment mPublishNewsFragment;
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
+
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, PublishActivity.class);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.slide_right_entry, R.anim.hold);
+    }
 
     @Override
     protected int getLayoutId() {
@@ -64,5 +72,11 @@ public class PublishActivity extends BaseActivity<PublishPresenter> implements I
     @Override
     public void exit() {
         finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_right_exit);
     }
 }

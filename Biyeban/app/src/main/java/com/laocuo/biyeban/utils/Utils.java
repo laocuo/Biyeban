@@ -20,17 +20,13 @@ package com.laocuo.biyeban.utils;
 
 
 import android.annotation.TargetApi;
-import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
 
 import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.graduation.GraduationActivity;
@@ -39,7 +35,9 @@ import com.laocuo.biyeban.login.LoginActivity;
 import com.laocuo.biyeban.main.MainActivity;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import cn.bmob.v3.BmobUser;
 
@@ -56,20 +54,26 @@ public class Utils {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
             if (user.getGraduClass() == null) {
-                activity.startActivity(new Intent(activity, GraduationActivity.class));
+                GraduationActivity.launch(activity);
             } else {
-                activity.startActivity(new Intent(activity, MainActivity.class));
+                MainActivity.launch(activity);
             }
         } else {
-            activity.startActivity(new Intent(activity, LoginActivity.class));
+            LoginActivity.launch(activity);
         }
-//            overridePendingTransition(R.anim.hold, R.anim.zoom_in_exit);
     }
 
     public static String getCurrentTime() {
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         String time = format.format(new Date(System.currentTimeMillis()));
         return time;
+    }
+
+    public static String getCurrentDate() {
+        Calendar rightNow = Calendar.getInstance(Locale.CHINA);
+        int month = rightNow.get(Calendar.MONTH);
+        int day = rightNow.get(Calendar.DATE);
+        return month + "月" + day + "日";
     }
 
     /**

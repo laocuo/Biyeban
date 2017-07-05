@@ -18,6 +18,8 @@
 
 package com.laocuo.biyeban.main;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -62,6 +64,12 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     ViewPager mViewPager;
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
+
+    public static void launch(Context context) {
+        Intent intent = new Intent(context, MainActivity.class);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.expand_vertical_entry, R.anim.hold);
+    }
 
     private long mExitTime = 0;
     private List<Integer> mNaviList = new ArrayList<>();
@@ -118,7 +126,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.menu_settings) {
-            startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+            SettingsActivity.launch(this);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -191,5 +199,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
         } else {
             finish();
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.expand_vertical_exit);
     }
 }

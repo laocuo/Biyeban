@@ -93,6 +93,7 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
 
     @Override
     protected void doInit() {
+//        hideStatusBar(true);
         initToolBar(mToolbar, true , "");
         updateIndex();
     }
@@ -134,5 +135,11 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
             mToolbar.animate().translationY(0).setDuration(300);
             mIndex.animate().translationYBy(-move_dis).setDuration(300);
         }
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_right_exit);
     }
 }

@@ -25,7 +25,7 @@ import cn.bmob.v3.datatype.BmobFile;
 public class BiyebanUser extends BmobUser {
     private String alias;
     private BmobFile avatar;
-    private GraduClass graduClass;
+    private String graduClass;
     private Boolean canChat;
 
     public String getAlias() {
@@ -44,11 +44,11 @@ public class BiyebanUser extends BmobUser {
         this.avatar = avatar;
     }
 
-    public GraduClass getGraduClass() {
+    public String getGraduClass() {
         return graduClass;
     }
 
-    public void setGraduClass(GraduClass graduClass) {
+    public void setGraduClass(String graduClass) {
         this.graduClass = graduClass;
     }
 

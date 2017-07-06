@@ -41,7 +41,7 @@ public class ChatRoomModule {
 
     @Provides
     String provideString() {
-        return BmobUtils.getCurrentUser().getUsername();
+        return BmobUtils.getCurrentUser().getObjectId();
     }
 
     @Provides

@@ -124,8 +124,7 @@ public class ContactsPresenter implements IContactsPresenter {
 
     @Override
     public void getClassMates() {
-        GraduClass graduClass = BmobUtils.getCurrentUser().getGraduClass();
-        String graduclass = graduClass.getObjectId();
+        String graduclass = BmobUtils.getCurrentUser().getGraduClass();
         L.d("getClassMates:"+graduclass);
         BmobQuery<GraduClass> query = new BmobQuery<GraduClass>();
         query.getObject(graduclass, new QueryListener<GraduClass>() {

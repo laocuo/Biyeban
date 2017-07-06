@@ -27,6 +27,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 
 import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.graduation.GraduationActivity;
@@ -42,8 +43,8 @@ import java.util.Locale;
 import cn.bmob.v3.BmobUser;
 
 public class Utils {
-    public static final String CHATROOM = "_chatroom";
-    public static final String FRESHNEWS = "_freshnews";
+    public static final String CHATROOM = "chatroom_";
+    public static final String FRESHNEWS = "freshnews_";
     private static final String AVATAR = "avatar.jpg";
 
     public static boolean isShowImageAlways(Context context) {
@@ -53,7 +54,7 @@ public class Utils {
     public static void enterMain(BaseActivity activity) {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
-            if (user.getGraduClass() == null) {
+            if (user.getGraduClass() == null || TextUtils.isEmpty(user.getGraduClass())) {
                 GraduationActivity.launch(activity);
             } else {
                 MainActivity.launch(activity);

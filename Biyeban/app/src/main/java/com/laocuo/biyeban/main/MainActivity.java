@@ -21,7 +21,9 @@ package com.laocuo.biyeban.main;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -32,6 +34,7 @@ import android.widget.Toast;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
+import com.laocuo.biyeban.base.ExitApplication;
 import com.laocuo.biyeban.base.ViewPagerAdapter;
 import com.laocuo.biyeban.main.chatroom.ChatRoomFragment;
 import com.laocuo.biyeban.main.contacts.ContactsFragment;
@@ -65,8 +68,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ExitApplication.getInstance().addActivity(this);
+    }
+
     public static void launch(Context context) {
         Intent intent = new Intent(context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         context.startActivity(intent);
         ((Activity)context).overridePendingTransition(R.anim.expand_vertical_entry, R.anim.hold);
     }

@@ -86,7 +86,7 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
 
     @Override
     public void switchToBack() {
-        //do nothing
+        finish();
     }
 
     @Override

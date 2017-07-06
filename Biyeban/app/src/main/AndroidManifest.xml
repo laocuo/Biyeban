@@ -29,12 +29,17 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".login.LoginActivity"/>
-        <activity android:name=".graduation.GraduationActivity"/>
+                  android:launchMode="singleTask"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".login.LoginActivity"
+                  android:screenOrientation="portrait"/>
+        <activity android:name=".graduation.GraduationActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name=".settings.SettingsActivity"
-            android:theme="@style/AppTheme"/>
-        <activity android:name=".publish.PublishActivity"/>
+                  android:screenOrientation="portrait"
+                  android:theme="@style/AppTheme"/>
+        <activity android:name=".publish.PublishActivity"
+                  android:screenOrientation="portrait"/>
         <activity android:name=".crop.ClipImageActivity"
                   android:theme="@style/AppTheme"
                   android:screenOrientation="portrait">
@@ -44,7 +49,8 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".bigimage.BigImageActivity"/>
+        <activity android:name=".bigimage.BigImageActivity"
+                  android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

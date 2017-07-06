@@ -23,6 +23,8 @@ import android.widget.Button;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.graduation.IGraduationInterface;
+import com.laocuo.biyeban.login.LoginActivity;
+import com.laocuo.biyeban.utils.BmobUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -34,6 +36,8 @@ public class GraduMainFragment extends BaseFragment {
     Button mButtonCreate;
     @BindView(R.id.join_class)
     Button mButtonJoin;
+    @BindView(R.id.logout)
+    Button mButtonLogout;
 
     public static GraduMainFragment newInstance(IGraduationInterface anInterface) {
         GraduMainFragment fragment = new GraduMainFragment();
@@ -69,6 +73,13 @@ public class GraduMainFragment extends BaseFragment {
     @OnClick(R.id.join_class)
     void onJoinClass() {
         mIGraduationInterface.switchToJoin();
+    }
+
+    @OnClick(R.id.logout)
+    void onLogout() {
+        BmobUtils.logOut();
+        mIGraduationInterface.switchToBack();
+        LoginActivity.launch(mContext);
     }
 
     public void setIGraduationInterface(IGraduationInterface IGraduationInterface) {

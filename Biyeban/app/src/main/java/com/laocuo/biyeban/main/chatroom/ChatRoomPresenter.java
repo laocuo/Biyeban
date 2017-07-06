@@ -48,7 +48,7 @@ import cn.bmob.v3.listener.ValueEventListener;
 public class ChatRoomPresenter implements IChatRoomPresenter {
     private IChatRoomView mIChatRoomView;
     private BmobRealTimeData data = new BmobRealTimeData();
-    private BiyebanUser user = BmobUtils.getCurrentUser();
+    private BiyebanUser user;
     private String chatRoomTableName;
     private String avatar_url;
     private List<Chat> messages = new ArrayList<>();
@@ -69,23 +69,17 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                     int len = array.length();
                     L.d("array.length()"+len);
                     for (int i=0;i<len;i++) {
-                        JSONObject data = null;
+                        JSONObject data;
                         try {
                             data = array.getJSONObject(len-1-i);
+                            Chat chat = new Chat(data.optString("userObjectId"),
+                                    data.optString("content"),
+                                    chatRoomTableName);
+                            chat.setTime(data.optString("time"));
+                            messages.add(chat);
                         } catch (JSONException e1) {
                             e1.printStackTrace();
                         }
-                        String name = data.optString("name");
-                        String username = data.optString("username");
-                        String content = data.optString("content");
-                        String avatar = data.optString("avatar");
-                        String time = data.optString("time");
-                        Chat chat = new Chat(name, content, username, chatRoomTableName);
-                        if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                            chat.setAvatar(avatar);
-                        }
-                        chat.setTime(time);
-                        messages.add(chat);
                     }
                     if (messages.size() > 0) {
                         mIChatRoomView.loadData(messages);
@@ -106,8 +100,15 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     @Inject
     ChatRoomPresenter(IChatRoomView view) {
         mIChatRoomView = view;
-        chatRoomTableName = user.getGraduClass().getObjectId() + Utils.CHATROOM;
-        L.d("chatRoomName = "+chatRoomTableName);
+        updateUserInfo();
+    }
+
+    private void updateUserInfo() {
+        user = BmobUtils.getCurrentUser();
+        chatRoomTableName = Utils.CHATROOM + user.getGraduClass();
+        L.d("updateUserInfo chatRoomName = "+chatRoomTableName);
+        BmobFile avatar = user.getAvatar();
+        avatar_url = avatar == null ? "" : avatar.getFileUrl();
     }
 
     @Override
@@ -116,8 +117,6 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
             isListenTable = true;
             L.d("listenTable = "+chatRoomTableName);
             if (mChatValueEventListener == null) {
-                BmobFile avatar = user.getAvatar();
-                avatar_url = avatar == null ? "" : avatar.getFileUrl();
                 mChatValueEventListener = new ChatValueEventListener();
             }
             data.start(mChatValueEventListener);
@@ -151,16 +150,28 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     }
 
     @Override
-    public void sendMsg(final String name, final String content) {
+    public void sendMsg(final String userObjId, final String content) {
         BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
-        query.getObject(user.getObjectId(), new QueryListener<BiyebanUser>() {
+        query.getObject(userObjId, new QueryListener<BiyebanUser>() {
             @Override
             public void done(BiyebanUser biyebanUser, BmobException e) {
                 if (e == null) {
                     Boolean canChat = biyebanUser.getCanChat();
                     L.d("canChat.booleanValue()="+canChat.booleanValue());
                     if (canChat.booleanValue() == true) {
-                        sendMsg(name, content, biyebanUser.getUsername(), biyebanUser.getObjectId());
+                        Chat chat = new Chat(userObjId, content, chatRoomTableName);
+                        chat.setTime(Utils.getCurrentTime());
+                        chat.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String s, BmobException e) {
+                                if (e == null) {
+                                    mIChatRoomView.sendMsg(true);
+                                } else {
+                                    L.d(e.toString());
+                                    mIChatRoomView.sendMsg(false);
+                                }
+                            }
+                        });
                         return;
                     } else {
                         mIChatRoomView.chatForbidden();
@@ -172,24 +183,10 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
         });
     }
 
-    private void sendMsg(String name, String msg, String username, String objId){
-        Chat chat = new Chat(name, msg, username, chatRoomTableName);
-        if (!TextUtils.isEmpty(avatar_url)) {
-            chat.setAvatar(avatar_url);
-        }
-        chat.setUserObjectId(objId);
-        chat.setTime(Utils.getCurrentTime());
-        chat.save(new SaveListener<String>() {
-            @Override
-            public void done(String s, BmobException e) {
-                if (e == null) {
-                    mIChatRoomView.sendMsg(true);
-                } else {
-                    L.d(e.toString());
-                    mIChatRoomView.sendMsg(false);
-                }
-            }
-        });
+    @Override
+    public void reload() {
+        updateUserInfo();
+        loadData();
     }
 
     private class ChatValueEventListener implements ValueEventListener {
@@ -199,16 +196,11 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
             // TODO Auto-generated method stub
             if(BmobRealTimeData.ACTION_UPDATETABLE.equals(arg0.optString("action"))){
                 JSONObject data = arg0.optJSONObject("data");
-                String name = data.optString("name");
-                String username = data.optString("username");
+                String objId = data.optString("userObjectId");
                 String content = data.optString("content");
-                String avatar = data.optString("avatar");
                 String time = data.optString("time");
 //                    L.d("UPDATETABLE:name="+name+" content="+content);
-                Chat chat = new Chat(name, content, username, chatRoomTableName);
-                if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                    chat.setAvatar(avatar);
-                }
+                Chat chat = new Chat(objId, content, chatRoomTableName);
                 //use remote time
                 chat.setTime(time);
                 //use local time

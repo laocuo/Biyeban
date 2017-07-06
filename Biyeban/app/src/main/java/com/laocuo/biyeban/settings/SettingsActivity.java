@@ -186,11 +186,13 @@ public class SettingsActivity extends AppCompatActivity {
                 } else if (preference instanceof SwitchPreference) {
                     if (preference.getKey().equalsIgnoreCase(LOGINSTATUS)) {
                         if ((Boolean) value == true) {
-                            startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
+//                            startActivityForResult(new Intent(getActivity(), LoginActivity.class), REQUEST_LOGIN);
                         } else {
                             BmobUtils.logOut();
-                            mAlias.setSummary(getActivity().getResources().getString(R.string.unset));
+                            getActivity().finish();
+//                            mAlias.setSummary(getActivity().getResources().getString(R.string.unset));
                         }
+                        LoginActivity.launch(getActivity());
                     }
                 } else {
                     // For all other preferences, set the summary to the value's

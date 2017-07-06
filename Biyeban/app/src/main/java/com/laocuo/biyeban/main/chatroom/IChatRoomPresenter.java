@@ -25,5 +25,6 @@ public interface IChatRoomPresenter extends IBasePresenter {
     void listenTable();
     void unlistenTable();
     void stopOrallowChat(boolean b, String userObjId);
-    void sendMsg(String name, String content);
+    void sendMsg(String userObjId, String content);
+    void reload();
 }

@@ -28,6 +28,8 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.os.Build;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -44,7 +46,9 @@ import android.widget.TextView;
 
 import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.base.ExitApplication;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.Utils;
@@ -83,6 +87,12 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         Intent intent = new Intent(context, LoginActivity.class);
         context.startActivity(intent);
         ((Activity)context).overridePendingTransition(R.anim.fade_entry, R.anim.hold);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ExitApplication.getInstance().addActivity(this);
     }
 
     @Override
@@ -222,7 +232,8 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
                 if (e == null) {
                     //TODO success
 //                    SnackbarUtil.showShortSnackbar(mLoginFormView, "login success!");
-                    L.d("login ok u=" + u.getUsername());
+                    L.d("login ok getUsername = " + u.getUsername());
+                    L.d("login ok getGraduClass = " + u.getGraduClass());
                     enterMainMenu();
                 } else {
                     displayProgress(false);
@@ -308,6 +319,15 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
             attemptLogin();
         }
         return false;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (null == BmobUtils.getCurrentUser()) {
+            ExitApplication.getInstance().exit();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     @Override

@@ -27,7 +27,7 @@
             android:id="@+id/et_content"/>
         <Button
             android:id="@+id/btn_send"
-            style="@style/common_btn_style"
+            style="@style/common_btn_style_green"
             android:layout_marginBottom="3dp"
             android:layout_gravity="bottom"
             android:text="发送"/>

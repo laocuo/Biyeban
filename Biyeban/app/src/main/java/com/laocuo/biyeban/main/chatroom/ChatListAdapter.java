@@ -29,19 +29,27 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
+import com.laocuo.biyeban.main.freshnews.FreshNewsItem;
 import com.laocuo.biyeban.utils.FactoryInterface;
+import com.laocuo.biyeban.utils.L;
+import com.laocuo.recycler.adapter.BaseViewHolder;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 
 public class ChatListAdapter extends BaseAdapter {
 
     private List<Chat> messages;
     private ViewHolder holder;
     private Context mContext;
-    private String mCurrentUserName;
+    private String mCurrentUserObjId;
 
     public void setChatList(List<Chat> list) {
         messages = list;
@@ -56,9 +64,13 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     @Inject
-    ChatListAdapter(Context context, String currentUserName) {
+    ChatListAdapter(Context context, String currentUserObjId) {
         this.mContext = context;
-        this.mCurrentUserName = currentUserName;
+        this.mCurrentUserObjId = currentUserObjId;
+    }
+
+    public void setCurrentUserObjId(String currentUserObjId) {
+        mCurrentUserObjId = currentUserObjId;
     }
 
     @Override
@@ -80,8 +92,8 @@ public class ChatListAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        String username = messages.get(position).getUsername();
-        if (username != null && mCurrentUserName.contentEquals(username)) {
+        String userObjId = messages.get(position).getUserObjectId();
+        if (userObjId != null && userObjId.equals(mCurrentUserObjId)) {
             return 0;
         } else {
             return 1;
@@ -118,13 +130,8 @@ public class ChatListAdapter extends BaseAdapter {
         }
 
         Chat chat = messages.get(position);
-        if (chat.getUsername().equalsIgnoreCase("admin")) {
-            StringBuilder display_name = new StringBuilder(chat.getName());
-            display_name.append("(").append(chat.getUsername()).append(")");
-            holder.tv_name.setText(display_name);
-        } else {
-            holder.tv_name.setText(chat.getName());
-        }
+        bindCommonItems(holder, chat.getUserObjectId());
+
         holder.tv_content.setText(chat.getContent());
         String time = chat.getTime();
         if (time != null && !TextUtils.isEmpty(time)) {
@@ -139,13 +146,6 @@ public class ChatListAdapter extends BaseAdapter {
         } else {
             holder.tv_time.setVisibility(View.GONE);
         }
-        String avatar = chat.getAvatar();
-        if (avatar != null && !TextUtils.isEmpty(avatar)) {
-            FactoryInterface.setAvatar(mContext, chat.getAvatar(), holder.tv_avatar);
-        } else {
-            holder.tv_avatar.setImageResource(R.drawable.user);
-        }
-
         return convertView;
     }
 
@@ -154,5 +154,31 @@ public class ChatListAdapter extends BaseAdapter {
         TextView tv_content;
         TextView tv_time;
         ImageView tv_avatar;
+    }
+
+    private void bindCommonItems(final ViewHolder holder, final String userObjId) {
+        final TextView n = holder.tv_name;
+        final ImageView a = holder.tv_avatar;
+        if (!TextUtils.isEmpty(userObjId)) {
+            BmobQuery<BiyebanUser> query = new BmobQuery<>();
+            query.getObject(userObjId, new QueryListener<BiyebanUser>() {
+
+                @Override
+                public void done(BiyebanUser user, BmobException e) {
+                    if (user != null) {
+                        String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
+                        n.setText(name);
+                        String avatar = user.getAvatar() != null ? user.getAvatar().getFileUrl() : null;
+                        if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                            FactoryInterface.setAvatar(mContext, avatar, a);
+                        } else {
+                            a.setImageResource(R.drawable.user);
+                        }
+                    } else {
+                        L.d("user == null");
+                    }
+                }
+            });
+        }
     }
 }

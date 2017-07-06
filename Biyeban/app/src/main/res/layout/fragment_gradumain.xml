@@ -30,4 +30,13 @@
             android:background="@drawable/circle_button_bg"/>
     </LinearLayout>
 
+    <Button
+        android:id="@+id/logout"
+        style="@style/common_btn_style"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="20dp"
+        android:textSize="14sp"
+        android:text="@string/logout"/>
 </RelativeLayout>

@@ -21,53 +21,29 @@ package com.laocuo.biyeban.bmob;
 import cn.bmob.v3.BmobObject;
 
 public class Chat extends BmobObject {
-    private String name;
-    private String username;
-    private String content;
-    private String avatar;
-    private String time;
+
     private String userObjectId;
+    private String content;
+    private String time;
 
     public Chat(String userObjectId, String tablename){
-        this.setName("Administrator");
-        this.setContent("Welcome!");
-        this.setAvatar("");
-        this.setTime("00:00");
-        this.setUsername("");
-        this.setTableName(tablename);
         this.setUserObjectId(userObjectId);
-    }
-
-    public Chat(String name, String content, String username, String tablename){
-        this.name = name;
-        this.content = content;
-        this.username = username;
+        this.setContent("Welcome!");
+        this.setTime("00:00");
         this.setTableName(tablename);
     }
 
-    public String getName() {
-        return name;
+    public Chat(String userObjectId, String content, String tablename){
+        this.setUserObjectId(userObjectId);
+        this.setContent(content);
+        this.setTableName(tablename);
     }
-    public void setName(String name) {
-        this.name = name;
-    }
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
+
     public String getContent() {
         return content;
     }
     public void setContent(String content) {
         this.content = content;
-    }
-    public String getAvatar() {
-        return avatar;
-    }
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
     }
     public String getTime() {
         return time;

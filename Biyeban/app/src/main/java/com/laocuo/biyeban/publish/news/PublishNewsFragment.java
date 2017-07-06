@@ -91,7 +91,7 @@ public class PublishNewsFragment extends BaseFragment<PublishNewsPresenter>
     protected void doInit() {
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mProgressDialog = new ProgressDialog(mContext);
-        freshNewsTableName = user.getGraduClass().getObjectId() + Utils.FRESHNEWS;
+        freshNewsTableName = Utils.FRESHNEWS + user.getGraduClass();
         setHasOptionsMenu(true);
         mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
         mActionBar.setDisplayShowTitleEnabled(false);

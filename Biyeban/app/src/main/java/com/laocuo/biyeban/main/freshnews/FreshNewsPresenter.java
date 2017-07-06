@@ -108,7 +108,7 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     @Inject
     FreshNewsPresenter(IFreshNewsView view) {
         mIFreshNewsView = view;
-        freshNewsTableName = user.getGraduClass().getObjectId() + Utils.FRESHNEWS;
+        freshNewsTableName = Utils.FRESHNEWS + user.getGraduClass();
         L.d("freshNewsTableName = "+freshNewsTableName);
     }
 

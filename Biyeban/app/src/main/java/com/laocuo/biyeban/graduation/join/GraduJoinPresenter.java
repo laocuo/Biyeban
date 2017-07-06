@@ -110,7 +110,7 @@ public class GraduJoinPresenter implements IGraduJoinPresenter {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
             BiyebanUser u = new BiyebanUser();
-            u.setGraduClass(gc);
+            u.setGraduClass(gc.getObjectId());
             u.update(user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {

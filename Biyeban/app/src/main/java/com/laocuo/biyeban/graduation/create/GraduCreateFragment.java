@@ -211,9 +211,9 @@ public class GraduCreateFragment extends BaseFragment {
     private void updateCurrentUser(GraduClass gc) {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
-            user.setGraduClass(gc);
+            user.setGraduClass(gc.getObjectId());
             BiyebanUser u = new BiyebanUser();
-            u.setGraduClass(gc);
+            u.setGraduClass(gc.getObjectId());
             u.update(user.getObjectId(), new UpdateListener() {
                 @Override
                 public void done(BmobException e) {
@@ -234,7 +234,7 @@ public class GraduCreateFragment extends BaseFragment {
     }
 
     private void createGraduClassChatRoom(String user_obj, String class_obj) {
-        Chat chat = new Chat(user_obj, class_obj + Utils.CHATROOM);
+        Chat chat = new Chat(user_obj, Utils.CHATROOM + class_obj);
         chat.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {
@@ -246,7 +246,7 @@ public class GraduCreateFragment extends BaseFragment {
     }
 
     private void createGraduClassFreshNews(String user_obj, String class_obj) {
-        FreshNews freshNews = new FreshNews(user_obj, class_obj + Utils.FRESHNEWS);
+        FreshNews freshNews = new FreshNews(user_obj, Utils.FRESHNEWS + class_obj);
         freshNews.save(new SaveListener<String>() {
             @Override
             public void done(String s, BmobException e) {

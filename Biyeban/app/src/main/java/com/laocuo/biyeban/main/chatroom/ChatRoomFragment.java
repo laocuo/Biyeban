@@ -52,7 +52,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     implements IChatRoomView {
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
-    private BiyebanUser user = BmobUtils.getCurrentUser();
+    private BiyebanUser user;
 
     @BindView(R.id.lv_data)
     ListView lv_data;
@@ -80,14 +80,19 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     @Override
     public void onPause() {
         super.onPause();
-        L.d("ChatRoomFragment onPause");
         mPresenter.unlistenTable();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        L.d("ChatRoomFragment onResume");
+        String username = user.getUsername();
+        String currentusername = BmobUtils.getCurrentUser().getUsername();
+        if (!username.equals(currentusername)) {
+            user = BmobUtils.getCurrentUser();
+            mChatListAdapter.setCurrentUserObjId(user.getObjectId());
+            mPresenter.reload();
+        }
         mPresenter.listenTable();
     }
 
@@ -106,6 +111,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
 
     @Override
     protected void doInit() {
+        user = BmobUtils.getCurrentUser();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mProgressDialog = new ProgressDialog(mContext);
         lv_data.setDividerHeight(0);
@@ -155,14 +161,13 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     void onSendClick(View v) {
         // TODO Auto-generated method stub
         if (user != null) {
-            final String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername():user.getAlias();
             final String content = et_content.getText().toString();
             if (TextUtils.isEmpty(content)) {
                 SnackbarUtil.showShortSnackbar(mLayout, "内容不能为空");
                 return;
             } else {
                 showProgress(true);
-                mPresenter.sendMsg(name, content);
+                mPresenter.sendMsg(user.getObjectId(), content);
             }
         } else {
             SnackbarUtil.showShortSnackbar(mLayout, "请先登录");

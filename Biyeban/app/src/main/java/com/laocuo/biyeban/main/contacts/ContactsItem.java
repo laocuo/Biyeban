@@ -23,21 +23,28 @@ import com.laocuo.recycler.entity.MultiItemEntity;
 
 public class ContactsItem extends MultiItemEntity {
     public static final int ITEM_TYPE_NORMAL = 1;
+    private String username;
     private String avatar;
     private String alias;
     private String objId;
     private String pinyin;
 
     public ContactsItem(int itemType,
+                        String username,
                         String avatar,
                         String alias,
                         String pinyin,
                         String objId) {
         super(itemType);
+        this.username = username;
         this.avatar = avatar;
         this.alias = alias;
         this.pinyin = pinyin;
         this.objId = objId;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public String getAvatar() {

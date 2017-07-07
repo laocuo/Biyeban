@@ -16,32 +16,35 @@
  *
  */
 
-package com.laocuo.biyeban.bmob;
+package com.laocuo.biyeban.greendao;
 
-import java.util.ArrayList;
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
-import cn.bmob.v3.BmobObject;
+@Entity
+public class Messages {
+    @Id(autoincrement = true)
+    private Long id;
 
-
-public class FreshNews extends BmobObject {
-    private String userObjectId;
+    private String userobjid;
     private String content;
     private String time;
-    private ArrayList<String> pics;
 
-    public FreshNews(String userObjectId, String tablename) {
-        this.setContent("Welcome!");
-        this.setTime("1月1日");
-        this.setTableName(tablename);
-        this.setUserObjectId(userObjectId);
+    public Long getId() {
+        return id;
     }
 
-    public String getUserObjectId() {
-        return userObjectId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setUserObjectId(String userObjectId) {
-        this.userObjectId = userObjectId;
+    public String getUserobjid() {
+        return userobjid;
+    }
+
+    public void setUserobjid(String userobjid) {
+        this.userobjid = userobjid;
     }
 
     public String getContent() {
@@ -60,11 +63,15 @@ public class FreshNews extends BmobObject {
         this.time = time;
     }
 
-    public ArrayList<String> getPics() {
-        return pics;
+    @Generated(hash = 1195889937)
+    public Messages(Long id, String userobjid, String content, String time) {
+        this.id = id;
+        this.userobjid = userobjid;
+        this.content = content;
+        this.time = time;
     }
 
-    public void setPics(ArrayList<String> pics) {
-        this.pics = pics;
+    @Generated(hash = 826815580)
+    public Messages() {
     }
 }

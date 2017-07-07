@@ -20,31 +20,29 @@ package com.laocuo.biyeban.main.freshnews;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
-import com.laocuo.biyeban.bmob.BiyebanUser;
-import com.laocuo.biyeban.utils.FactoryInterface;
-import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.greendao.DaoSession;
+import com.laocuo.biyeban.greendao.UserDao;
+import com.laocuo.biyeban.utils.BmobUtils;
+
 import com.laocuo.recycler.adapter.BaseMultiItemQuickAdapter;
 import com.laocuo.recycler.adapter.BaseViewHolder;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
-
 
 public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsItem> {
     private Context mContext;
+    private UserDao mUserDao;
 
     @Inject
-    public FreshNewsListAdapter(Context context) {
+    FreshNewsListAdapter(Context context, DaoSession daosession) {
         super(context);
         mContext = context;
+        mUserDao = daosession.getUserDao();
     }
 
     @Override
@@ -62,38 +60,14 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
     }
 
     private void _handleNewsNormal(final BaseViewHolder holder, final FreshNewsItem item) {
-        bindCommonItems(holder, item);
+        TextView n = holder.getView(R.id.tv_name);
+        ImageView a = holder.getView(R.id.tv_avatar);
         TextView c = holder.getView(R.id.tv_content);
         RecyclerView r = holder.getView(R.id.images);
-        item.bindNormal(mContext, c,r);
-    }
-
-    private void bindCommonItems(final BaseViewHolder holder, final FreshNewsItem item) {
-        final TextView n = holder.getView(R.id.tv_name);
-        final ImageView a = holder.getView(R.id.tv_avatar);
-        if (!TextUtils.isEmpty(item.getUserObjectId())) {
-            BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
-            query.getObject(item.getUserObjectId(), new QueryListener<BiyebanUser>() {
-
-                @Override
-                public void done(BiyebanUser user, BmobException e) {
-                    if (user != null) {
-                        String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
-                        n.setText(name);
-                        String avatar = user.getAvatar() != null ? user.getAvatar().getFileUrl() : null;
-                        if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                            FactoryInterface.setAvatar(mContext, avatar, a);
-                        } else {
-                            a.setImageResource(R.drawable.user);
-                        }
-                    } else {
-                        L.d("user == null");
-                    }
-                }
-            });
-        }
-
         TextView t = holder.getView(R.id.tv_time);
+
+        BmobUtils.bindUserItems(n, a, item.getUserObjectId(), mUserDao, mContext);
+        item.bindNormal(mContext, c,r);
         t.setText(item.getTime());
     }
 }

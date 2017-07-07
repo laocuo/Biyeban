@@ -20,41 +20,55 @@ package com.laocuo.biyeban.greendao;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Transient;
 import org.greenrobot.greendao.annotation.Generated;
-
 
 @Entity
 public class User {
-    @Id
+    @Id(autoincrement = true)
     private Long id;
-    private String name;
+    private String objid;
 
-    @Transient
-    private int tempUsageCount; //not persisted
-
-    public String getName() {
-        return this.name;
+    private String username;
+    private String alias;
+    private String avatar;
+    public String getAvatar() {
+        return this.avatar;
     }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
-
+    public String getAlias() {
+        return this.alias;
+    }
+    public void setAlias(String alias) {
+        this.alias = alias;
+    }
+    public String getUsername() {
+        return this.username;
+    }
+    public void setUsername(String username) {
+        this.username = username;
+    }
+    public String getObjid() {
+        return this.objid;
+    }
+    public void setObjid(String objid) {
+        this.objid = objid;
+    }
     public Long getId() {
         return this.id;
     }
-
     public void setId(Long id) {
         this.id = id;
     }
-
-    @Generated(hash = 873297011)
-    public User(Long id, String name) {
+    @Generated(hash = 458929507)
+    public User(Long id, String objid, String username, String alias, String avatar) {
         this.id = id;
-        this.name = name;
+        this.objid = objid;
+        this.username = username;
+        this.alias = alias;
+        this.avatar = avatar;
     }
-
     @Generated(hash = 586692638)
     public User() {
     }

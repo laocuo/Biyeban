@@ -102,6 +102,7 @@ public class FactoryInterface {
         if (!TextUtils.isEmpty(url)) {
             Glide.with(context)
                     .load(url)
+                    .animate(R.anim.photo_entry)
                     .placeholder(R.drawable.user)
                     .crossFade()
                     .into(imageview);
@@ -112,6 +113,7 @@ public class FactoryInterface {
         if (url != null && !TextUtils.isEmpty(url)) {
             Glide.with(context)
                     .load(url)
+                    .animate(R.anim.photo_entry)
                     .placeholder(R.drawable.icon)
                     .crossFade()
                     .into(imageview);

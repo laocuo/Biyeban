@@ -24,8 +24,6 @@ import android.database.sqlite.SQLiteDatabase;
 import com.laocuo.biyeban.greendao.DaoMaster;
 import com.laocuo.biyeban.greendao.DaoSession;
 
-import cn.bmob.v3.Bmob;
-
 
 public class BiyebanApp extends Application {
     private static BiyebanApp instance;
@@ -34,11 +32,11 @@ public class BiyebanApp extends Application {
     private DaoMaster mDaoMaster;
     private DaoSession mDaoSession;
     private String ApplicationID = "b623f2f510d079549ae09e7031664748";
-    private int uploadImgsMax = 3;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance = this;
         setDatabase();
     }
 
@@ -47,14 +45,11 @@ public class BiyebanApp extends Application {
     }
 
     public static BiyebanApp getInstance() {
-        if (instance == null) {
-            instance = new BiyebanApp();
-        }
         return instance;
     }
 
     public int getUploadImgsMax() {
-        return uploadImgsMax;
+        return 3;
     }
 
     private void setDatabase() {

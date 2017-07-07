@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.greendao.DaoSession;
+import com.laocuo.biyeban.greendao.UserDao;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.recycler.adapter.BaseMultiItemQuickAdapter;
 import com.laocuo.recycler.adapter.BaseViewHolder;
@@ -36,11 +39,13 @@ import javax.inject.Inject;
 
 public class ContactsListAdapter extends BaseMultiItemQuickAdapter<ContactsItem> {
     private Context mContext;
+    private UserDao mUserDao;
 
     @Inject
-    public ContactsListAdapter(Context context) {
+    ContactsListAdapter(Context context, DaoSession daosession) {
         super(context);
         mContext = context;
+        mUserDao = daosession.getUserDao();
     }
 
     @Override
@@ -78,5 +83,7 @@ public class ContactsListAdapter extends BaseMultiItemQuickAdapter<ContactsItem>
         }
         contact_head.setText(head);
         contact_head.setVisibility(View.VISIBLE);
+
+        BmobUtils.updateUserItem(item, mUserDao, mContext);
     }
 }

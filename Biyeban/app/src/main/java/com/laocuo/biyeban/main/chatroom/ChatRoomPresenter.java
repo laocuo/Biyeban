@@ -19,8 +19,6 @@
 package com.laocuo.biyeban.main.chatroom;
 
 
-import android.text.TextUtils;
-
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
 import com.laocuo.biyeban.utils.BmobUtils;
@@ -38,7 +36,6 @@ import javax.inject.Inject;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobRealTimeData;
-import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.SaveListener;
@@ -50,7 +47,6 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     private BmobRealTimeData data = new BmobRealTimeData();
     private BiyebanUser user;
     private String chatRoomTableName;
-    private String avatar_url;
     private List<Chat> messages = new ArrayList<>();
     private boolean isListenTable = false;
     private ChatValueEventListener mChatValueEventListener = null;
@@ -107,8 +103,6 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
         user = BmobUtils.getCurrentUser();
         chatRoomTableName = Utils.CHATROOM + user.getGraduClass();
         L.d("updateUserInfo chatRoomName = "+chatRoomTableName);
-        BmobFile avatar = user.getAvatar();
-        avatar_url = avatar == null ? "" : avatar.getFileUrl();
     }
 
     @Override

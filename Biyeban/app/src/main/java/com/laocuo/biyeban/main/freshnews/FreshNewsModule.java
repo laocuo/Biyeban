@@ -21,6 +21,9 @@ package com.laocuo.biyeban.main.freshnews;
 import android.content.Context;
 
 
+import com.laocuo.biyeban.BiyebanApp;
+import com.laocuo.biyeban.greendao.DaoSession;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -41,5 +44,10 @@ public class FreshNewsModule {
     @Provides
     Context provideContext() {
         return mFreshNewsFragment.getContext();
+    }
+
+    @Provides
+    DaoSession provideDaoSession() {
+        return BiyebanApp.getInstance().getDaoSession();
     }
 }

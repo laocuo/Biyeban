@@ -20,6 +20,8 @@ package com.laocuo.biyeban.main.chatroom;
 
 import android.content.Context;
 
+import com.laocuo.biyeban.BiyebanApp;
+import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.utils.BmobUtils;
 
 import dagger.Module;
@@ -47,5 +49,10 @@ public class ChatRoomModule {
     @Provides
     IChatRoomView provideIChatRoomView() {
         return (IChatRoomView)mChatRoomFragment;
+    }
+
+    @Provides
+    DaoSession provideDaoSession() {
+        return BiyebanApp.getInstance().getDaoSession();
     }
 }

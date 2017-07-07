@@ -19,16 +19,27 @@
 package com.laocuo.biyeban.utils;
 
 
+import android.content.Context;
 import android.text.TextUtils;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.greendao.User;
+import com.laocuo.biyeban.greendao.UserDao;
+import com.laocuo.biyeban.main.contacts.ContactsItem;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.io.File;
 import java.util.List;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadBatchListener;
 import cn.bmob.v3.listener.UploadFileListener;
@@ -104,5 +115,73 @@ public class BmobUtils {
                 l.fail();
             }
         });
+    }
+
+    public static void bindUserItems(final TextView n, final ImageView a, final String objId
+            , final UserDao userDao, final Context context) {
+        if (!TextUtils.isEmpty(objId)) {
+            QueryBuilder<User> qb = userDao.queryBuilder();
+            qb.where(UserDao.Properties.Objid.gt(objId));
+            List<User> userList = qb.list();
+            L.d("bindUserItems userList.size()="+userList.size());
+            if (userList.size() <= 0) {
+                BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
+                query.getObject(objId, new QueryListener<BiyebanUser>() {
+
+                    @Override
+                    public void done(BiyebanUser user, BmobException e) {
+                        if (user != null) {
+                            User u = new User(null, user.getObjectId(), user.getUsername(),
+                                    user.getAlias(), user.getAvatar() == null ? "" : user.getAvatar().getFileUrl());
+                            userDao.insert(u);
+
+                            String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
+                            n.setText(name);
+                            String avatar = u.getAvatar();
+                            if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                FactoryInterface.setAvatar(context, avatar, a);
+                            } else {
+                                a.setImageResource(R.drawable.user);
+                            }
+                        } else {
+                            L.d("user == null");
+                        }
+                    }
+                });
+            } else {
+                User u = userList.get(0);
+
+                String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
+                n.setText(name);
+                String avatar = u.getAvatar();
+                if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                    FactoryInterface.setAvatar(context, avatar, a);
+                } else {
+                    a.setImageResource(R.drawable.user);
+                }
+            }
+        }
+    }
+
+    public static void updateUserItem(ContactsItem item, UserDao userDao, Context context) {
+        if (!TextUtils.isEmpty(item.getObjId())) {
+            QueryBuilder<User> qb = userDao.queryBuilder();
+            qb.where(UserDao.Properties.Objid.gt(item.getObjId()));
+            List<User> userList = qb.list();
+            L.d("updateUserItem userList.size()=" + userList.size());
+            if (userList.size() <= 0) {
+                User u = new User(null, item.getObjId(), item.getUsername(),
+                        item.getAlias(), item.getAvatar());
+                userDao.insert(u);
+            } else {
+                User u = userList.get(0);
+                if (false == u.getAvatar().equals(item.getAvatar()) ||
+                        false == u.getAlias().equals(item.getAlias())) {
+                    u.setAvatar(item.getAvatar());
+                    u.setAlias(item.getAlias());
+                    userDao.update(u);
+                }
+            }
+        }
     }
 }

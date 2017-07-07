@@ -31,7 +31,10 @@ import android.widget.TextView;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
+import com.laocuo.biyeban.greendao.DaoSession;
+import com.laocuo.biyeban.greendao.UserDao;
 import com.laocuo.biyeban.main.freshnews.FreshNewsItem;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.recycler.adapter.BaseViewHolder;
@@ -50,6 +53,7 @@ public class ChatListAdapter extends BaseAdapter {
     private ViewHolder holder;
     private Context mContext;
     private String mCurrentUserObjId;
+    private UserDao mUserDao;
 
     public void setChatList(List<Chat> list) {
         messages = list;
@@ -64,9 +68,10 @@ public class ChatListAdapter extends BaseAdapter {
     }
 
     @Inject
-    ChatListAdapter(Context context, String currentUserObjId) {
+    ChatListAdapter(Context context, String currentUserObjId, DaoSession daosession) {
         this.mContext = context;
         this.mCurrentUserObjId = currentUserObjId;
+        mUserDao = daosession.getUserDao();
     }
 
     public void setCurrentUserObjId(String currentUserObjId) {
@@ -130,7 +135,8 @@ public class ChatListAdapter extends BaseAdapter {
         }
 
         Chat chat = messages.get(position);
-        bindCommonItems(holder, chat.getUserObjectId());
+
+        BmobUtils.bindUserItems(holder.tv_name, holder.tv_avatar, chat.getUserObjectId(), mUserDao, mContext);
 
         holder.tv_content.setText(chat.getContent());
         String time = chat.getTime();
@@ -154,31 +160,5 @@ public class ChatListAdapter extends BaseAdapter {
         TextView tv_content;
         TextView tv_time;
         ImageView tv_avatar;
-    }
-
-    private void bindCommonItems(final ViewHolder holder, final String userObjId) {
-        final TextView n = holder.tv_name;
-        final ImageView a = holder.tv_avatar;
-        if (!TextUtils.isEmpty(userObjId)) {
-            BmobQuery<BiyebanUser> query = new BmobQuery<>();
-            query.getObject(userObjId, new QueryListener<BiyebanUser>() {
-
-                @Override
-                public void done(BiyebanUser user, BmobException e) {
-                    if (user != null) {
-                        String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
-                        n.setText(name);
-                        String avatar = user.getAvatar() != null ? user.getAvatar().getFileUrl() : null;
-                        if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                            FactoryInterface.setAvatar(mContext, avatar, a);
-                        } else {
-                            a.setImageResource(R.drawable.user);
-                        }
-                    } else {
-                        L.d("user == null");
-                    }
-                }
-            });
-        }
     }
 }

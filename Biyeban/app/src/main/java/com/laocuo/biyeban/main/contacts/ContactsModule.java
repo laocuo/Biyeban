@@ -20,6 +20,9 @@ package com.laocuo.biyeban.main.contacts;
 
 import android.content.Context;
 
+import com.laocuo.biyeban.BiyebanApp;
+import com.laocuo.biyeban.greendao.DaoSession;
+
 import dagger.Module;
 import dagger.Provides;
 
@@ -40,5 +43,10 @@ public class ContactsModule {
     @Provides
     Context provideContext() {
         return mContactsFragment.getContext();
+    }
+
+    @Provides
+    DaoSession provideDaoSession() {
+        return BiyebanApp.getInstance().getDaoSession();
     }
 }

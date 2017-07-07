@@ -62,10 +62,10 @@ public class ContactsPresenter implements IContactsPresenter {
                 @Override
                 public void done(BiyebanUser user, BmobException e) {
                     if (e == null) {
-                        int pos = count;
                         String avatar = user.getAvatar()==null?"":user.getAvatar().getFileUrl();
                         String alias = TextUtils.isEmpty(user.getAlias())?user.getUsername():user.getAlias();
                         mContactsList.add(new ContactsItem(ContactsItem.ITEM_TYPE_NORMAL,
+                                user.getUsername(),
                                 avatar,
                                 alias,
                                 transformPinYin(alias).toUpperCase(),

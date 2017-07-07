@@ -34,6 +34,8 @@ import com.laocuo.biyeban.greendao.User;
 import com.laocuo.biyeban.greendao.UserDao;
 import com.laocuo.biyeban.utils.L;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
 import java.util.List;
 
 import javax.inject.Inject;
@@ -100,17 +102,18 @@ public class TestPresenter implements TestContact.Presentr {
     }
 
     private void add() {
-        mSessionUserDao.insert(new User(index, "one"));
+        mSessionUserDao.insert(new User(null, "", "one", "", ""));
         index++;
     }
 
     private String query() {
+
         List<User> userList = mSessionUserDao.loadAll();
         String username = "";
         for (int i=0; i<userList.size();i++) {
             username += userList.get(i).getId();
             username += " ";
-            username += userList.get(i).getName();
+            username += userList.get(i).getUsername();
             username += " ";
         }
         return username;

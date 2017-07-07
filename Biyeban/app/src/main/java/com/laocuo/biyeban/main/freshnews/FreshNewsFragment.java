@@ -78,7 +78,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 
     @Override
     protected void doInit() {
-        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, true, mAdapter, this);
+        RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, false, mAdapter, this);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

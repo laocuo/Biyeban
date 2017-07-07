@@ -54,6 +54,7 @@ public class BmobUtils {
         final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
         if (user != null) {
             user.logOut();
+//            BiyebanApp.getInstance().getDaoSession().getUserDao().deleteAll();
         }
     }
 
@@ -121,20 +122,25 @@ public class BmobUtils {
             , final UserDao userDao, final Context context) {
         if (!TextUtils.isEmpty(objId)) {
             QueryBuilder<User> qb = userDao.queryBuilder();
-            qb.where(UserDao.Properties.Objid.gt(objId));
+            qb.where(UserDao.Properties.Objid.eq(objId)).build();
             List<User> userList = qb.list();
-            L.d("bindUserItems userList.size()="+userList.size());
+//            L.d("bindUserItems userList.size()="+userList.size());
+//            L.d("objId = "+objId);
             if (userList.size() <= 0) {
+                final User u = new User(null, objId, "", "", "");
+                userDao.insert(u);
+//                L.d("insert objId = "+objId);
+
                 BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
                 query.getObject(objId, new QueryListener<BiyebanUser>() {
 
                     @Override
                     public void done(BiyebanUser user, BmobException e) {
                         if (user != null) {
-                            User u = new User(null, user.getObjectId(), user.getUsername(),
-                                    user.getAlias(), user.getAvatar() == null ? "" : user.getAvatar().getFileUrl());
-                            userDao.insert(u);
-
+                            u.setUsername(user.getUsername());
+                            u.setAlias(user.getAlias());
+                            u.setAvatar(user.getAvatar() == null ? "" : user.getAvatar().getFileUrl());
+                            userDao.update(u);
                             String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
                             n.setText(name);
                             String avatar = u.getAvatar();
@@ -150,29 +156,54 @@ public class BmobUtils {
                 });
             } else {
                 User u = userList.get(0);
+//                L.d("u.getObjid() = "+u.getObjid());
 
-                String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
-                n.setText(name);
-                String avatar = u.getAvatar();
-                if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                    FactoryInterface.setAvatar(context, avatar, a);
+                if (TextUtils.isEmpty(u.getUsername())) {
+                    BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
+                    query.getObject(u.getObjid(), new QueryListener<BiyebanUser>() {
+
+                        @Override
+                        public void done(BiyebanUser user, BmobException e) {
+                            if (user != null) {
+                                String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
+                                n.setText(name);
+                                String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
+                                if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                    FactoryInterface.setAvatar(context, avatar, a);
+                                } else {
+                                    a.setImageResource(R.drawable.user);
+                                }
+                            } else {
+                                L.d("user == null");
+                            }
+                        }
+                    });
                 } else {
-                    a.setImageResource(R.drawable.user);
+                    String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
+                    n.setText(name);
+                    String avatar = u.getAvatar();
+                    if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                        FactoryInterface.setAvatar(context, avatar, a);
+                    } else {
+                        a.setImageResource(R.drawable.user);
+                    }
                 }
             }
         }
     }
 
-    public static void updateUserItem(ContactsItem item, UserDao userDao, Context context) {
+    public static void updateUserItem(ContactsItem item, UserDao userDao) {
         if (!TextUtils.isEmpty(item.getObjId())) {
             QueryBuilder<User> qb = userDao.queryBuilder();
-            qb.where(UserDao.Properties.Objid.gt(item.getObjId()));
+            qb.where(UserDao.Properties.Objid.eq(item.getObjId())).build();
             List<User> userList = qb.list();
-            L.d("updateUserItem userList.size()=" + userList.size());
+//            L.d("updateUserItem userList.size() = " + userList.size());
+//            L.d("objId = "+item.getObjId());
             if (userList.size() <= 0) {
                 User u = new User(null, item.getObjId(), item.getUsername(),
                         item.getAlias(), item.getAvatar());
                 userDao.insert(u);
+//                L.d("insert objId = "+item.getObjId());
             } else {
                 User u = userList.get(0);
                 if (false == u.getAvatar().equals(item.getAvatar()) ||

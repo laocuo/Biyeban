@@ -84,6 +84,6 @@ public class ContactsListAdapter extends BaseMultiItemQuickAdapter<ContactsItem>
         contact_head.setText(head);
         contact_head.setVisibility(View.VISIBLE);
 
-        BmobUtils.updateUserItem(item, mUserDao, mContext);
+        BmobUtils.updateUserItem(item, mUserDao);
     }
 }

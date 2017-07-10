@@ -23,10 +23,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
-//import android.os.Handler;
-//import android.support.v7.app.ActionBar;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteException;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,26 +37,33 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-//import android.widget.ArrayAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.laocuo.biyeban.BiyebanApp;
 import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.ExitApplication;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.greendao.Account;
+import com.laocuo.biyeban.greendao.AccountDao;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.PreferenceUtils;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.Utils;
 
-//import java.util.List;
+
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
@@ -80,8 +86,6 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
     View mProgressView;
     @BindView(R.id.login_form)
     View mLoginFormView;
-
-//    private Handler mHandler = new Handler();
 
     public static void launch(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -110,24 +114,15 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         initToolBar(mToolbar, true, R.string.login);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mPasswordView.setOnEditorActionListener(this);
+        addAccountsToAutoComplete(getAccounts());
     }
 
     @Override
     protected void getData(boolean isRefresh) {
-        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
-        if (user != null) {
-            L.d("onStart getCurrentUser=" + user.getUsername());
-            mUsernameView.setText(user.getUsername());
-            mPasswordView.setText(user.getUsername());
+        String username = PreferenceUtils.getString(this, PreferenceUtils.USERNAME);
+        if (!TextUtils.isEmpty(username)) {
+            mUsernameView.setText(username);
             mPasswordView.requestFocus();
-//            mHandler.postDelayed(new Runnable() {
-//                @Override
-//                public void run() {
-//                    attemptLogin();
-//                }
-//            }, 1000);
-        } else {
-            L.d("onStart getCurrentUser=null");
         }
     }
 
@@ -234,6 +229,7 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
 //                    SnackbarUtil.showShortSnackbar(mLoginFormView, "login success!");
                     L.d("login ok getUsername = " + u.getUsername());
                     L.d("login ok getGraduClass = " + u.getGraduClass());
+                    saveAccount(u.getUsername());
                     enterMainMenu();
                 } else {
                     displayProgress(false);
@@ -245,8 +241,30 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         });
     }
 
+    private void saveAccount(String username) {
+        PreferenceUtils.setString(LoginActivity.this, PreferenceUtils.USERNAME, username);
+        AccountDao ad = BiyebanApp.getInstance().getDaoSession().getAccountDao();
+        QueryBuilder<Account> qb = ad.queryBuilder();
+        qb.where(AccountDao.Properties.Username.eq(username)).build();
+        List<Account> list = qb.list();
+        if (list.size() <= 0) {
+            ad.insert(new Account(null, username));
+        }
+    }
+
+    private List<String> getAccounts() {
+        List<String> list = new ArrayList<>();
+        AccountDao ad = BiyebanApp.getInstance().getDaoSession().getAccountDao();
+        List<Account> accounts = ad.loadAll();
+        if (accounts.size() > 0) {
+            for (Account a : accounts) {
+                list.add(a.getUsername());
+            }
+        }
+        return list;
+    }
+
     private void enterMainMenu() {
-        L.d("login success");
         setResult(1);
         finish();
         Utils.enterMain(LoginActivity.this);
@@ -298,14 +316,14 @@ public class LoginActivity extends BaseActivity implements TextView.OnEditorActi
         }
     }
 
-//    private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
-//        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
-//        ArrayAdapter<String> adapter =
-//                new ArrayAdapter<>(LoginActivity.this,
-//                        android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
-//
-//        mUsernameView.setAdapter(adapter);
-//    }
+    private void addAccountsToAutoComplete(List<String> accountsCollection) {
+        //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
+        ArrayAdapter<String> adapter =
+                new ArrayAdapter<>(LoginActivity.this,
+                        android.R.layout.simple_dropdown_item_1line, accountsCollection);
+
+        mUsernameView.setAdapter(adapter);
+    }
 
     private void hideKeyboard() {
         InputMethodManager inputMethodManager =

@@ -178,4 +178,49 @@ public class Utils {
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
+
+//    private void loadData() {
+//        //do something
+//        Observable.from(new Integer[]{1, 2, 3, 4})
+//                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe(new Action0() {
+//                    @Override
+//                    public void call() {
+//                        mView.showLoading();
+//                    }
+//                })
+//                .subscribeOn(AndroidSchedulers.mainThread())
+//                .compose(mTransformer)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<String>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        mView.hideLoading();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(String s) {
+//                        L.d(s+"\n");
+//                    }
+//                });
+//    }
+//
+//    private Observable.Transformer<Integer, String> mTransformer =
+//            new Observable.Transformer<Integer, String>() {
+//                @Override
+//                public Observable<String> call(Observable<Integer> observable) {
+//                    return observable
+//                            .map(new Func1<Integer, String>() {
+//                                @Override
+//                                public String call(Integer integer) {
+//                                    return integer.toString();
+//                                }
+//                            });
+//                }
+//            };
 }

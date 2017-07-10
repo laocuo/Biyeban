@@ -77,4 +77,6 @@ dependencies {
     compile 'com.github.promeg:tinypinyin:1.0.0'
 
     compile project(path: ':RecyclerViewHelper')
+
+    compile 'de.greenrobot:eventbus:3.0.0-beta1'
 }

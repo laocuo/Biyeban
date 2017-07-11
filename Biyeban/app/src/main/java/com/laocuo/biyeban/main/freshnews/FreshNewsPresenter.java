@@ -20,6 +20,7 @@ package com.laocuo.biyeban.main.freshnews;
 
 
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.bmob.FreshNews;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.Utils;
@@ -38,58 +39,36 @@ import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 
 public class FreshNewsPresenter implements IFreshNewsPresenter {
+    public static final int STEP  = 10;
     private IFreshNewsView mIFreshNewsView;
     private List<FreshNewsItem> mFreshNewsItems = new ArrayList<>();
     private List<FreshNewsItem> mFreshNewsMoreItems = new ArrayList<>();
-    private int index = 0;
     private BiyebanUser user = BmobUtils.getCurrentUser();
     private String freshNewsTableName;
+    private int skip = 0;
 
     @Override
     public void loadData() {
         mIFreshNewsView.showLoading();
-        mFreshNewsItems.clear();
         BmobQuery bmobQuery = new BmobQuery(freshNewsTableName);
         bmobQuery.order("-createdAt");
-        bmobQuery.setLimit(20);
+        bmobQuery.setLimit(STEP);
+        bmobQuery.setSkip(skip * STEP);
+        skip++;
+//        bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        boolean isCache = bmobQuery.hasCachedResult(FreshNews.class);
+        L.d("loadData isCache="+isCache);
         bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
 
             @Override
             public void done(JSONArray array, BmobException e) {
                 if (e == null) {
-                    int len = array.length();
-                    for (int i=0;i<len;i++) {
-                        JSONObject data = null;
-                        try {
-                            data = array.getJSONObject(i);
-                        } catch (JSONException e1) {
-                            e1.printStackTrace();
-                        }
-//                        L.d(i+" data:"+data.toString());
-                        ArrayList<String> imgs = null;
-                        JSONArray pics = data.optJSONArray("pics");
-                        if (pics != null && pics.length() > 0) {
-                            imgs = new ArrayList<>();
-                            for (int j = 0;j < pics.length();j++) {
-                                try {
-                                    String img = (String) pics.get(j);
-                                    if (img != null) {
-                                        imgs.add(img);
-                                    }
-                                } catch (JSONException e1) {
-                                    e1.printStackTrace();
-                                }
-                            }
-                        }
-                        mFreshNewsItems.add(new FreshNewsItem(
-                                FreshNewsItem.ITEM_TYPE_NORMAL,
-                                data.optString("userObjectId"),
-                                data.optString("content"),
-                                data.optString("time"),
-                                imgs));
-                    }
+                    mFreshNewsItems.clear();
+                    mFreshNewsItems.addAll(parseJsonArray(array));
                     if (mFreshNewsItems.size() > 0) {
                         mIFreshNewsView.loadData(mFreshNewsItems);
+                    } else {
+                        mIFreshNewsView.loadNoData();
                     }
                 } else {
                     L.d(e.toString());
@@ -97,12 +76,67 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
                 mIFreshNewsView.hideLoading();
             }
         });
+    }
 
+    private List<FreshNewsItem> parseJsonArray(JSONArray array) {
+        List<FreshNewsItem> newsItems = new ArrayList<>();
+        int len = array.length();
+        for (int i=0;i<len;i++) {
+            JSONObject data = null;
+            try {
+                data = array.getJSONObject(i);
+            } catch (JSONException e1) {
+                e1.printStackTrace();
+            }
+            ArrayList<String> imgs = null;
+            JSONArray pics = data.optJSONArray("pics");
+            if (pics != null && pics.length() > 0) {
+                imgs = new ArrayList<>();
+                for (int j = 0;j < pics.length();j++) {
+                    try {
+                        String img = (String) pics.get(j);
+                        if (img != null) {
+                            imgs.add(img);
+                        }
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+            newsItems.add(new FreshNewsItem(
+                    FreshNewsItem.ITEM_TYPE_NORMAL,
+                    data.optString("userObjectId"),
+                    data.optString("content"),
+                    data.optString("time"),
+                    imgs));
+        }
+        return newsItems;
     }
 
     @Override
     public void loadMoreData() {
+        BmobQuery bmobQuery = new BmobQuery(freshNewsTableName);
+        bmobQuery.order("-createdAt");
+        bmobQuery.setLimit(STEP);
+        bmobQuery.setSkip(skip * STEP);
+        skip++;
+        boolean isCache = bmobQuery.hasCachedResult(FreshNews.class);
+        L.d("loadMoreData isCache="+isCache);
+        bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
 
+            @Override
+            public void done(JSONArray array, BmobException e) {
+                if (e == null) {
+                    mFreshNewsMoreItems.clear();
+                    mFreshNewsMoreItems.addAll(parseJsonArray(array));
+                    if (mFreshNewsMoreItems.size() > 0) {
+                        mIFreshNewsView.loadMoreData(mFreshNewsMoreItems);
+                    }
+                } else {
+                    L.d(e.toString());
+                }
+            }
+        });
     }
 
     @Inject
@@ -114,6 +148,7 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
 
     @Override
     public void swipeRefresh() {
+        skip = 0;
         loadData();
     }
 }

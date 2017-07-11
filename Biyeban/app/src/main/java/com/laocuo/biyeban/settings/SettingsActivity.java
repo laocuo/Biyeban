@@ -30,13 +30,17 @@ import android.preference.PreferenceManager;
 import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
+import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.bmob.GraduClass;
+import com.laocuo.biyeban.graduation.GraduationActivity;
 import com.laocuo.biyeban.login.LoginActivity;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.FactoryInterface;
@@ -45,10 +49,13 @@ import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.UploadBmobFileListener;
 
 import java.io.File;
+import java.util.ArrayList;
 
+import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -84,7 +91,14 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static class MeFragment extends PreferenceFragment {
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.hold, R.anim.slide_right_exit);
+    }
+
+    public static class MeFragment extends PreferenceFragment
+            implements ExitClassDialogFragment.ExitClassListener{
         private static final int REQUEST_LOGIN = 1;
         private static final int SELECT_PORTRAIT = 2;
         private static final int CROP_PORTRAIT = 3;
@@ -93,6 +107,7 @@ public class SettingsActivity extends AppCompatActivity {
         public static final String AVATAR = "pref_key_user_avatar";
         public static final String ALIAS = "pref_key_user_alias";
         public static final String LOGINSTATUS = "pref_key_login_status";
+        public static final String EXITCLASS = "pref_key_exit_class";
         public static final String ABOUT = "pref_key_about";
 
         private SwitchPreference mLoginSwitch;
@@ -100,6 +115,7 @@ public class SettingsActivity extends AppCompatActivity {
         private EditTextPreference mAlias;
 
         private ProgressDialog mWaittingDialog;
+        private ExitClassDialogFragment mExitClassDialogFragment;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -118,6 +134,8 @@ public class SettingsActivity extends AppCompatActivity {
             // guidelines.
             bindPreferenceSummaryToValue(mAlias);
             bindPreferenceSummaryToValue(mLoginSwitch);
+            mExitClassDialogFragment = new ExitClassDialogFragment();
+            mExitClassDialogFragment.setListener(this);
         }
 
         @Override
@@ -125,6 +143,10 @@ public class SettingsActivity extends AppCompatActivity {
             final String key = preference.getKey();
             if (AVATAR.equals(key)) {
                 selectPortrait();
+                return true;
+            } else if (EXITCLASS.equals(key)) {
+//                exitClass();
+                mExitClassDialogFragment.show(getFragmentManager(), "exitclass");
                 return true;
             } else if (ABOUT.equals(key)) {
                 showAbout();
@@ -284,6 +306,56 @@ public class SettingsActivity extends AppCompatActivity {
             });
         }
 
+        private void exitClass() {
+            showProgress(true);
+            final BiyebanUser currentUser = BmobUtils.getCurrentUser();
+            BiyebanUser user = new BiyebanUser();
+            user.setGraduClass("");
+            user.update(currentUser.getObjectId(), new UpdateListener() {
+                @Override
+                public void done(BmobException e) {
+                    if (e != null) {
+                        L.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
+                        showProgress(false);
+                        SnackbarUtil.showShortSnackbar(getView(), "退出失败");
+                    } else {
+                        BmobQuery<GraduClass> query = new BmobQuery<GraduClass>();
+                        query.getObject(currentUser.getGraduClass(), new QueryListener<GraduClass>() {
+                            @Override
+                            public void done(GraduClass aClass, BmobException e) {
+                                if (e == null) {
+                                    ArrayList<String> classmates = aClass.getClassmates();
+                                    L.d("classmates.size()=" + classmates.size());
+                                    classmates.remove(currentUser.getObjectId());
+                                    L.d("classmates.size()=" + classmates.size());
+                                    GraduClass graduClass = new GraduClass();
+                                    graduClass.setClassmates(classmates);
+                                    graduClass.update(aClass.getObjectId(), new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            showProgress(false);
+                                            if (e == null) {
+                                                BmobUtils.clearCache();
+                                                getActivity().finish();
+                                                GraduationActivity.launch(getActivity());
+                                            } else {
+                                                L.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
+                                                SnackbarUtil.showShortSnackbar(getView(), "退出失败");
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    L.i("bmob", "更新失败：" + e.getMessage() + "," + e.getErrorCode());
+                                    showProgress(false);
+                                    SnackbarUtil.showShortSnackbar(getView(), "退出失败");
+                                }
+                            }
+                        });
+                    }
+                }
+            });
+        }
+
         private void showAbout() {
 //        Intent i = new Intent(mContext, HelpActivity.class);
 //        startActivity(i);
@@ -338,11 +410,10 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
             }
         }
-    }
 
-    @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.hold, R.anim.slide_right_exit);
+        @Override
+        public void confirm() {
+            exitClass();
+        }
     }
 }

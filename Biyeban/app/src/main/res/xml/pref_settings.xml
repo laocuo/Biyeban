@@ -14,6 +14,9 @@
             android:title="@string/login"
             android:summary="@string/login_switch"
             android:defaultValue="false"/>
+        <Preference
+            android:key="pref_key_exit_class"
+            android:title="@string/exit_class"/>
     </PreferenceCategory>
 
     <PreferenceCategory

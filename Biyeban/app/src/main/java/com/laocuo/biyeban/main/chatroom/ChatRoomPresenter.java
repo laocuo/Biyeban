@@ -43,13 +43,16 @@ import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.ValueEventListener;
 
 public class ChatRoomPresenter implements IChatRoomPresenter {
+    public static final int STEP  = 10;
     private IChatRoomView mIChatRoomView;
     private BmobRealTimeData data = new BmobRealTimeData();
     private BiyebanUser user;
     private String chatRoomTableName;
     private List<Chat> messages = new ArrayList<>();
+    private List<Chat> moreMessages = new ArrayList<>();
     private boolean isListenTable = false;
     private ChatValueEventListener mChatValueEventListener = null;
+    private int skip = 0;
 
     @Override
     public void loadData() {
@@ -57,7 +60,9 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
         messages.clear();
         BmobQuery bmobQuery = new BmobQuery(chatRoomTableName);
         bmobQuery.order("-createdAt");
-        bmobQuery.setLimit(20);
+        bmobQuery.setLimit(STEP);
+        bmobQuery.setSkip(skip * STEP);
+        skip++;
         bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
             @Override
             public void done(JSONArray array, BmobException e) {
@@ -79,6 +84,8 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                     }
                     if (messages.size() > 0) {
                         mIChatRoomView.loadData(messages);
+                    } else {
+                        mIChatRoomView.loadNoData();
                     }
                 } else {
                     L.d(e.toString());
@@ -90,7 +97,39 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
 
     @Override
     public void loadMoreData() {
-
+        moreMessages.clear();
+        BmobQuery bmobQuery = new BmobQuery(chatRoomTableName);
+        bmobQuery.order("-createdAt");
+        bmobQuery.setLimit(STEP);
+        bmobQuery.setSkip(skip * STEP);
+        skip++;
+        bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
+            @Override
+            public void done(JSONArray array, BmobException e) {
+                if (e == null) {
+                    int len = array.length();
+                    L.d("array.length()"+len);
+                    for (int i=0;i<len;i++) {
+                        JSONObject data;
+                        try {
+                            data = array.getJSONObject(i);
+                            Chat chat = new Chat(data.optString("userObjectId"),
+                                    data.optString("content"),
+                                    chatRoomTableName);
+                            chat.setTime(data.optString("time"));
+                            moreMessages.add(chat);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    if (moreMessages.size() > 0) {
+                        mIChatRoomView.loadMoreData(moreMessages);
+                    }
+                } else {
+                    L.d(e.toString());
+                }
+            }
+        });
     }
 
     @Inject
@@ -107,7 +146,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
 
     @Override
     public void listenTable() {
-        if (!isListenTable) {
+        if (!isListenTable && data != null) {
             isListenTable = true;
             L.d("listenTable = "+chatRoomTableName);
             if (mChatValueEventListener == null) {
@@ -119,7 +158,7 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
 
     @Override
     public void unlistenTable() {
-        if (isListenTable) {
+        if (isListenTable && data != null) {
             L.d("unlistenTable = "+chatRoomTableName);
             isListenTable = false;
             data.unsubTableUpdate(chatRoomTableName);
@@ -143,38 +182,46 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
         });
     }
 
-    @Override
-    public void sendMsg(final String userObjId, final String content) {
-        BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
-        query.getObject(userObjId, new QueryListener<BiyebanUser>() {
+    private void sendMsg(String userObjId, String content, String chatRoomTableName) {
+        Chat chat = new Chat(userObjId, content, chatRoomTableName);
+        chat.setTime(Utils.getCurrentTime());
+        chat.save(new SaveListener<String>() {
             @Override
-            public void done(BiyebanUser biyebanUser, BmobException e) {
+            public void done(String s, BmobException e) {
                 if (e == null) {
-                    Boolean canChat = biyebanUser.getCanChat();
-                    L.d("canChat.booleanValue()="+canChat.booleanValue());
-                    if (canChat.booleanValue() == true) {
-                        Chat chat = new Chat(userObjId, content, chatRoomTableName);
-                        chat.setTime(Utils.getCurrentTime());
-                        chat.save(new SaveListener<String>() {
-                            @Override
-                            public void done(String s, BmobException e) {
-                                if (e == null) {
-                                    mIChatRoomView.sendMsg(true);
-                                } else {
-                                    L.d(e.toString());
-                                    mIChatRoomView.sendMsg(false);
-                                }
-                            }
-                        });
-                        return;
-                    } else {
-                        mIChatRoomView.chatForbidden();
-                    }
+                    mIChatRoomView.sendMsg(true);
                 } else {
                     L.d(e.toString());
+                    mIChatRoomView.sendMsg(false);
                 }
             }
         });
+    }
+
+    @Override
+    public void sendMsg(final String userObjId, final String content) {
+        if (true) {
+            sendMsg(userObjId, content, chatRoomTableName);
+        } else {
+            BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
+            query.getObject(userObjId, new QueryListener<BiyebanUser>() {
+                @Override
+                public void done(BiyebanUser biyebanUser, BmobException e) {
+                    if (e == null) {
+                        Boolean canChat = biyebanUser.getCanChat();
+                        L.d("canChat.booleanValue()=" + canChat.booleanValue());
+                        if (canChat.booleanValue() == true) {
+                            sendMsg(userObjId, content, chatRoomTableName);
+                            return;
+                        } else {
+                            mIChatRoomView.chatForbidden();
+                        }
+                    } else {
+                        L.d(e.toString());
+                    }
+                }
+            });
+        }
     }
 
     @Override

@@ -23,8 +23,13 @@ import android.text.TextUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.GraduClass;
+import com.laocuo.biyeban.greendao.DaoSession;
+import com.laocuo.biyeban.greendao.User;
+import com.laocuo.biyeban.greendao.UserDao;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
+
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,6 +52,7 @@ public class ContactsPresenter implements IContactsPresenter {
     private List<String> mNaviHeads = new ArrayList<String>();
     private Set<String> mNaviHeadsSet = new LinkedHashSet<>();
     private int count, length;
+    private UserDao userDao;
 
     @Override
     public void loadData() {
@@ -57,25 +63,41 @@ public class ContactsPresenter implements IContactsPresenter {
         length = mClassMates.size();
         L.d("ContactsPresenter loadData:"+mClassMates.toString());
         for (String objId : mClassMates) {
-            BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
-            query.getObject(objId, new QueryListener<BiyebanUser>() {
-                @Override
-                public void done(BiyebanUser user, BmobException e) {
-                    if (e == null) {
-                        String avatar = user.getAvatar()==null?"":user.getAvatar().getFileUrl();
-                        String alias = TextUtils.isEmpty(user.getAlias())?user.getUsername():user.getAlias();
-                        mContactsList.add(new ContactsItem(ContactsItem.ITEM_TYPE_NORMAL,
-                                user.getUsername(),
-                                avatar,
-                                alias,
-                                transformPinYin(alias).toUpperCase(),
-                                user.getObjectId()));
-                    } else {
-                        L.d(e.toString());
+            QueryBuilder<User> qb = userDao.queryBuilder();
+            qb.where(UserDao.Properties.Objid.eq(objId)).build();
+            List<User> userList = qb.list();
+            if (userList.size() <= 0) {
+                BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
+                query.getObject(objId, new QueryListener<BiyebanUser>() {
+                    @Override
+                    public void done(BiyebanUser user, BmobException e) {
+                        if (e == null) {
+                            String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
+                            String alias = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
+                            mContactsList.add(new ContactsItem(ContactsItem.ITEM_TYPE_NORMAL,
+                                    user.getUsername(),
+                                    avatar,
+                                    alias,
+                                    transformPinYin(alias).toUpperCase(),
+                                    user.getObjectId()));
+                            userDao.insert(new User(null, user.getObjectId(), user.getUsername(),
+                                    alias, avatar));
+                        } else {
+                            L.d(e.toString());
+                        }
+                        checkEnd();
                     }
-                    checkEnd();
-                }
-            });
+                });
+            } else {
+                User user = userList.get(0);
+                mContactsList.add(new ContactsItem(ContactsItem.ITEM_TYPE_NORMAL,
+                        user.getUsername(),
+                        user.getAvatar(),
+                        user.getAlias(),
+                        transformPinYin(user.getAlias()).toUpperCase(),
+                        user.getObjid()));
+                checkEnd();
+            }
         }
     }
 
@@ -118,8 +140,9 @@ public class ContactsPresenter implements IContactsPresenter {
     }
 
     @Inject
-    ContactsPresenter(IContactsView view) {
+    ContactsPresenter(IContactsView view, DaoSession daosession) {
         mIContactsView = view;
+        userDao = daosession.getUserDao();
     }
 
     @Override

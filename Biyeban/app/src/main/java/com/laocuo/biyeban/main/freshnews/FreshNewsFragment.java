@@ -27,6 +27,7 @@ import android.view.View;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.publish.PublishActivity;
+import com.laocuo.biyeban.utils.L;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 import com.laocuo.recycler.listener.OnRequestDataListener;
 
@@ -98,22 +99,32 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 
     @Override
     public void loadData(List<FreshNewsItem> data) {
+        L.d("loadData size="+data.size());
         mAdapter.updateItems(data);
+        checkEnd(data.size());
     }
 
     @Override
     public void loadMoreData(List<FreshNewsItem> data) {
+        L.d("loadMoreData size="+data.size());
         mAdapter.addItems(data);
         finishRefresh();
+        checkEnd(data.size());
     }
 
     @Override
     public void loadNoData() {
-
+        L.d("loadNoData");
     }
 
     @Override
     public void onLoadMore() {
         mPresenter.loadMoreData();
+    }
+
+    private void checkEnd(int size) {
+        if (size < FreshNewsPresenter.STEP) {
+            mAdapter.noMoreData();
+        }
     }
 }

@@ -6,6 +6,5 @@
     <item
         android:id="@+id/menu_settings"
         android:title="@string/setting"
-        android:icon="@android:drawable/ic_menu_info_details"
         app:showAsAction="always"/>
 </menu>

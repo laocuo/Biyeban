@@ -27,6 +27,7 @@ import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -53,6 +54,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
     private BiyebanUser user;
+    private boolean isEnd = true;
 
     @BindView(R.id.lv_data)
     ListView lv_data;
@@ -116,6 +118,22 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
         mProgressDialog = new ProgressDialog(mContext);
         lv_data.setDividerHeight(0);
         registerForContextMenu(lv_data);
+        lv_data.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    if (lv_data.getFirstVisiblePosition() == 0 && isEnd == false) {
+                        L.d("mPresenter.loadMoreData");
+                        mPresenter.loadMoreData();
+                    }
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+            }
+        });
     }
 
     @Override
@@ -212,18 +230,34 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
 
     @Override
     public void loadData(List<Chat> data) {
+        L.d("loadData size="+data.size());
         mChatListAdapter.setChatList(data);
         lv_data.setAdapter(mChatListAdapter);
         refrestList();
+        checkEnd(data.size());
     }
 
     @Override
     public void loadMoreData(List<Chat> data) {
-
+        checkEnd(data.size());
+        L.d("loadMoreData size="+data.size());
+        List<Chat> messages = mChatListAdapter.getChatList();
+        for (Chat c : data) {
+            messages.add(0, c);
+        }
+        mChatListAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void loadNoData() {
 
+    }
+
+    private void checkEnd(int size) {
+        if (size < ChatRoomPresenter.STEP) {
+            isEnd = true;
+        } else {
+            isEnd = false;
+        }
     }
 }

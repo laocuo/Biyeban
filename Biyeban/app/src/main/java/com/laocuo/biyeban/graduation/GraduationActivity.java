@@ -21,13 +21,18 @@ package com.laocuo.biyeban.graduation;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.Toolbar;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
+import com.laocuo.biyeban.base.ExitApplication;
 import com.laocuo.biyeban.graduation.create.GraduCreateFragment;
 import com.laocuo.biyeban.graduation.main.GraduMainFragment;
 import com.laocuo.biyeban.graduation.join.GraduJoinFragment;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.Utils;
 
 import javax.inject.Inject;
@@ -49,6 +54,12 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
         Intent intent = new Intent(context, GraduationActivity.class);
         context.startActivity(intent);
         ((Activity)context).overridePendingTransition(R.anim.fade_entry, R.anim.hold);
+    }
+
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ExitApplication.getInstance().addActivity(this);
     }
 
     @Override
@@ -93,6 +104,16 @@ public class GraduationActivity extends BaseActivity<GraduationPresenter> implem
     public void switchToMain() {
         Utils.enterMain(this);
         finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Fragment f = getSupportFragmentManager().findFragmentById(R.id.container);
+        if (f instanceof GraduCreateFragment || f instanceof GraduJoinFragment) {
+            super.onBackPressed();
+        } else {
+            ExitApplication.getInstance().exit();
+        }
     }
 
     @Override

@@ -24,8 +24,10 @@ import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.laocuo.biyeban.BiyebanApp;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
+import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.User;
 import com.laocuo.biyeban.greendao.UserDao;
 import com.laocuo.biyeban.main.contacts.ContactsItem;
@@ -197,13 +199,10 @@ public class BmobUtils {
             QueryBuilder<User> qb = userDao.queryBuilder();
             qb.where(UserDao.Properties.Objid.eq(item.getObjId())).build();
             List<User> userList = qb.list();
-//            L.d("updateUserItem userList.size() = " + userList.size());
-//            L.d("objId = "+item.getObjId());
             if (userList.size() <= 0) {
                 User u = new User(null, item.getObjId(), item.getUsername(),
                         item.getAlias(), item.getAvatar());
                 userDao.insert(u);
-//                L.d("insert objId = "+item.getObjId());
             } else {
                 User u = userList.get(0);
                 if (false == u.getAvatar().equals(item.getAvatar()) ||
@@ -214,5 +213,10 @@ public class BmobUtils {
                 }
             }
         }
+    }
+
+    public static void clearCache() {
+        DaoSession daoSession = BiyebanApp.getInstance().getDaoSession();
+        daoSession.clear();
     }
 }

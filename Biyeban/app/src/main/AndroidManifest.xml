@@ -30,28 +30,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.MainActivity"
-                  android:launchMode="singleTask"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".login.LoginActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".graduation.GraduationActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".settings.SettingsActivity"
-                  android:screenOrientation="portrait"
-                  android:theme="@style/AppTheme"/>
-        <activity android:name=".publish.PublishActivity"
-                  android:screenOrientation="portrait"/>
-        <activity android:name=".crop.ClipImageActivity"
-                  android:theme="@style/AppTheme"
-                  android:screenOrientation="portrait">
+                  android:launchMode="singleTask"/>
+        <activity android:name=".login.LoginActivity"/>
+        <activity android:name=".graduation.GraduationActivity"/>
+        <activity android:name=".settings.SettingsActivity"/>
+        <activity android:name=".publish.PublishActivity"/>
+        <activity android:name=".crop.ClipImageActivity">
             <intent-filter>
                 <action android:name="android.intent.action.biyeban.Crop" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".bigimage.BigImageActivity"
-                  android:screenOrientation="portrait"/>
+        <activity android:name=".bigimage.BigImageActivity"/>
     </application>
 
 </manifest>

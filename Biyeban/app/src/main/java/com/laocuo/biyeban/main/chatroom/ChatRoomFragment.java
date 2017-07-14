@@ -231,10 +231,10 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     @Override
     public void loadData(List<Chat> data) {
         L.d("loadData size="+data.size());
+        checkEnd(data.size());
         mChatListAdapter.setChatList(data);
         lv_data.setAdapter(mChatListAdapter);
-        refrestList();
-        checkEnd(data.size());
+        mChatListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -246,6 +246,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
             messages.add(0, c);
         }
         mChatListAdapter.notifyDataSetChanged();
+        lv_data.setSelection(data.size());
     }
 
     @Override

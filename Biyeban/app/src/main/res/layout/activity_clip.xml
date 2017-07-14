@@ -4,10 +4,10 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="#aaaaaa">
-
+    <include layout="@layout/layout_toolbar"/>
     <com.laocuo.biyeban.crop.ClipImageLayout
         android:id="@+id/id_clipImageLayout"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

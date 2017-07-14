@@ -140,7 +140,7 @@ public class GraduCreateFragment extends BaseFragment {
                 .province("江苏省")
                 .city("南京市")
                 .district("秦淮区")
-                .textColor(Color.parseColor("#4aa4a4"))
+                .textColor(Color.parseColor("#FF4081"))
                 .provinceCyclic(true)
                 .cityCyclic(false)
                 .districtCyclic(false)

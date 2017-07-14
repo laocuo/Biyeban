@@ -54,7 +54,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="1976届"
-            android:textColor="#4aa4a4"
+            android:textColor="@color/colorAccent"
             android:layout_alignParentEnd="true"
             android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
     </RelativeLayout>
@@ -72,7 +72,7 @@
             android:visibility="gone"
             custom:epvMaxShowNum="6"
             custom:epvRecycleMode="true"
-            custom:epvTextColor="#4aa4a4"
+            custom:epvTextColor="@color/colorAccent"
             custom:epvTextMaxScale="2.0"
             custom:epvTextMinAlpha="0.35"
             custom:epvTextPadding="10dp"
@@ -107,7 +107,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="江苏省南京市秦淮区"
-            android:textColor="#4aa4a4"
+            android:textColor="@color/colorAccent"
             android:maxLines="3"
             android:maxWidth="200dp"
             android:layout_alignParentEnd="true"

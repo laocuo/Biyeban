@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -14,17 +15,25 @@ import com.laocuo.biyeban.R;
 
 import java.io.ByteArrayOutputStream;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 
 public class ClipImageActivity extends AppCompatActivity {
-    private ClipImageLayout mClipImageLayout;
     private Intent mIntent;
+
+    @BindView(R.id.toolbar)
+    Toolbar mToolbar;
+    @BindView(R.id.id_clipImageLayout)
+    ClipImageLayout mClipImageLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_clip);
-        getSupportActionBar().setTitle("");
-        mClipImageLayout = (ClipImageLayout) findViewById(R.id.id_clipImageLayout);
+        ButterKnife.bind(this);
+        mToolbar.setTitle("");
+        setSupportActionBar(mToolbar);
         mIntent = getIntent();
         if (mIntent != null) {
             String s = mIntent.getStringExtra("CROP_URI");

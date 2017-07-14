@@ -27,7 +27,7 @@
             android:id="@+id/et_content"/>
         <Button
             android:id="@+id/btn_send"
-            style="@style/common_btn_style_green"
+            style="@style/common_btn_style"
             android:layout_marginBottom="3dp"
             android:layout_gravity="bottom"
             android:text="发送"/>
@@ -42,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/ll_bottom"
+            android:stackFromBottom="true"
             android:id="@+id/lv_data"/>
     </FrameLayout>
 </RelativeLayout>

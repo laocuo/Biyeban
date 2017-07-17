@@ -1,127 +1,45 @@
 <resources>
     <string name="app_name">毕业班</string>
-    <string name="title_freshnews">FreshNews</string>
-    <string name="title_contacts">Contacts</string>
-    <string name="title_chatroom">ChatRoom</string>
-    <string name="title_me">Me</string>
-
-    <string name="prompt_username">username</string>
-    <string name="prompt_password">password</string>
-    <string name="action_register">SignUp</string>
-    <string name="action_sign_in">Login</string>
-    <string name="action_sign_in_short">Login</string>
-    <string name="error_invalid_username">This username is too short</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
-
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
-    <string name="login_switch">Switch to logout</string>
-    <string name="edit_your_name">Edit your name</string>
-    <string name="user_settings">Settings</string>
-    <string name="setting">Settings</string>
-
-    <string name="user_name">user name</string>
-    <string name="name">name</string>
-    <string name="avatar">Avatar</string>
-    <string name="alias">Alias</string>
-    <string name="unset">Unset</string>
-    <string name="about">About</string>
-    <string name="other">Others</string>
-    <string name="empty">Empty</string>
-    <string name="exit_class">Exit Class</string>
-
-    <string name="publish">Publish</string>
-
-    <string name="gradu_class">Graduation Class</string>
-    <string name="title_gradu_main">GraduationMain</string>
-    <string name="title_gradu_join">GraduationJoin</string>
-    <string name="title_gradu_create">GraduationCreate</string>
-    <string name="join">Join</string>
-    <string name="create">Create</string>
-    <string name="class_name">Class Name</string>
-    <string name="gradu_year">Graduation Year</string>
-    <string name="district">District</string>
-    <string name="title_activity_setting">Settings</string>
-
-    <!-- Strings related to Settings -->
-
-    <!-- Example General settings -->
-    <string name="pref_header_general">General</string>
-
-    <string name="pref_title_social_recommendations">Enable social recommendations</string>
-    <string name="pref_description_social_recommendations">Recommendations for people to contact
-        based on your message history
-    </string>
-
-    <string name="pref_title_display_name">Display name</string>
-    <string name="pref_default_display_name">John Smith</string>
-
-    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
-
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value"/>
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
-    <string name="pref_header_notifications">Notifications</string>
-
-    <string name="pref_title_new_message_notifications">New message notifications</string>
-
-    <string name="pref_title_ringtone">Ringtone</string>
-    <string name="pref_ringtone_silent">Silent</string>
-
-    <string name="pref_title_vibrate">Vibrate</string>
-
-    <string name="stopchat">stop chat</string>
-    <string name="allowchat">allow chat</string>
-
-    <string name="clip">Clip</string>
+    <string name="title_freshnews">新鲜事</string>
+    <string name="title_contacts">通讯录</string>
+    <string name="title_chatroom">聊天室</string>
+    <string name="title_me">我</string>
+    <string name="prompt_username">用户名</string>
+    <string name="prompt_password">密码</string>
+    <string name="action_register">注册</string>
+    <string name="action_sign_in">登录</string>
+    <string name="action_sign_in_short">登录</string>
+    <string name="error_invalid_username">用户名太短</string>
+    <string name="error_invalid_password">密码太短</string>
+    <string name="error_incorrect_password">密码不正确</string>
+    <string name="error_field_required">必填项</string>
+    <string name="login">登入</string>
+    <string name="logout">登出</string>
+    <string name="login_switch">切换登出</string>
+    <string name="edit_your_name">输入你的名字</string>
+    <string name="user_settings">用户设置</string>
+    <string name="setting">设置</string>
+    <string name="user_name">用户名</string>
+    <string name="name">名字</string>
+    <string name="avatar">头像</string>
+    <string name="alias">昵称</string>
+    <string name="unset">未设置</string>
+    <string name="about">关于</string>
+    <string name="other">其他</string>
+    <string name="empty">空</string>
+    <string name="exit_class">退出班级</string>
+    <string name="publish">发布</string>
+    <string name="gradu_class">毕业班级</string>
+    <string name="title_gradu_main">班级管理</string>
+    <string name="title_gradu_join">加入班级</string>
+    <string name="title_gradu_create">创建班级</string>
+    <string name="join">加入</string>
+    <string name="create">创建</string>
+    <string name="class_name">班级名称</string>
+    <string name="gradu_year">毕业时间</string>
+    <string name="district">地区</string>
+    <string name="title_activity_setting">设置</string>
+    <string name="stopchat">禁言</string>
+    <string name="allowchat">解除</string>
+    <string name="clip">剪切</string>
 </resources>

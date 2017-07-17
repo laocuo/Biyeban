@@ -12,11 +12,13 @@ import android.view.MenuItem;
 
 
 import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.event.Event;
 
 import java.io.ByteArrayOutputStream;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 
 public class ClipImageActivity extends AppCompatActivity {
@@ -59,6 +61,7 @@ public class ClipImageActivity extends AppCompatActivity {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
                 byte[] datas = baos.toByteArray();
                 mIntent.putExtra("CROP_BITMAP", datas);
+//                EventBus.getDefault().post(new Event.ClipEvent(datas));
                 setResult(1, mIntent);
                 finish();
                 break;

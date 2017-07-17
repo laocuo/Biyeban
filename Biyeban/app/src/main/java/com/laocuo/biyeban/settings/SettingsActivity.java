@@ -38,6 +38,7 @@ import android.view.MenuItem;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.GraduClass;
+import com.laocuo.biyeban.event.Event;
 import com.laocuo.biyeban.graduation.GraduationActivity;
 import com.laocuo.biyeban.login.LoginActivity;
 import com.laocuo.biyeban.utils.BmobUtils;
@@ -55,6 +56,9 @@ import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
+import de.greenrobot.event.EventBus;
+import de.greenrobot.event.Subscribe;
+import de.greenrobot.event.ThreadMode;
 
 public class SettingsActivity extends AppCompatActivity {
     private Toolbar mToolbar;
@@ -97,7 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public static class MeFragment extends PreferenceFragment
             implements ExitClassDialogFragment.ExitClassListener{
-        private static final int REQUEST_LOGIN = 1;
+//        private static final int REQUEST_LOGIN = 1;
         private static final int SELECT_PORTRAIT = 2;
         private static final int CROP_PORTRAIT = 3;
 
@@ -134,6 +138,20 @@ public class SettingsActivity extends AppCompatActivity {
             bindPreferenceSummaryToValue(mLoginSwitch);
             mExitClassDialogFragment = new ExitClassDialogFragment();
             mExitClassDialogFragment.setListener(this);
+        }
+
+        @Override
+        public void onStart() {
+            super.onStart();
+//            L.d("EventBus register");
+//            EventBus.getDefault().register(this);
+        }
+
+        @Override
+        public void onStop() {
+            super.onStop();
+//            L.d("EventBus unregister");
+//            EventBus.getDefault().unregister(this);
         }
 
         @Override
@@ -375,17 +393,17 @@ public class SettingsActivity extends AppCompatActivity {
         public void onActivityResult(int requestCode, int resultCode, Intent data) {
             super.onActivityResult(requestCode, resultCode, data);
             switch (requestCode) {
-                case REQUEST_LOGIN:
-                    if (resultCode != 1) {
-                        //login fail
-                        mLoginSwitch.setChecked(false);
-                    } else {
-                        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
-                        mAlias.setSummary(user.getAlias());
-                        mAlias.setText(user.getAlias());
-                        mAvatar.updateAvatar();
-                    }
-                    break;
+//                case REQUEST_LOGIN:
+//                    if (resultCode != 1) {
+//                        //login fail
+//                        mLoginSwitch.setChecked(false);
+//                    } else {
+//                        final BiyebanUser user = BmobUser.getCurrentUser(BiyebanUser.class);
+//                        mAlias.setSummary(user.getAlias());
+//                        mAlias.setText(user.getAlias());
+//                        mAvatar.updateAvatar();
+//                    }
+//                    break;
 
                 case SELECT_PORTRAIT:
                     L.d("SELECT_PORTRAIT: data = " + data);
@@ -408,6 +426,13 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
             }
         }
+
+//        @Subscribe(threadMode = ThreadMode.MainThread)
+//        public void onClipEvent(Event.ClipEvent event) {
+//            byte[] b = event.datas;
+//            L.d("EventBus onClipEvent");
+//            saveAndUpdateAvatar(b);
+//        }
 
         @Override
         public void confirm() {

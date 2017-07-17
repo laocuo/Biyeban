@@ -46,7 +46,7 @@ public class ExitClassDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Do you want to exit class?");
+        builder.setMessage("确定退出?");
         builder.setCancelable(false);
         builder.setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
             @Override

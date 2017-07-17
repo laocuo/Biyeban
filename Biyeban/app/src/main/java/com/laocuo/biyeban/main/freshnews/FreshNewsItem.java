@@ -20,10 +20,11 @@ package com.laocuo.biyeban.main.freshnews;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
 
+import com.laocuo.biyeban.bigimage.BigImageActivity;
+import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.recycler.entity.MultiItemEntity;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 
@@ -31,7 +32,8 @@ import java.util.ArrayList;
 
 
 public class FreshNewsItem extends MultiItemEntity {
-    public static final int ITEM_TYPE_NORMAL = 1;
+    public static final int ITEM_TYPE_MULTI_IMAGES = 1;
+    public static final int ITEM_TYPE_SINGLE_IMAGE = 2;
     private String userObjectId;
     private String content;
     private String time;
@@ -54,18 +56,15 @@ public class FreshNewsItem extends MultiItemEntity {
         return userObjectId;
     }
 
+    public String getContent() {
+        return content;
+    }
+
     public String getTime() {
         return time;
     }
 
-    public void bindNormal(Context context, TextView c, RecyclerView r) {
-        if (!TextUtils.isEmpty(content)) {
-            c.setText(content);
-            c.setVisibility(View.VISIBLE);
-        } else {
-            c.setText("");
-            c.setVisibility(View.GONE);
-        }
+    public void bindMultiImages(Context context, RecyclerView r) {
         if (pics != null && pics.size() > 0) {
             if (mImgsAdapter == null) {
                 mImgsAdapter = new FreshNewsImagesAdapter(context);
@@ -78,5 +77,16 @@ public class FreshNewsItem extends MultiItemEntity {
             }
             r.setAdapter(null);
         }
+    }
+
+    public void bindSingleImage(final Context context, ImageView i) {
+        final String url = pics.get(0);
+        FactoryInterface.setImage(context, url, i);
+        i.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BigImageActivity.launch(context, url);
+            }
+        });
     }
 }

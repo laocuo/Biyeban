@@ -21,6 +21,7 @@ package com.laocuo.biyeban.utils;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -158,7 +159,6 @@ public class BmobUtils {
                 });
             } else {
                 User u = userList.get(0);
-//                L.d("u.getObjid() = "+u.getObjid());
 
                 if (TextUtils.isEmpty(u.getUsername())) {
                     BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
@@ -191,27 +191,45 @@ public class BmobUtils {
                     }
                 }
             }
-        }
-    }
 
-    public static void updateUserItem(ContactsItem item, UserDao userDao) {
-        if (!TextUtils.isEmpty(item.getObjId())) {
-            QueryBuilder<User> qb = userDao.queryBuilder();
-            qb.where(UserDao.Properties.Objid.eq(item.getObjId())).build();
-            List<User> userList = qb.list();
-            if (userList.size() <= 0) {
-                User u = new User(null, item.getObjId(), item.getUsername(),
-                        item.getAlias(), item.getAvatar());
-                userDao.insert(u);
-            } else {
-                User u = userList.get(0);
-                if (false == u.getAvatar().equals(item.getAvatar()) ||
-                        false == u.getAlias().equals(item.getAlias())) {
-                    u.setAvatar(item.getAvatar());
-                    u.setAlias(item.getAlias());
-                    userDao.update(u);
+            a.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (!TextUtils.isEmpty(objId)) {
+                        BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
+                        query.getObject(objId, new QueryListener<BiyebanUser>() {
+
+                            @Override
+                            public void done(BiyebanUser user, BmobException e) {
+                                if (user != null) {
+                                    String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
+                                    String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
+                                    QueryBuilder<User> qb = userDao.queryBuilder();
+                                    qb.where(UserDao.Properties.Objid.eq(objId)).build();
+                                    List<User> userList = qb.list();
+                                    if (userList.size() <= 0) {
+                                        User u = new User(null, user.getObjectId(), user.getUsername(),
+                                                name, avatar);
+                                        userDao.insert(u);
+                                    } else {
+                                        User u = userList.get(0);
+                                        u.setAlias(name);
+                                        u.setAvatar(avatar);
+                                        userDao.update(u);
+                                    }
+                                    if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                        FactoryInterface.setAvatar(context, avatar, a);
+                                    } else {
+                                        a.setImageResource(R.drawable.user);
+                                    }
+                                } else {
+                                    L.d("user == null");
+                                }
+                            }
+                        });
+                    }
                 }
-            }
+            });
         }
     }
 

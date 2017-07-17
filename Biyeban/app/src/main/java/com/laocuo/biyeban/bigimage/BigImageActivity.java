@@ -69,6 +69,16 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
         ((Activity)context).overridePendingTransition(R.anim.slide_right_entry, R.anim.hold);
     }
 
+    public static void launch(Context context, String photoUrl) {
+        Intent intent = new Intent(context, BigImageActivity.class);
+        intent.putExtra(PHOTO_SETS_POS, 0);
+        ArrayList<BigImageItem> bigImageItemList = new ArrayList<>();
+            bigImageItemList.add(new BigImageItem(photoUrl));
+        intent.putParcelableArrayListExtra(PHOTO_SETS_KEY, bigImageItemList);
+        context.startActivity(intent);
+        ((Activity)context).overridePendingTransition(R.anim.slide_right_entry, R.anim.hold);
+    }
+
     @Override
     protected int getLayoutId() {
         return R.layout.activity_bigimage;

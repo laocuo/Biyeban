@@ -104,7 +104,7 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
                 }
             }
             newsItems.add(new FreshNewsItem(
-                    FreshNewsItem.ITEM_TYPE_NORMAL,
+                    imgs != null && imgs.size() == 1 ? FreshNewsItem.ITEM_TYPE_SINGLE_IMAGE : FreshNewsItem.ITEM_TYPE_MULTI_IMAGES,
                     data.optString("userObjectId"),
                     data.optString("content"),
                     data.optString("time"),

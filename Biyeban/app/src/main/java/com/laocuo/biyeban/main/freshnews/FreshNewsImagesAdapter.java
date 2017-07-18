@@ -28,8 +28,8 @@ import android.widget.ImageView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bigimage.BigImageActivity;
-import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class FreshNewsImagesAdapter extends RecyclerView.Adapter<FreshNewsImages
 
     @Override
     public void onBindViewHolder(ImageHolder holder, final int position) {
-        FactoryInterface.setImage(mContext,
+        Utils.setImage(mContext,
                 pics.get(position),
                 holder.mImageView);
         holder.mImageView.setOnClickListener(new View.OnClickListener() {

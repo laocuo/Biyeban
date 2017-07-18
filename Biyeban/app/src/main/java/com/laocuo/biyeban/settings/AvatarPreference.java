@@ -11,8 +11,8 @@ import android.widget.ImageView;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.utils.BmobUtils;
-import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.Utils;
 
 
 public class AvatarPreference extends Preference {
@@ -43,7 +43,7 @@ public class AvatarPreference extends Preference {
         L.d("updateAvatar");
         BiyebanUser user = BmobUtils.getCurrentUser();
         if (user != null) {
-            FactoryInterface.setAvatar(mContext, user, mAvatar);
+            Utils.setAvatar(mContext, user, mAvatar);
         }
     }
 }

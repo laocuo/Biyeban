@@ -23,7 +23,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.laocuo.biyeban.R;
-import com.laocuo.biyeban.utils.FactoryInterface;
+import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.adapter.BaseMultiItemQuickAdapter;
 import com.laocuo.recycler.adapter.BaseViewHolder;
 
@@ -54,6 +54,6 @@ public class PublishImageListAdapter extends BaseMultiItemQuickAdapter<ImageItem
     }
 
     private void _handleNewsNormal(BaseViewHolder holder, ImageItem item) {
-        FactoryInterface.setImage(mContext, item.getImgUrl(), (ImageView) holder.getView(R.id.pic));
+        Utils.setImage(mContext, item.getImgUrl(), (ImageView) holder.getView(R.id.pic));
     }
 }

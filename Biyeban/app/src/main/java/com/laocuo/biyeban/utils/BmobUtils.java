@@ -148,7 +148,7 @@ public class BmobUtils {
                             n.setText(name);
                             String avatar = u.getAvatar();
                             if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                                FactoryInterface.setAvatar(context, avatar, a);
+                                Utils.setAvatar(context, avatar, a);
                             } else {
                                 a.setImageResource(R.drawable.user);
                             }
@@ -171,7 +171,7 @@ public class BmobUtils {
                                 n.setText(name);
                                 String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
                                 if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                                    FactoryInterface.setAvatar(context, avatar, a);
+                                    Utils.setAvatar(context, avatar, a);
                                 } else {
                                     a.setImageResource(R.drawable.user);
                                 }
@@ -185,7 +185,7 @@ public class BmobUtils {
                     n.setText(name);
                     String avatar = u.getAvatar();
                     if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                        FactoryInterface.setAvatar(context, avatar, a);
+                        Utils.setAvatar(context, avatar, a);
                     } else {
                         a.setImageResource(R.drawable.user);
                     }
@@ -218,7 +218,7 @@ public class BmobUtils {
                                         userDao.update(u);
                                     }
                                     if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                                        FactoryInterface.setAvatar(context, avatar, a);
+                                        Utils.setAvatar(context, avatar, a);
                                     } else {
                                         a.setImageResource(R.drawable.user);
                                     }

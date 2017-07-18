@@ -23,24 +23,33 @@ import android.annotation.TargetApi;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
 import com.laocuo.biyeban.graduation.GraduationActivity;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.login.LoginActivity;
 import com.laocuo.biyeban.main.MainActivity;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
 import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
 
 public class Utils {
     public static final String CHATROOM = "chatroom_";
@@ -75,6 +84,74 @@ public class Utils {
         int month = rightNow.get(Calendar.MONTH);
         int day = rightNow.get(Calendar.DATE);
         return month + "月" + day + "日";
+    }
+
+    public static Bitmap getBitmap(Context context, int id) {
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(), id);
+        return bitmap;
+    }
+
+    public static Bitmap getBitmap(Context context, Uri uri) {
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+
+    public static boolean saveAvatar(Context context, byte[] b) {
+        boolean ret = false;
+        try {
+            context.deleteFile(AVATAR);
+            FileOutputStream outputStream =  context.openFileOutput(AVATAR, Context.MODE_PRIVATE);
+            outputStream.write(b);
+            outputStream.close();
+            ret = true;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }
+
+    public static String getAvatarPath(Context context) {
+        String path = context.getFilesDir()+"/"+AVATAR;
+        L.d("getAvatarPath:"+path);
+        return path;
+    }
+
+    public static void setAvatar(Context context, BiyebanUser user, ImageView imageview) {
+        BmobFile avatar = user.getAvatar();
+        String url = avatar == null ? "" : avatar.getFileUrl();
+        if (!TextUtils.isEmpty(url)) {
+            setAvatar(context, url, imageview);
+        }
+    }
+
+    public static void setAvatar(Context context, String url, ImageView imageview) {
+        if (url != null && !TextUtils.isEmpty(url)) {
+            Glide.with(context)
+                    .load(url)
+                    .animate(R.anim.photo_entry)
+                    .placeholder(R.drawable.user)
+                    .crossFade()
+                    .into(imageview);
+        }
+    }
+
+    public static void setImage(Context context, String url, ImageView imageview) {
+        if (url != null && !TextUtils.isEmpty(url)) {
+            Glide.with(context)
+                    .load(url)
+                    .animate(R.anim.photo_entry)
+                    .placeholder(R.drawable.icon)
+                    .crossFade()
+                    .thumbnail(0.1f)
+                    .into(imageview);
+        }
     }
 
     /**
@@ -178,49 +255,4 @@ public class Utils {
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
-
-//    private void loadData() {
-//        //do something
-//        Observable.from(new Integer[]{1, 2, 3, 4})
-//                .subscribeOn(Schedulers.io())
-//                .doOnSubscribe(new Action0() {
-//                    @Override
-//                    public void call() {
-//                        mView.showLoading();
-//                    }
-//                })
-//                .subscribeOn(AndroidSchedulers.mainThread())
-//                .compose(mTransformer)
-//                .observeOn(AndroidSchedulers.mainThread())
-//                .subscribe(new Subscriber<String>() {
-//                    @Override
-//                    public void onCompleted() {
-//                        mView.hideLoading();
-//                    }
-//
-//                    @Override
-//                    public void onError(Throwable throwable) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onNext(String s) {
-//                        L.d(s+"\n");
-//                    }
-//                });
-//    }
-//
-//    private Observable.Transformer<Integer, String> mTransformer =
-//            new Observable.Transformer<Integer, String>() {
-//                @Override
-//                public Observable<String> call(Observable<Integer> observable) {
-//                    return observable
-//                            .map(new Func1<Integer, String>() {
-//                                @Override
-//                                public String call(Integer integer) {
-//                                    return integer.toString();
-//                                }
-//                            });
-//                }
-//            };
 }

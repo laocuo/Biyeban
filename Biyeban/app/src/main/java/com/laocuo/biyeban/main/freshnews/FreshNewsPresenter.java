@@ -149,6 +149,30 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     @Override
     public void swipeRefresh() {
         skip = 0;
-        loadData();
+        BmobQuery bmobQuery = new BmobQuery(freshNewsTableName);
+        bmobQuery.order("-createdAt");
+        bmobQuery.setLimit(STEP);
+        bmobQuery.setSkip(skip * STEP);
+        skip++;
+//        bmobQuery.setCachePolicy(BmobQuery.CachePolicy.CACHE_ELSE_NETWORK);
+        boolean isCache = bmobQuery.hasCachedResult(FreshNews.class);
+        L.d("loadData isCache="+isCache);
+        bmobQuery.findObjectsByTable(new QueryListener<JSONArray>() {
+
+            @Override
+            public void done(JSONArray array, BmobException e) {
+                if (e == null) {
+                    mFreshNewsItems.clear();
+                    mFreshNewsItems.addAll(parseJsonArray(array));
+                    if (mFreshNewsItems.size() > 0) {
+                        mIFreshNewsView.loadData(mFreshNewsItems);
+                    } else {
+                        mIFreshNewsView.loadNoData();
+                    }
+                } else {
+                    L.d(e.toString());
+                }
+            }
+        });
     }
 }

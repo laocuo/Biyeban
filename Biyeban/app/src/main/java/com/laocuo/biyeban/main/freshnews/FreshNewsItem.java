@@ -24,7 +24,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.laocuo.biyeban.bigimage.BigImageActivity;
-import com.laocuo.biyeban.utils.FactoryInterface;
+import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.entity.MultiItemEntity;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 
@@ -79,10 +79,10 @@ public class FreshNewsItem extends MultiItemEntity {
         }
     }
 
-    public void bindSingleImage(final Context context, ImageView i) {
+    public void bindSingleImage(final Context context, ImageView imageView) {
         final String url = pics.get(0);
-        FactoryInterface.setImage(context, url, i);
-        i.setOnClickListener(new View.OnClickListener() {
+        Utils.setImage(context, url, imageView);
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 BigImageActivity.launch(context, url);

@@ -26,8 +26,7 @@ import android.widget.TextView;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.UserDao;
-import com.laocuo.biyeban.utils.BmobUtils;
-import com.laocuo.biyeban.utils.FactoryInterface;
+import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.adapter.BaseMultiItemQuickAdapter;
 import com.laocuo.recycler.adapter.BaseViewHolder;
 
@@ -67,7 +66,7 @@ public class ContactsListAdapter extends BaseMultiItemQuickAdapter<ContactsItem>
         alias.setText(item.getAlias());
 
         ImageView avatar = holder.getView(R.id.avatar);
-        FactoryInterface.setAvatar(mContext, item.getAvatar(), avatar);
+        Utils.setAvatar(mContext, item.getAvatar(), avatar);
 
         TextView contact_head = holder.getView(R.id.contact_head);
         List<ContactsItem> list = getData();

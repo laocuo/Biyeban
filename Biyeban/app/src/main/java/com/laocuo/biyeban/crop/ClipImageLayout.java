@@ -8,7 +8,7 @@ import android.util.TypedValue;
 import android.widget.RelativeLayout;
 
 
-import com.laocuo.biyeban.utils.FactoryInterface;
+import com.laocuo.biyeban.utils.Utils;
 
 
 /**
@@ -55,7 +55,7 @@ public class ClipImageLayout extends RelativeLayout {
     }
 
     public void setImageSrc(Context context, Uri uri) {
-        Bitmap b = FactoryInterface.getBitmap(context, uri);
+        Bitmap b = Utils.getBitmap(context, uri);
         if (b != null) {
             mZoomImageView.setImageBitmap(b);
         }

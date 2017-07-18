@@ -101,6 +101,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     public void loadData(List<FreshNewsItem> data) {
         L.d("loadData size="+data.size());
         mAdapter.updateItems(data);
+        finishRefresh();
         checkEnd(data.size());
     }
 

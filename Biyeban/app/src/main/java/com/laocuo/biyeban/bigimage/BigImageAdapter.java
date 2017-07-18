@@ -26,7 +26,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.laocuo.biyeban.R;
-import com.laocuo.biyeban.utils.FactoryInterface;
+import com.laocuo.biyeban.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -62,7 +62,7 @@ public class BigImageAdapter extends PagerAdapter {
                 mOnTapListener.onPhotoClick();
             }
         });
-        FactoryInterface.setImage(mContext, mImgList.get(position).getUrl(), imageView);
+        Utils.setImage(mContext, mImgList.get(position).getUrl(), imageView);
         container.addView(view);
         return view;
     }

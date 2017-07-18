@@ -29,23 +29,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
-import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.Chat;
 import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.UserDao;
-import com.laocuo.biyeban.main.freshnews.FreshNewsItem;
 import com.laocuo.biyeban.utils.BmobUtils;
-import com.laocuo.biyeban.utils.FactoryInterface;
-import com.laocuo.biyeban.utils.L;
-import com.laocuo.recycler.adapter.BaseViewHolder;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.QueryListener;
 
 public class ChatListAdapter extends BaseAdapter {
 

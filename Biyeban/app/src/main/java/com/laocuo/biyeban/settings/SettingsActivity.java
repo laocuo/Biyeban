@@ -42,10 +42,10 @@ import com.laocuo.biyeban.event.Event;
 import com.laocuo.biyeban.graduation.GraduationActivity;
 import com.laocuo.biyeban.login.LoginActivity;
 import com.laocuo.biyeban.utils.BmobUtils;
-import com.laocuo.biyeban.utils.FactoryInterface;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.UploadBmobFileListener;
+import com.laocuo.biyeban.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -280,7 +280,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void uploadAvatar() {
-            String path = FactoryInterface.getAvatarPath(getActivity());
+            String path = Utils.getAvatarPath(getActivity());
             BmobUtils.uploadBmobFile(new File(path), new UploadBmobFileListener() {
                 @Override
                 public void success(BmobFile f) {
@@ -298,7 +298,7 @@ public class SettingsActivity extends AppCompatActivity {
         private void saveAndUpdateAvatar(byte[] b) {
             L.d("saveAndUpdateAvatar");
             showProgress(true);
-            if (FactoryInterface.saveAvatar(getActivity(), b)) {
+            if (Utils.saveAvatar(getActivity(), b)) {
                 uploadAvatar();
             } else {
                 showProgress(false);

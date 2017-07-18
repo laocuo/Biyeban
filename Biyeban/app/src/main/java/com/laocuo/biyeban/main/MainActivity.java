@@ -49,6 +49,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import cn.bmob.v3.update.BmobUpdateAgent;
 
 public class MainActivity extends BaseActivity<MainPresenter> implements ViewPager.OnPageChangeListener {
     @Inject
@@ -172,6 +173,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
         mFragmentList.add(mContactsFragment);
         mTitleList.add(getResources().getString(R.string.title_chatroom));
         mFragmentList.add(mChatRoomFragment);
+
+        //        BmobUpdateAgent.initAppVersion();
+        BmobUpdateAgent.setUpdateOnlyWifi(true);
+        BmobUpdateAgent.setUpdateCheckConfig(false);
+        BmobUpdateAgent.update(this);
     }
 
     @Override

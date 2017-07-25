@@ -42,4 +42,6 @@
     <string name="stopchat">禁言</string>
     <string name="allowchat">解除</string>
     <string name="clip">剪切</string>
+    <string name="save">保存</string>
+    <string name="clear_cache">清除缓存</string>
 </resources>

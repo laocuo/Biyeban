@@ -62,6 +62,12 @@ public class BigImageAdapter extends PagerAdapter {
                 mOnTapListener.onPhotoClick();
             }
         });
+        imageView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                return mOnTapListener.onPhotoLongCLick();
+            }
+        });
         Utils.setImage(mContext, mImgList.get(position).getUrl(), imageView);
         container.addView(view);
         return view;
@@ -78,5 +84,6 @@ public class BigImageAdapter extends PagerAdapter {
 
     public interface OnTapListener {
         void onPhotoClick();
+        boolean onPhotoLongCLick();
     }
 }

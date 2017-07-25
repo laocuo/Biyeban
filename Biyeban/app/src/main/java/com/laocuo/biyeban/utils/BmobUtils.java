@@ -31,7 +31,6 @@ import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.User;
 import com.laocuo.biyeban.greendao.UserDao;
-import com.laocuo.biyeban.main.contacts.ContactsItem;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
@@ -42,6 +41,7 @@ import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.DownloadFileListener;
 import cn.bmob.v3.listener.QueryListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadBatchListener;
@@ -58,6 +58,34 @@ public class BmobUtils {
         if (user != null) {
             user.logOut();
 //            BiyebanApp.getInstance().getDaoSession().getUserDao().deleteAll();
+        }
+    }
+
+    public static void downloadBmobFile(String url, String path, final BmobFileListener l) {
+        int index = url.lastIndexOf("/");
+        String filename = url.substring(index);
+        String file_path = path + filename;
+        if (!TextUtils.isEmpty(filename)) {
+            File file = new File(file_path);
+            BmobFile bmobFile = new BmobFile();
+            bmobFile.setUrl(url);
+            bmobFile.download(file, new DownloadFileListener() {
+                @Override
+                public void done(String s, BmobException e) {
+                    if (e != null) {
+                        L.i("bmob", "文件下载失败：" + e.getMessage() + "," + e.getErrorCode());
+                        l.fail();
+                    } else {
+                        L.d("bmob", "文件下载成功");
+                        l.success();
+                    }
+                }
+
+                @Override
+                public void onProgress(Integer integer, long l) {
+
+                }
+            });
         }
     }
 
@@ -235,6 +263,6 @@ public class BmobUtils {
 
     public static void clearCache() {
         DaoSession daoSession = BiyebanApp.getInstance().getDaoSession();
-        daoSession.clear();
+        daoSession.getUserDao().deleteAll();
     }
 }

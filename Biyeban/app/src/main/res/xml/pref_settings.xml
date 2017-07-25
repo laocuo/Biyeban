@@ -17,6 +17,9 @@
         <Preference
             android:key="pref_key_exit_class"
             android:title="@string/exit_class"/>
+        <Preference
+            android:key="pref_key_clear_cache"
+            android:title="@string/clear_cache"/>
     </PreferenceCategory>
 
     <PreferenceCategory

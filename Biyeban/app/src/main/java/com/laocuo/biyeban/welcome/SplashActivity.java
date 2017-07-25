@@ -73,7 +73,7 @@ public class SplashActivity extends BaseActivity {
     }
 
     private void updateUI() {
-        mTips.setText("SKIP "+timeleft);
+        mTips.setText("跳过 "+timeleft);
     }
 
     @Override

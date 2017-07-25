@@ -55,6 +55,7 @@ public class Utils {
     public static final String CHATROOM = "chatroom_";
     public static final String FRESHNEWS = "freshnews_";
     private static final String AVATAR = "avatar.jpg";
+    private static final String BIYEBAN = "biyeban";
 
     public static boolean isShowImageAlways(Context context) {
         return true;
@@ -123,6 +124,15 @@ public class Utils {
         return path;
     }
 
+    public static String getPicsPath(Context context) {
+        ///storage/emulated/0/biyeban
+        String path = Environment.getExternalStorageDirectory().getPath() + "/" +BIYEBAN;
+        L.d("getPicsPath path:"+path);
+        ///storage/emulated/0/Android/data/com.laocuo.biyeban/files/Pictures
+        //String path1 = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
+        return path;
+    }
+
     public static void setAvatar(Context context, BiyebanUser user, ImageView imageview) {
         BmobFile avatar = user.getAvatar();
         String url = avatar == null ? "" : avatar.getFileUrl();
@@ -139,6 +149,8 @@ public class Utils {
                     .placeholder(R.drawable.user)
                     .crossFade()
                     .into(imageview);
+        } else {
+            imageview.setImageResource(R.drawable.user);
         }
     }
 
@@ -151,6 +163,8 @@ public class Utils {
                     .crossFade()
                     .thumbnail(0.1f)
                     .into(imageview);
+        } else {
+            imageview.setImageResource(R.drawable.icon);
         }
     }
 
@@ -255,4 +269,49 @@ public class Utils {
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
+
+    //    private void loadData() {
+//        //do something
+//        Observable.from(new Integer[]{1, 2, 3, 4})
+//                .subscribeOn(Schedulers.io())
+//                .doOnSubscribe(new Action0() {
+//                    @Override
+//                    public void call() {
+//                        mView.showLoading();
+//                    }
+//                })
+//                .subscribeOn(AndroidSchedulers.mainThread())
+//                .compose(mTransformer)
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .subscribe(new Subscriber<String>() {
+//                    @Override
+//                    public void onCompleted() {
+//                        mView.hideLoading();
+//                    }
+//
+//                    @Override
+//                    public void onError(Throwable throwable) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onNext(String s) {
+//                        L.d(s+"\n");
+//                    }
+//                });
+//    }
+//
+//    private Observable.Transformer<Integer, String> mTransformer =
+//            new Observable.Transformer<Integer, String>() {
+//                @Override
+//                public Observable<String> call(Observable<Integer> observable) {
+//                    return observable
+//                            .map(new Func1<Integer, String>() {
+//                                @Override
+//                                public String call(Integer integer) {
+//                                    return integer.toString();
+//                                }
+//                            });
+//                }
+//            };
 }

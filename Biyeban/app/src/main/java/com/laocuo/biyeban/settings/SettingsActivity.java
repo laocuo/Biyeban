@@ -46,6 +46,7 @@ import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.biyeban.utils.UploadBmobFileListener;
 import com.laocuo.biyeban.utils.Utils;
+import com.lljjcoder.citylist.Toast.ToastUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -110,6 +111,7 @@ public class SettingsActivity extends AppCompatActivity {
         public static final String ALIAS = "pref_key_user_alias";
         public static final String LOGINSTATUS = "pref_key_login_status";
         public static final String EXITCLASS = "pref_key_exit_class";
+        public static final String CLEARCACHE = "pref_key_clear_cache";
         public static final String ABOUT = "pref_key_about";
 
         private SwitchPreference mLoginSwitch;
@@ -164,6 +166,9 @@ public class SettingsActivity extends AppCompatActivity {
 //                exitClass();
                 mExitClassDialogFragment.show(getFragmentManager(), "exitclass");
                 return true;
+            } else  if (CLEARCACHE.equals(key)) {
+                BmobUtils.clearCache();
+                ToastUtils.showShortToast(getActivity(), "缓存已清除");
             } else if (ABOUT.equals(key)) {
                 showAbout();
                 return true;

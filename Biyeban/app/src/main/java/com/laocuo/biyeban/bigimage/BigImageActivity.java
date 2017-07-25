@@ -27,7 +27,11 @@ import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseActivity;
+import com.laocuo.biyeban.utils.BmobFileListener;
+import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.DensityUtil;
+import com.laocuo.biyeban.utils.Utils;
+import com.lljjcoder.citylist.Toast.ToastUtils;
 
 import java.util.ArrayList;
 
@@ -39,7 +43,7 @@ import butterknife.BindView;
 public class BigImageActivity extends BaseActivity<BigImagePresenter>
         implements IBigImageInterface,
         ViewPager.OnPageChangeListener,
-        BigImageAdapter.OnTapListener {
+        BigImageAdapter.OnTapListener, SaveImageDialogFragment.SaveImageListener {
     private static final String PHOTO_SETS_KEY = "PhotoSetsKey";
     private static final String PHOTO_SETS_POS = "PhotoSetsPos";
 
@@ -56,6 +60,7 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
     private ArrayList<BigImageItem> mPhotoSetsId;
     private int mCurrentItem, length, move_dis;
     private boolean isHide;
+    private SaveImageDialogFragment mSaveImageDialogFragment;
 
     public static void launch(Context context, int pos, ArrayList<String> photoId) {
         Intent intent = new Intent(context, BigImageActivity.class);
@@ -106,6 +111,8 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
 //        hideStatusBar(true);
         initToolBar(mToolbar, true , "");
         updateIndex();
+        mSaveImageDialogFragment = new SaveImageDialogFragment();
+        mSaveImageDialogFragment.setListener(this);
     }
 
     @Override
@@ -145,6 +152,31 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
             mToolbar.animate().translationY(0).setDuration(300);
             mIndex.animate().translationYBy(-move_dis).setDuration(300);
         }
+    }
+
+    @Override
+    public boolean onPhotoLongCLick() {
+        mSaveImageDialogFragment.show(getSupportFragmentManager(), "saveImage");
+        return true;
+    }
+
+    @Override
+    public void confirm() {
+        //save image
+        BigImageItem currentItem = mPhotoSetsId.get(mCurrentItem);
+        BmobUtils.downloadBmobFile(currentItem.getUrl(),
+                Utils.getPicsPath(BigImageActivity.this),
+                new BmobFileListener() {
+                    @Override
+                    public void success() {
+                        ToastUtils.showShortToast(BigImageActivity.this, "图片已保存");
+                    }
+
+                    @Override
+                    public void fail() {
+                        ToastUtils.showShortToast(BigImageActivity.this, "图片保存失败");
+                    }
+                });
     }
 
     @Override

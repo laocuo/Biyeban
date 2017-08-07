@@ -7,6 +7,35 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/select_district"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/menu_padding"
+        android:background="@android:color/white">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/district"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+        <TextView
+            android:id="@+id/district"
+            android:drawableEnd="@drawable/ic_ab_back_holo_light"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="未指定"
+            android:textColor="@color/colorAccent"
+            android:maxLines="3"
+            android:maxWidth="200dp"
+            android:layout_alignParentEnd="true"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"/>
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
     <android.support.v7.widget.SearchView
         android:id="@+id/search_class"
         android:layout_width="match_parent"

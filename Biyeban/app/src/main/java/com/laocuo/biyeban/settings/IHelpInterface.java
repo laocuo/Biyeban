@@ -16,12 +16,10 @@
  *
  */
 
-package com.laocuo.biyeban.graduation.join;
+package com.laocuo.biyeban.settings;
+
+import com.laocuo.biyeban.base.IBaseView;
 
 
-import com.laocuo.biyeban.base.IBasePresenter;
-
-public interface IGraduJoinPresenter extends IBasePresenter{
-    void queryGraduClass(String district);
-    void joinGraduClass(int pos);
+public interface IHelpInterface extends IBaseView {
 }

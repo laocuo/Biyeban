@@ -21,6 +21,7 @@ package com.laocuo.biyeban.graduation.join;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.View;
@@ -31,12 +32,15 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.graduation.IGraduationInterface;
 import com.laocuo.biyeban.utils.L;
+import com.lljjcoder.citypickerview.widget.CityPicker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +48,7 @@ import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implements
         SearchView.OnQueryTextListener, IGraduJoinView {
@@ -55,10 +60,15 @@ public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implemen
     ListView mListView;
     @BindView(R.id.empty_content)
     LinearLayout mEmptyLayout;
+    @BindView(R.id.select_district)
+    RelativeLayout mSelectDistrict;
+    @BindView(R.id.district)
+    TextView mDistrict;
 
     private List<HashMap<String, String>> mClassList = new ArrayList<>();
     private MySimpleAdapter simpleAdapter;
     private View.OnClickListener mOnClickListener;
+    private CityPicker cityPicker;
 
     public static GraduJoinFragment newInstance(IGraduationInterface anInterface) {
         GraduJoinFragment fragment = new GraduJoinFragment();
@@ -102,12 +112,47 @@ public class GraduJoinFragment extends BaseFragment<GraduJoinPresenter> implemen
                 joinGraduClass(position);
             }
         };
+        initCityPicker();
     }
 
     @Override
     protected void getData(boolean isRefresh) {
-        showProgress(true);
-        mPresenter.loadData();
+    }
+
+    @OnClick(R.id.select_district)
+    void selectDistrict() {
+        cityPicker.show();
+    }
+
+    private void initCityPicker() {
+        cityPicker = new CityPicker.Builder(getContext()).textSize(20)
+                .titleTextColor("#000000")
+                .backgroundPop(0xa0000000)
+                .province("江苏省")
+                .city("南京市")
+                .district("秦淮区")
+                .textColor(Color.parseColor("#FF4081"))
+                .provinceCyclic(true)
+                .cityCyclic(false)
+                .districtCyclic(false)
+                .visibleItemsCount(7)
+                .itemPadding(10)
+                .build();
+        cityPicker.setOnCityItemClickListener(new CityPicker.OnCityItemClickListener() {
+            @Override
+            public void onSelected(String... citySelected) {
+                mDistrict.setText(citySelected[0]
+                        + citySelected[1]
+                        + citySelected[2]);
+                showProgress(true);
+                mPresenter.queryGraduClass(mDistrict.getText().toString());
+            }
+
+            @Override
+            public void onCancel() {
+
+            }
+        });
     }
 
     @Override

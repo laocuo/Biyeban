@@ -24,6 +24,8 @@ import javax.inject.Inject;
 
 
 public class BigImagePresenter implements IBasePresenter {
+    private IBigImageInterface mInterface;
+
     @Override
     public void loadData() {
 
@@ -35,6 +37,7 @@ public class BigImagePresenter implements IBasePresenter {
     }
 
     @Inject
-    BigImagePresenter() {
+    BigImagePresenter(IBigImageInterface i) {
+        mInterface = i;
     }
 }

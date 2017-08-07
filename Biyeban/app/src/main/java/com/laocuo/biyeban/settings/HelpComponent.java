@@ -16,12 +16,11 @@
  *
  */
 
-package com.laocuo.biyeban.graduation.join;
+package com.laocuo.biyeban.settings;
 
+import dagger.Component;
 
-import com.laocuo.biyeban.base.IBasePresenter;
-
-public interface IGraduJoinPresenter extends IBasePresenter{
-    void queryGraduClass(String district);
-    void joinGraduClass(int pos);
+@Component(modules = HelpModule.class)
+public interface HelpComponent {
+    void inject(HelpActivity activity);
 }

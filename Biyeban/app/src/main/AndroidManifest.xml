@@ -43,6 +43,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".bigimage.BigImageActivity"/>
+        <activity android:name=".settings.HelpActivity"/>
     </application>
 
 </manifest>

@@ -44,4 +44,6 @@
     <string name="clip">剪切</string>
     <string name="save">保存</string>
     <string name="clear_cache">清除缓存</string>
+    <string name="version">版本</string>
+    <string name="help_content">\u3000\u3000在这里找到你当年的同班同学，梦回毕业那年。</string>
 </resources>

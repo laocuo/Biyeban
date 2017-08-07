@@ -378,8 +378,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private void showAbout() {
-//        Intent i = new Intent(mContext, HelpActivity.class);
-//        startActivity(i);
+            HelpActivity.launch(getActivity());
         }
 
         private void showProgress(boolean show) {

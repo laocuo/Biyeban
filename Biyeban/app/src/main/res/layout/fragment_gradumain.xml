@@ -7,40 +7,42 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true">
         <Button
             android:id="@+id/create_class"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:text="@string/create"
+            android:textSize="20sp"
             android:textColor="@android:color/white"
             android:gravity="center"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/circle_button_bg"/>
         <Button
             android:id="@+id/join_class"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:text="@string/join"
+            android:textSize="20sp"
             android:textColor="@android:color/white"
             android:gravity="center"
-            android:layout_marginStart="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/circle_button_bg"/>
+        <Button
+            android:id="@+id/logout"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:text="@string/logout"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center_horizontal"
             android:background="@drawable/circle_button_bg"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/logout"
-        android:layout_marginBottom="@dimen/menu_margin"
-        android:layout_marginStart="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:textColor="@android:color/white"
-        android:gravity="center"
-        android:textAppearance="@android:style/TextAppearance.Material.Medium"
-        android:background="@drawable/button_background"
-        android:layout_alignParentBottom="true"
-        android:text="@string/logout"/>
 </RelativeLayout>

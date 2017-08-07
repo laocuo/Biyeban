@@ -39,7 +39,7 @@ import cn.bmob.v3.listener.UpdateListener;
 public class GraduJoinPresenter implements IGraduJoinPresenter {
     private IGraduJoinView mView;
     private List<HashMap<String, String>> mClassList = new ArrayList<>();
-    private List<GraduClass> gradu_list;
+    private List<GraduClass> gradu_list = new ArrayList<>();
 
     @Override
     public void loadData() {
@@ -58,7 +58,8 @@ public class GraduJoinPresenter implements IGraduJoinPresenter {
     }
 
     private void expandClassList(List<GraduClass> list) {
-        gradu_list = list;
+        gradu_list.clear();
+        gradu_list.addAll(list);
         mClassList.clear();
         for (GraduClass gc : list) {
             HashMap<String, String> item = new HashMap<>();
@@ -80,8 +81,20 @@ public class GraduJoinPresenter implements IGraduJoinPresenter {
     }
 
     @Override
-    public void queryGraduClass(String key) {
-
+    public void queryGraduClass(String district) {
+        BmobQuery<GraduClass> query = new BmobQuery<>();
+        query.addWhereEqualTo("district", district);
+        query.findObjects(new FindListener<GraduClass>() {
+            @Override
+            public void done(List<GraduClass> list, BmobException e) {
+                if (e == null) {
+                    expandClassList(list);
+                    mView.loadData(mClassList);
+                } else {
+                    L.d(e.toString());
+                }
+            }
+        });
     }
 
     @Override

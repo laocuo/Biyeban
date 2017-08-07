@@ -125,11 +125,14 @@ public class Utils {
     }
 
     public static String getPicsPath(Context context) {
-        ///storage/emulated/0/biyeban
-        String path = Environment.getExternalStorageDirectory().getPath() + "/" +BIYEBAN;
+        ///storage/emulated/0/Pictures/biyeban
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).getPath();
+        path = path + "/" +BIYEBAN;
         L.d("getPicsPath path:"+path);
+        ///storage/emulated/0/biyeban
+        //String path1 = Environment.getExternalStorageDirectory().getPath() + "/" +BIYEBAN;
         ///storage/emulated/0/Android/data/com.laocuo.biyeban/files/Pictures
-        //String path1 = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
+        //String path2 = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES).getPath();
         return path;
     }
 

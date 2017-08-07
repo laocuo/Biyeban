@@ -16,12 +16,27 @@
  *
  */
 
-package com.laocuo.biyeban.graduation.join;
-
+package com.laocuo.biyeban.settings;
 
 import com.laocuo.biyeban.base.IBasePresenter;
 
-public interface IGraduJoinPresenter extends IBasePresenter{
-    void queryGraduClass(String district);
-    void joinGraduClass(int pos);
+import javax.inject.Inject;
+
+public class HelpPresenter implements IBasePresenter {
+    private IHelpInterface mInterface;
+
+    @Override
+    public void loadData() {
+
+    }
+
+    @Override
+    public void loadMoreData() {
+
+    }
+
+    @Inject
+    HelpPresenter(IHelpInterface i) {
+        mInterface = i;
+    }
 }

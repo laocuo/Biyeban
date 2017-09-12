@@ -44,6 +44,11 @@
         </activity>
         <activity android:name=".bigimage.BigImageActivity"/>
         <activity android:name=".settings.HelpActivity"/>
+        <activity
+            android:name="cn.bmob.v3.update.UpdateDialogActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <meta-data android:value="Channel ID" android:name="BMOB_CHANNEL"/>
     </application>
 
 </manifest>

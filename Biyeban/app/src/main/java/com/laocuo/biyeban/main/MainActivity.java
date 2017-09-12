@@ -174,7 +174,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
         mTitleList.add(getResources().getString(R.string.title_chatroom));
         mFragmentList.add(mChatRoomFragment);
 
-        //        BmobUpdateAgent.initAppVersion();
+        //初始化表，只调用一次
+        //BmobUpdateAgent.initAppVersion();
         BmobUpdateAgent.setUpdateOnlyWifi(true);
         BmobUpdateAgent.setUpdateCheckConfig(false);
         BmobUpdateAgent.update(this);

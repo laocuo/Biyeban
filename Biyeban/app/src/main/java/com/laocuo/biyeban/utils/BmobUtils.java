@@ -174,11 +174,13 @@ public class BmobUtils {
                             userDao.update(u);
                             String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
                             n.setText(name);
-                            String avatar = u.getAvatar();
-                            if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                                Utils.setAvatar(context, avatar, a);
-                            } else {
-                                a.setImageResource(R.drawable.user);
+                            if (a != null) {
+                                String avatar = u.getAvatar();
+                                if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                    Utils.setAvatar(context, avatar, a);
+                                } else {
+                                    a.setImageResource(R.drawable.user);
+                                }
                             }
                         } else {
                             L.d("user == null");
@@ -197,11 +199,13 @@ public class BmobUtils {
                             if (user != null) {
                                 String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
                                 n.setText(name);
-                                String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
-                                if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                                    Utils.setAvatar(context, avatar, a);
-                                } else {
-                                    a.setImageResource(R.drawable.user);
+                                if (a != null) {
+                                    String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
+                                    if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                        Utils.setAvatar(context, avatar, a);
+                                    } else {
+                                        a.setImageResource(R.drawable.user);
+                                    }
                                 }
                             } else {
                                 L.d("user == null");
@@ -211,53 +215,57 @@ public class BmobUtils {
                 } else {
                     String name = TextUtils.isEmpty(u.getAlias()) ? u.getUsername() : u.getAlias();
                     n.setText(name);
-                    String avatar = u.getAvatar();
-                    if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                        Utils.setAvatar(context, avatar, a);
-                    } else {
-                        a.setImageResource(R.drawable.user);
+                    if (a != null) {
+                        String avatar = u.getAvatar();
+                        if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                            Utils.setAvatar(context, avatar, a);
+                        } else {
+                            a.setImageResource(R.drawable.user);
+                        }
                     }
                 }
             }
 
-            a.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (!TextUtils.isEmpty(objId)) {
-                        BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
-                        query.getObject(objId, new QueryListener<BiyebanUser>() {
+            if (a != null) {
+                a.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (!TextUtils.isEmpty(objId)) {
+                            BmobQuery<BiyebanUser> query = new BmobQuery<BiyebanUser>();
+                            query.getObject(objId, new QueryListener<BiyebanUser>() {
 
-                            @Override
-                            public void done(BiyebanUser user, BmobException e) {
-                                if (user != null) {
-                                    String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
-                                    String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
-                                    QueryBuilder<User> qb = userDao.queryBuilder();
-                                    qb.where(UserDao.Properties.Objid.eq(objId)).build();
-                                    List<User> userList = qb.list();
-                                    if (userList.size() <= 0) {
-                                        User u = new User(null, user.getObjectId(), user.getUsername(),
-                                                name, avatar);
-                                        userDao.insert(u);
+                                @Override
+                                public void done(BiyebanUser user, BmobException e) {
+                                    if (user != null) {
+                                        String name = TextUtils.isEmpty(user.getAlias()) ? user.getUsername() : user.getAlias();
+                                        String avatar = user.getAvatar() == null ? "" : user.getAvatar().getFileUrl();
+                                        QueryBuilder<User> qb = userDao.queryBuilder();
+                                        qb.where(UserDao.Properties.Objid.eq(objId)).build();
+                                        List<User> userList = qb.list();
+                                        if (userList.size() <= 0) {
+                                            User u = new User(null, user.getObjectId(), user.getUsername(),
+                                                    name, avatar);
+                                            userDao.insert(u);
+                                        } else {
+                                            User u = userList.get(0);
+                                            u.setAlias(name);
+                                            u.setAvatar(avatar);
+                                            userDao.update(u);
+                                        }
+                                        if (avatar != null && !TextUtils.isEmpty(avatar)) {
+                                            Utils.setAvatar(context, avatar, a);
+                                        } else {
+                                            a.setImageResource(R.drawable.user);
+                                        }
                                     } else {
-                                        User u = userList.get(0);
-                                        u.setAlias(name);
-                                        u.setAvatar(avatar);
-                                        userDao.update(u);
+                                        L.d("user == null");
                                     }
-                                    if (avatar != null && !TextUtils.isEmpty(avatar)) {
-                                        Utils.setAvatar(context, avatar, a);
-                                    } else {
-                                        a.setImageResource(R.drawable.user);
-                                    }
-                                } else {
-                                    L.d("user == null");
                                 }
-                            }
-                        });
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 

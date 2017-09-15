@@ -14,6 +14,33 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
         <include layout="@layout/layout_common_empty"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:id="@+id/ll_bottom"
+            android:orientation="horizontal"
+            android:background="@android:color/white"
+            android:padding="4dp"
+            android:visibility="invisible">
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="内容"
+                android:minHeight="45dp"
+                android:maxLines="3"
+                android:imeOptions="actionSend"
+                android:textSize="14sp"
+                android:nextFocusRight="@+id/btn_send"
+                android:id="@+id/et_content"/>
+            <Button
+                android:id="@+id/btn_send"
+                style="@style/common_btn_style"
+                android:layout_marginBottom="3dp"
+                android:layout_gravity="bottom"
+                android:text="发送"/>
+        </LinearLayout>
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -22,6 +49,7 @@
             android:layout_margin="@dimen/fab_margin"
             app:borderWidth="0dp"
             app:backgroundTint="@color/colorPrimary"
-            app:srcCompat="@android:drawable/ic_dialog_email"/>
+            app:srcCompat="@android:drawable/ic_dialog_email"
+            android:visibility="visible"/>
     </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

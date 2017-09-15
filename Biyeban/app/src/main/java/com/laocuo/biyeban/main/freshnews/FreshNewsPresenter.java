@@ -37,6 +37,7 @@ import javax.inject.Inject;
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.QueryListener;
+import cn.bmob.v3.listener.UpdateListener;
 
 public class FreshNewsPresenter implements IFreshNewsPresenter {
     public static final int STEP  = 10;
@@ -46,6 +47,13 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     private BiyebanUser user = BmobUtils.getCurrentUser();
     private String freshNewsTableName;
     private int skip = 0;
+
+    @Inject
+    FreshNewsPresenter(IFreshNewsView view) {
+        mIFreshNewsView = view;
+        freshNewsTableName = Utils.FRESHNEWS + user.getGraduClass();
+        L.d("freshNewsTableName = "+freshNewsTableName);
+    }
 
     @Override
     public void loadData() {
@@ -81,22 +89,37 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
     private List<FreshNewsItem> parseJsonArray(JSONArray array) {
         List<FreshNewsItem> newsItems = new ArrayList<>();
         int len = array.length();
-        for (int i=0;i<len;i++) {
+        for (int i = 0;i < len;i++) {
             JSONObject data = null;
             try {
                 data = array.getJSONObject(i);
             } catch (JSONException e1) {
                 e1.printStackTrace();
             }
-            ArrayList<String> imgs = null;
+            ArrayList<String> mPics = null;
             JSONArray pics = data.optJSONArray("pics");
             if (pics != null && pics.length() > 0) {
-                imgs = new ArrayList<>();
+                mPics = new ArrayList<>();
                 for (int j = 0;j < pics.length();j++) {
                     try {
                         String img = (String) pics.get(j);
                         if (img != null) {
-                            imgs.add(img);
+                            mPics.add(img);
+                        }
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+            ArrayList<String> mComments = null;
+            JSONArray comments = data.optJSONArray("comments");
+            if (comments != null && comments.length() > 0) {
+                mComments = new ArrayList<>();
+                for (int j = 0;j < comments.length();j++) {
+                    try {
+                        String comment = (String) comments.get(j);
+                        if (comment != null) {
+                            mComments.add(comment);
                         }
                     } catch (JSONException e1) {
                         e1.printStackTrace();
@@ -104,11 +127,14 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
                 }
             }
             newsItems.add(new FreshNewsItem(
-                    imgs != null && imgs.size() == 1 ? FreshNewsItem.ITEM_TYPE_SINGLE_IMAGE : FreshNewsItem.ITEM_TYPE_MULTI_IMAGES,
+                    data.optString("objectId"),
+                    freshNewsTableName,
+                    mPics != null && mPics.size() == 1 ? FreshNewsItem.ITEM_TYPE_SINGLE_IMAGE : FreshNewsItem.ITEM_TYPE_MULTI_IMAGES,
                     data.optString("userObjectId"),
                     data.optString("content"),
                     data.optString("time"),
-                    imgs));
+                    mPics,
+                    mComments));
         }
         return newsItems;
     }
@@ -139,13 +165,6 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
         });
     }
 
-    @Inject
-    FreshNewsPresenter(IFreshNewsView view) {
-        mIFreshNewsView = view;
-        freshNewsTableName = Utils.FRESHNEWS + user.getGraduClass();
-        L.d("freshNewsTableName = "+freshNewsTableName);
-    }
-
     @Override
     public void swipeRefresh() {
         skip = 0;
@@ -171,6 +190,33 @@ public class FreshNewsPresenter implements IFreshNewsPresenter {
                     }
                 } else {
                     L.d(e.toString());
+                }
+            }
+        });
+    }
+
+    @Override
+    public void addComment(final String content, final FreshNewsItem item) {
+        mIFreshNewsView.showProgress(true);
+        FreshNews freshNews = new FreshNews(freshNewsTableName);
+        ArrayList<String> comments = new ArrayList<>();
+        ArrayList<String> current_comments = item.getComments();
+        if (current_comments != null) {
+            comments.addAll(current_comments);
+        }
+        final String comment = user.getObjectId() + "|" + content;
+        comments.add(comment);
+        freshNews.setComments(comments);
+        freshNews.update(item.getObjectId(), new UpdateListener() {
+            @Override
+            public void done(BmobException e) {
+                mIFreshNewsView.showProgress(false);
+                if (e == null) {
+                    item.addComment(comment);
+                    mIFreshNewsView.addCommentClickResult(true);
+                } else {
+                    L.d(e.toString());
+                    mIFreshNewsView.addCommentClickResult(false);
                 }
             }
         });

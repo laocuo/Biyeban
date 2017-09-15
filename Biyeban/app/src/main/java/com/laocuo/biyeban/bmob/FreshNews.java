@@ -28,7 +28,18 @@ public class FreshNews extends BmobObject {
     private String content;
     private String time;
     private ArrayList<String> pics;
+    private ArrayList<String> comments;
 
+    /*
+    * update freashnews
+    */
+    public FreshNews(String tablename) {
+        this.setTableName(tablename);
+    }
+
+    /*
+    * when create a new class, we need to add first freshnews.
+    */
     public FreshNews(String userObjectId, String tablename) {
         this.setContent("Welcome!");
         this.setTime("1月1日");
@@ -66,5 +77,13 @@ public class FreshNews extends BmobObject {
 
     public void setPics(ArrayList<String> pics) {
         this.pics = pics;
+    }
+
+    public ArrayList<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(ArrayList<String> comments) {
+        this.comments = comments;
     }
 }

@@ -22,6 +22,7 @@ import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,12 +40,14 @@ import javax.inject.Inject;
 public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsItem> {
     private Context mContext;
     private UserDao mUserDao;
+    private IFreshNewsView mIFreshNewsView;
 
     @Inject
-    FreshNewsListAdapter(Context context, DaoSession daosession) {
+    FreshNewsListAdapter(Context context, DaoSession daosession, IFreshNewsView view) {
         super(context);
         mContext = context;
         mUserDao = daosession.getUserDao();
+        mIFreshNewsView = view;
     }
 
     @Override
@@ -66,31 +69,24 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
     }
 
     private void _handleNewsMultiImages(final BaseViewHolder holder, final FreshNewsItem item) {
-        TextView n = holder.getView(R.id.tv_name);
-        ImageView a = holder.getView(R.id.tv_avatar);
-        TextView c = holder.getView(R.id.tv_content);
-        TextView t = holder.getView(R.id.tv_time);
+        _handleCommonItems(holder, item);
         RecyclerView r = holder.getView(R.id.images);
-
-        BmobUtils.bindUserItems(n, a, item.getUserObjectId(), mUserDao, mContext);
-        if (!TextUtils.isEmpty(item.getContent())) {
-            c.setText(item.getContent());
-            c.setVisibility(View.VISIBLE);
-        } else {
-            c.setText("");
-            c.setVisibility(View.GONE);
-        }
-        t.setText(item.getTime());
-
         item.bindMultiImages(mContext, r);
     }
 
     private void _handleNewsSingleImage(final BaseViewHolder holder, final FreshNewsItem item) {
+        _handleCommonItems(holder, item);
+        ImageView i = holder.getView(R.id.image);
+        item.bindSingleImage(mContext, i);
+    }
+
+    private void _handleCommonItems(final BaseViewHolder holder, final FreshNewsItem item) {
         TextView n = holder.getView(R.id.tv_name);
         ImageView a = holder.getView(R.id.tv_avatar);
         TextView c = holder.getView(R.id.tv_content);
         TextView t = holder.getView(R.id.tv_time);
-        ImageView i = holder.getView(R.id.image);
+        Button b = holder.getView(R.id.comment);
+        RecyclerView r = holder.getView(R.id.comment_list);
 
         BmobUtils.bindUserItems(n, a, item.getUserObjectId(), mUserDao, mContext);
         if (!TextUtils.isEmpty(item.getContent())) {
@@ -102,6 +98,13 @@ public class FreshNewsListAdapter  extends BaseMultiItemQuickAdapter<FreshNewsIt
         }
         t.setText(item.getTime());
 
-        item.bindSingleImage(mContext, i);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIFreshNewsView.addCommentClick(v, item);
+            }
+        });
+
+        item.bindCommentsList(mContext, r, mUserDao);
     }
 }

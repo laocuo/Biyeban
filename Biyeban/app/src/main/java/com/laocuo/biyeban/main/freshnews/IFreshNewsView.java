@@ -18,10 +18,14 @@
 
 package com.laocuo.biyeban.main.freshnews;
 
+import android.view.View;
+
 import com.laocuo.biyeban.base.ILoadDataView;
 
 import java.util.List;
 
 
 public interface IFreshNewsView extends ILoadDataView<List<FreshNewsItem>>{
+    void addCommentClick(View v, FreshNewsItem item);
+    void addCommentClickResult(boolean ret);
 }

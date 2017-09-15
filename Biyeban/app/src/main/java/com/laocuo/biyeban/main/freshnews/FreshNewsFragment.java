@@ -22,11 +22,17 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.publish.PublishActivity;
+import com.laocuo.biyeban.utils.DensityUtil;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 import com.laocuo.recycler.listener.OnRequestDataListener;
@@ -36,12 +42,16 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 
 public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         implements IFreshNewsView, OnRequestDataListener {
     private static final String TYPE_KEY = "TypeKey";
     private String mTitle;
+    private PopupWindow mAddComment;
+    private View.OnClickListener mCommentClickListener;
+    private FreshNewsItem mCurrentFreshNewsItem;
 
     @Inject
     FreshNewsListAdapter mAdapter;
@@ -50,6 +60,10 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     RecyclerView mRecyclerView;
     @BindView(R.id.fab)
     FloatingActionButton mFloatingActionButton;
+    @BindView(R.id.ll_bottom)
+    LinearLayout mCommentLayout;
+    @BindView(R.id.et_content)
+    EditText mCommentEditText;
 
     public static FreshNewsFragment newInstance() {
         FreshNewsFragment fragment = new FreshNewsFragment();
@@ -79,11 +93,30 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 
     @Override
     protected void doInit() {
+        View v = LayoutInflater.from(mContext).inflate(R.layout.freshnews_popup_addcomment, null);
+        mAddComment = new PopupWindow(v,
+                DensityUtil.dip2px(mContext, 80),
+                DensityUtil.dip2px(mContext, 30),
+                true);
+        mAddComment.setOutsideTouchable(false);
+        mAddComment.setAnimationStyle(R.style.anim_add_comment);
+        mCommentClickListener = new CommentClickListener();
+        TextView zan = (TextView) v.findViewById(R.id.zan);
+        TextView pinglun = (TextView) v.findViewById(R.id.pinglun);
+        zan.setOnClickListener(mCommentClickListener);
+        pinglun.setOnClickListener(mCommentClickListener);
         RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, false, mAdapter, this);
         mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 PublishActivity.launch(mContext);
+            }
+        });
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                showEditComment(false);
+                super.onScrollStateChanged(recyclerView, newState);
             }
         });
     }
@@ -126,6 +159,72 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     private void checkEnd(int size) {
         if (size < FreshNewsPresenter.STEP) {
             mAdapter.noMoreData();
+        }
+    }
+
+    @Override
+    public void addCommentClick(View v, FreshNewsItem item) {
+        if (mAddComment != null) {
+            if (mAddComment.isShowing()) {
+                mAddComment.dismiss();
+            } else {
+                mCurrentFreshNewsItem = item;
+                mAddComment.showAsDropDown(v,
+                        -1 * (mAddComment.getWidth() + DensityUtil.dip2px(mContext, 10)),
+                        (mAddComment.getHeight() - v.getHeight())/2 - mAddComment.getHeight());
+            }
+        }
+    }
+
+    private class CommentClickListener implements View.OnClickListener {
+
+        @Override
+        public void onClick(View v) {
+            switch (v.getId()) {
+                case R.id.zan:
+                    showEditComment(false);
+                    mAddComment.dismiss();
+                    break;
+                case R.id.pinglun:
+                    showEditComment(true);
+                    mAddComment.dismiss();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    @OnClick(R.id.btn_send)
+    void addComment() {
+        String content = mCommentEditText.getText().toString();
+        L.d("addComment:"+content);
+        if (!content.isEmpty()) {
+            mPresenter.addComment(content, mCurrentFreshNewsItem);
+        }
+    }
+
+    @Override
+    public void addCommentClickResult(boolean ret) {
+        if (ret == true) {
+            L.d("notifyDataSetChanged");
+            mAdapter.notifyDataSetChanged();
+        }
+        showEditComment(false);
+    }
+
+    private void showEditComment(boolean b) {
+        if (b == true) {
+            if (mCommentLayout.getVisibility() != View.VISIBLE) {
+                mCommentLayout.setVisibility(View.VISIBLE);
+                mFloatingActionButton.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            if (mCommentLayout.getVisibility() == View.VISIBLE) {
+                mCommentEditText.setText("");
+                mCommentLayout.setVisibility(View.INVISIBLE);
+                mFloatingActionButton.setVisibility(View.VISIBLE);
+            }
         }
     }
 }

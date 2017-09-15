@@ -23,4 +23,5 @@ import com.laocuo.biyeban.base.IBasePresenter;
 
 public interface IFreshNewsPresenter extends IBasePresenter {
     void swipeRefresh();
+    void addComment(String comment, FreshNewsItem item);
 }

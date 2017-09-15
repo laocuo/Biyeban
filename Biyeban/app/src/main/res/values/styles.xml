@@ -54,4 +54,9 @@
         <item name="android:layout_height">45dp</item>
         <item name="android:textSize">14sp</item>
     </style>
+
+    <style name="anim_add_comment">
+        <item name="android:windowEnterAnimation">@anim/expand_right_enter</item>
+        <item name="android:windowExitAnimation">@anim/expand_right_exit</item>
+    </style>
 </resources>

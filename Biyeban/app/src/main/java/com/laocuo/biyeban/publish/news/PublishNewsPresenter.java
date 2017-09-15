@@ -19,8 +19,6 @@
 package com.laocuo.biyeban.publish.news;
 
 
-import android.text.TextUtils;
-
 import com.laocuo.biyeban.bmob.FreshNews;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;

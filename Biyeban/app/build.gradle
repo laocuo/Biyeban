@@ -11,8 +11,8 @@ android {
         applicationId "com.laocuo.biyeban"
         minSdkVersion rootProject.ext.minSdk
         targetSdkVersion rootProject.ext.targetSdk
-        versionCode 6
-        versionName "0.4.0"
+        versionCode 7
+        versionName "0.4.1"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

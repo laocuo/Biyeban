@@ -20,6 +20,7 @@ package com.laocuo.biyeban.publish.news;
 
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.ImageView;
 
 import com.laocuo.biyeban.R;
@@ -54,6 +55,10 @@ public class PublishImageListAdapter extends BaseMultiItemQuickAdapter<ImageItem
     }
 
     private void _handleNewsNormal(BaseViewHolder holder, ImageItem item) {
-        Utils.setImage(mContext, item.getImgUrl(), (ImageView) holder.getView(R.id.pic));
+        if (TextUtils.isEmpty(item.getImgUrl())) {
+            ((ImageView) holder.getView(R.id.pic)).setImageResource(R.drawable.add_img);
+        } else {
+            Utils.setImage(mContext, item.getImgUrl(), (ImageView) holder.getView(R.id.pic));
+        }
     }
 }

@@ -34,6 +34,7 @@ import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.publish.PublishActivity;
 import com.laocuo.biyeban.utils.DensityUtil;
 import com.laocuo.biyeban.utils.L;
+import com.laocuo.biyeban.utils.SnackbarUtil;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
 import com.laocuo.recycler.listener.OnRequestDataListener;
 
@@ -200,17 +201,20 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         String content = mCommentEditText.getText().toString();
         L.d("addComment:"+content);
         if (!content.isEmpty()) {
+            showEditComment(false);
             mPresenter.addComment(content, mCurrentFreshNewsItem);
+        } else {
+            SnackbarUtil.showShortSnackbar(mCommentLayout, "内容不能为空");
         }
     }
 
     @Override
     public void addCommentClickResult(boolean ret) {
         if (ret == true) {
-            L.d("notifyDataSetChanged");
             mAdapter.notifyDataSetChanged();
+        } else {
+            SnackbarUtil.showShortSnackbar(mCommentLayout, "发送失败");
         }
-        showEditComment(false);
     }
 
     private void showEditComment(boolean b) {

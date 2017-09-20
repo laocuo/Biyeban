@@ -53,12 +53,12 @@
 
         <Button
             android:id="@+id/comment"
-            android:layout_width="36dp"
-            android:layout_height="16dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_below="@id/images"
             android:layout_marginTop="5dp"
             android:layout_alignParentEnd="true"
-            android:background="@drawable/button_bg_green"/>
+            android:background="@drawable/comment"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/comment_list"

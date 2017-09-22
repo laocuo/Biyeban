@@ -43,6 +43,8 @@ public class EmptyLayout extends FrameLayout {
     FrameLayout mEmptyLayout;
     @BindView(R.id.empty_loading)
     ProgressBar mEmptyLoading;
+    @BindView(R.id.empty_loading_text)
+    TextView mEmptyLoadingText;
 
     public EmptyLayout(Context context) {
         this(context, null);
@@ -118,12 +120,14 @@ public class EmptyLayout extends FrameLayout {
             case STATUS_LOADING:
                 setVisibility(VISIBLE);
                 mRlEmptyContainer.setVisibility(GONE);
-                mEmptyLoading.setVisibility(VISIBLE);
+//                mEmptyLoading.setVisibility(VISIBLE);
+                mEmptyLoadingText.setVisibility(VISIBLE);
                 break;
             case STATUS_NO_DATA:
             case STATUS_NO_NET:
                 setVisibility(VISIBLE);
-                mEmptyLoading.setVisibility(GONE);
+//                mEmptyLoading.setVisibility(GONE);
+                mEmptyLoadingText.setVisibility(GONE);
                 mRlEmptyContainer.setVisibility(VISIBLE);
                 break;
             case STATUS_HIDE:

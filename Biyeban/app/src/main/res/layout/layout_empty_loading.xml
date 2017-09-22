@@ -40,4 +40,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"/>
+
+    <TextView
+        android:id="@+id/empty_loading_text"
+        android:text="加载中..."
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="16sp"
+        android:layout_gravity="center"/>
 </FrameLayout>

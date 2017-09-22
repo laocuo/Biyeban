@@ -126,7 +126,7 @@ public class ContactsPresenter implements IContactsPresenter {
     }
 
     private void updateNavigatorData(List<ContactsItem> list) {
-        for (ContactsItem c : mContactsList) {
+        for (ContactsItem c : list) {
             mNaviHeadsSet.add(c.getPinyin().substring(0,1));
         }
         for (String s : mNaviHeadsSet) {

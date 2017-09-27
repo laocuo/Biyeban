@@ -30,6 +30,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".main.MainActivity"
+                  android:screenOrientation="portrait"
                   android:launchMode="singleTask"/>
         <activity android:name=".login.LoginActivity"/>
         <activity android:name=".graduation.GraduationActivity"/>

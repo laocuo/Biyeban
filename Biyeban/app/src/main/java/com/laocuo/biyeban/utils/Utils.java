@@ -82,9 +82,10 @@ public class Utils {
 
     public static String getCurrentDate() {
         Calendar rightNow = Calendar.getInstance(Locale.CHINA);
-        int month = rightNow.get(Calendar.MONTH);
+        int  year = rightNow.get(Calendar.YEAR);
+        int month = rightNow.get(Calendar.MONTH) + 1;
         int day = rightNow.get(Calendar.DATE);
-        return month + "月" + day + "日";
+        return year + "年" + month + "月" + day + "日";
     }
 
     public static Bitmap getBitmap(Context context, int id) {

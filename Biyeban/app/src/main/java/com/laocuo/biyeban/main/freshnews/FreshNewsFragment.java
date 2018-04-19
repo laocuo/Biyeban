@@ -20,7 +20,6 @@ package com.laocuo.biyeban.main.freshnews;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +58,6 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
 
     @BindView(R.id.freshnews_list)
     RecyclerView mRecyclerView;
-    @BindView(R.id.fab)
-    FloatingActionButton mFloatingActionButton;
     @BindView(R.id.ll_bottom)
     LinearLayout mCommentLayout;
     @BindView(R.id.et_content)
@@ -107,12 +104,6 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         zan.setOnClickListener(mCommentClickListener);
         pinglun.setOnClickListener(mCommentClickListener);
         RecyclerViewHelper.initRecyclerViewV(mContext, mRecyclerView, false, mAdapter, this);
-        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                PublishActivity.launch(mContext);
-            }
-        });
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -221,14 +212,17 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         if (b == true) {
             if (mCommentLayout.getVisibility() != View.VISIBLE) {
                 mCommentLayout.setVisibility(View.VISIBLE);
-                mFloatingActionButton.setVisibility(View.INVISIBLE);
             }
         } else {
             if (mCommentLayout.getVisibility() == View.VISIBLE) {
                 mCommentEditText.setText("");
                 mCommentLayout.setVisibility(View.INVISIBLE);
-                mFloatingActionButton.setVisibility(View.VISIBLE);
             }
         }
+    }
+
+    @Override
+    public void floatingClick() {
+        PublishActivity.launch(mContext);
     }
 }

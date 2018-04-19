@@ -194,4 +194,5 @@ public abstract class BaseFragment<T extends IBasePresenter> extends Fragment im
      */
     protected abstract void getData(boolean isRefresh);
 
+    public void floatingClick(){};
 }

@@ -72,8 +72,11 @@ public class CityNavigateView extends View {
     }
 
     public void setContent(List<String> content) {
-        mHeadList = content;
-        invalidate();
+        if (content != null) {
+            mHeadList = content;
+            mTextHeight = (mHeight - mPaddingTop) / mHeadList.size();
+            invalidate();
+        }
     }
 
     public void setListener(onTouchListener listener) {

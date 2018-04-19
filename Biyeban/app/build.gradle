@@ -44,6 +44,8 @@ dependencies {
     implementation "com.jakewharton:butterknife:$rootProject.butterknifeVersion"
     annotationProcessor "com.jakewharton:butterknife-compiler:$rootProject.butterknifeVersion"
 
+    compile 'com.github.githubwing:ByeBurger:1.2.3'
+    
     // greendao
     compile 'org.greenrobot:greendao:3.1.0'
     // circleimageview

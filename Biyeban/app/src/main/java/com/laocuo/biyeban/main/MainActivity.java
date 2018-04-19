@@ -25,11 +25,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.laocuo.biyeban.R;
@@ -40,6 +42,7 @@ import com.laocuo.biyeban.main.chatroom.ChatRoomFragment;
 import com.laocuo.biyeban.main.contacts.ContactsFragment;
 import com.laocuo.biyeban.main.freshnews.FreshNewsFragment;
 import com.laocuo.biyeban.settings.SettingsActivity;
+import com.laocuo.biyeban.utils.StatusBarUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -68,6 +71,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     ViewPager mViewPager;
     @BindView(R.id.navigation)
     BottomNavigationView navigation;
+    @BindView(R.id.fab)
+    FloatingActionButton mFloatingActionButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,12 +100,15 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
             switch (item.getItemId()) {
                 case R.id.navigation_freshnews:
                     mViewPager.setCurrentItem(0, true);
+                    mFloatingActionButton.setVisibility(View.VISIBLE);
                     return true;
                 case R.id.navigation_contacts:
                     mViewPager.setCurrentItem(1, true);
+                    mFloatingActionButton.setVisibility(View.INVISIBLE);
                     return true;
                 case R.id.navigation_chatroom:
                     mViewPager.setCurrentItem(2, true);
+                    mFloatingActionButton.setVisibility(View.INVISIBLE);
                     return true;
             }
             return false;
@@ -159,6 +167,8 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
     @Override
     protected void doInit() {
         initToolBar(mToolbar, false, R.string.app_name);
+        StatusBarUtil.immersive(this);
+        StatusBarUtil.setPaddingSmart(this, mToolbar);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         mViewPager.setAdapter(mViewPagerAdapter);
         mViewPager.addOnPageChangeListener(this);
@@ -166,6 +176,14 @@ public class MainActivity extends BaseActivity<MainPresenter> implements ViewPag
         mNaviList.add(R.id.navigation_freshnews);
         mNaviList.add(R.id.navigation_contacts);
         mNaviList.add(R.id.navigation_chatroom);
+
+        mFloatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                PublishActivity.launch(mContext);
+                mFreshNewsFragment.floatingClick();
+            }
+        });
 
         mTitleList.add(getResources().getString(R.string.title_freshnews));
         mFragmentList.add(mFreshNewsFragment);

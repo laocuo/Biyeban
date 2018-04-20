@@ -20,6 +20,7 @@ package com.laocuo.biyeban.main.freshnews;
 
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,12 +53,15 @@ public class FreshNewsImagesAdapter extends RecyclerView.Adapter<FreshNewsImages
     public void onBindViewHolder(ImageHolder holder, final int position) {
         Utils.setImage(mContext,
                 pics.get(position),
-                holder.mImageView);
+                holder.mImageView, true);
+//        holder.mImageView.setTransitionName(pics.get(position));
+//        ViewCompat.setTransitionName(holder.mImageView, pics.get(position));
+//        L.d("Multi set:" + pics.get(position));
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 L.d("FreshNewsImagesAdapter onClick="+position);
-                BigImageActivity.launch(mContext, position, pics);
+                BigImageActivity.launch(v, mContext, position, pics);
             }
         });
     }

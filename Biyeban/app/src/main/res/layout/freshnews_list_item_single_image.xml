@@ -36,12 +36,12 @@
 
         <ImageView
             android:id="@+id/image"
+            android:transitionName="share_image"
             android:layout_marginTop="8dp"
             android:layout_below="@id/tv_content"
-            android:layout_centerHorizontal="true"
             android:layout_width="300dp"
-            android:layout_height="300dp"
-            android:scaleType="fitCenter"/>
+            android:layout_centerHorizontal="true"
+            android:layout_height="300dp"/>
 
         <TextView
             android:layout_width="wrap_content"

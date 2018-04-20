@@ -21,8 +21,10 @@ package com.laocuo.biyeban.bigimage;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
@@ -43,12 +45,14 @@ import butterknife.BindView;
 public class BigImageActivity extends BaseActivity<BigImagePresenter>
         implements IBigImageInterface,
         ViewPager.OnPageChangeListener,
-        BigImageAdapter.OnTapListener, SaveImageDialogFragment.SaveImageListener {
+        BigImageAdapter.OnTapListener, SaveImageDialogFragment.SaveImageListener, DragCloseLayout.DragCloseListener {
     private static final String PHOTO_SETS_KEY = "PhotoSetsKey";
     private static final String PHOTO_SETS_POS = "PhotoSetsPos";
 
-    @BindView(R.id.toolbar)
-    Toolbar mToolbar;
+//    @BindView(R.id.toolbar)
+//    Toolbar mToolbar;
+    @BindView(R.id.dragclose_layout)
+    DragCloseLayout mDragCloseLayout;
     @BindView(R.id.bigimages)
     ViewPager mBigImages;
     @BindView(R.id.bigimageindex)
@@ -62,7 +66,7 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
     private boolean isHide;
     private SaveImageDialogFragment mSaveImageDialogFragment;
 
-    public static void launch(Context context, int pos, ArrayList<String> photoId) {
+    public static void launch(View v, Context context, int pos, ArrayList<String> photoId) {
         Intent intent = new Intent(context, BigImageActivity.class);
         intent.putExtra(PHOTO_SETS_POS, pos);
         ArrayList<BigImageItem> bigImageItemList = new ArrayList<>();
@@ -70,18 +74,20 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
             bigImageItemList.add(new BigImageItem(photoUrl));
         }
         intent.putParcelableArrayListExtra(PHOTO_SETS_KEY, bigImageItemList);
-        context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.slide_right_entry, R.anim.hold);
+        ActivityOptionsCompat optionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, v, "share_image");
+        context.startActivity(intent,optionsCompat.toBundle());
     }
 
-    public static void launch(Context context, String photoUrl) {
+    public static void launch(View v, Context context, String photoUrl) {
         Intent intent = new Intent(context, BigImageActivity.class);
         intent.putExtra(PHOTO_SETS_POS, 0);
         ArrayList<BigImageItem> bigImageItemList = new ArrayList<>();
             bigImageItemList.add(new BigImageItem(photoUrl));
         intent.putParcelableArrayListExtra(PHOTO_SETS_KEY, bigImageItemList);
-        context.startActivity(intent);
-        ((Activity)context).overridePendingTransition(R.anim.slide_right_entry, R.anim.hold);
+        ActivityOptionsCompat optionsCompat =
+                ActivityOptionsCompat.makeSceneTransitionAnimation((Activity) context, v, "share_image");
+        context.startActivity(intent,optionsCompat.toBundle());
     }
 
     @Override
@@ -109,7 +115,8 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
     @Override
     protected void doInit() {
 //        hideStatusBar(true);
-        initToolBar(mToolbar, true , "");
+//        initToolBar(mToolbar, true , "");
+        mDragCloseLayout.setDragCloseListener(this);
         updateIndex();
         mSaveImageDialogFragment = new SaveImageDialogFragment();
         mSaveImageDialogFragment.setListener(this);
@@ -147,9 +154,9 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
         move_dis = DensityUtil.dip2px(this, 20) + mIndex.getHeight();
         if (isHide) {
             mIndex.animate().translationYBy(move_dis).setDuration(300);
-            mToolbar.animate().translationY(-mToolbar.getBottom()).setDuration(300);
+//            mToolbar.animate().translationY(-mToolbar.getBottom()).setDuration(300);
         } else {
-            mToolbar.animate().translationY(0).setDuration(300);
+//            mToolbar.animate().translationY(0).setDuration(300);
             mIndex.animate().translationYBy(-move_dis).setDuration(300);
         }
     }
@@ -180,8 +187,7 @@ public class BigImageActivity extends BaseActivity<BigImagePresenter>
     }
 
     @Override
-    public void finish() {
-        super.finish();
-        overridePendingTransition(R.anim.hold, R.anim.slide_right_exit);
+    public void dragclose() {
+        finishAfterTransition();
     }
 }

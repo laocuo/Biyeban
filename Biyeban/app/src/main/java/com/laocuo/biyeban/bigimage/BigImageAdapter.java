@@ -20,12 +20,14 @@ package com.laocuo.biyeban.bigimage;
 
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.laocuo.biyeban.R;
+import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.Utils;
 
 import java.util.ArrayList;
@@ -56,6 +58,9 @@ public class BigImageAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.bigimage_item, null, false);
         ImageView imageView = (ImageView) view.findViewById(R.id.bigimage);
+//        imageView.setTransitionName(mImgList.get(position).getUrl());
+//        ViewCompat.setTransitionName(imageView, mImgList.get(position).getUrl());
+//        L.d("BigImage set:" + mImgList.get(position).getUrl());
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,7 +73,7 @@ public class BigImageAdapter extends PagerAdapter {
                 return mOnTapListener.onPhotoLongCLick();
             }
         });
-        Utils.setImage(mContext, mImgList.get(position).getUrl(), imageView);
+        Utils.setImage(mContext, mImgList.get(position).getUrl(), imageView, false);
         container.addView(view);
         return view;
     }

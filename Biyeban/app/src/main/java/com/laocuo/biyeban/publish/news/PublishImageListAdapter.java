@@ -58,7 +58,7 @@ public class PublishImageListAdapter extends BaseMultiItemQuickAdapter<ImageItem
         if (TextUtils.isEmpty(item.getImgUrl())) {
             ((ImageView) holder.getView(R.id.pic)).setImageResource(R.drawable.add_img);
         } else {
-            Utils.setImage(mContext, item.getImgUrl(), (ImageView) holder.getView(R.id.pic));
+            Utils.setImage(mContext, item.getImgUrl(), (ImageView) holder.getView(R.id.pic), true);
         }
     }
 }

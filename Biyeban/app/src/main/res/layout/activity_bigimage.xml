@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.laocuo.biyeban.bigimage.DragCloseLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/dragclose_layout"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:fitsSystemWindows="true">
+              android:background="#FF000000"
+              android:fitsSystemWindows="false">
     <android.support.v4.view.ViewPager
         android:id="@+id/bigimages"
+        android:transitionName="share_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <TextView
@@ -16,5 +19,4 @@
         android:textSize="18sp"
         android:textColor="@android:color/white"
         android:layout_gravity="bottom|end"/>
-    <include layout="@layout/layout_toolbar_transparent"/>
-</FrameLayout>
+</com.laocuo.biyeban.bigimage.DragCloseLayout>

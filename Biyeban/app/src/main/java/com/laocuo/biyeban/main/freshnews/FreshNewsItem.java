@@ -19,6 +19,7 @@
 package com.laocuo.biyeban.main.freshnews;
 
 import android.content.Context;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bigimage.BigImageActivity;
 import com.laocuo.biyeban.greendao.UserDao;
 import com.laocuo.biyeban.utils.BmobUtils;
+import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.Utils;
 import com.laocuo.recycler.entity.MultiItemEntity;
 import com.laocuo.recycler.helper.RecyclerViewHelper;
@@ -130,11 +132,14 @@ public class FreshNewsItem extends MultiItemEntity {
 
     public void bindSingleImage(final Context context, ImageView imageView) {
         final String url = pics.get(0);
-        Utils.setImage(context, url, imageView);
+        Utils.setImage(context, url, imageView, true);
+//        imageView.setTransitionName(url);
+//        ViewCompat.setTransitionName(imageView, url);
+//        L.d("Single set:" + url);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                BigImageActivity.launch(context, url);
+                BigImageActivity.launch(v, context, url);
             }
         });
     }

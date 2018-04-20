@@ -158,20 +158,28 @@ public class Utils {
         }
     }
 
-    public static void setImage(Context context, String url, ImageView imageview) {
+    public static void setImage(Context context, String url, ImageView imageview, boolean usethumbnail) {
         if (url != null && !TextUtils.isEmpty(url)) {
-            Glide.with(context)
-                    .load(url)
-                    .animate(R.anim.photo_entry)
-                    .placeholder(R.drawable.icon)
-                    .crossFade()
-                    .thumbnail(0.1f)
-                    .into(imageview);
+            if (usethumbnail) {
+                Glide.with(context)
+                        .load(url)
+                        .placeholder(R.drawable.icon)
+                        .thumbnail(0.2f)
+                        .dontAnimate()
+                        .fitCenter()
+                        .into(imageview);
+            } else {
+                Glide.with(context)
+                        .load(url)
+                        .placeholder(R.drawable.icon)
+                        .dontAnimate()
+                        .fitCenter()
+                        .into(imageview);
+            }
         } else {
             imageview.setImageResource(R.drawable.icon);
         }
     }
-
     /**
      * 根据Uri获取图片绝对路径，解决Android4.4以上版本Uri转换
      * @param context

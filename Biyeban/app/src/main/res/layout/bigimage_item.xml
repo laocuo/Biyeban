@@ -4,8 +4,9 @@
              android:layout_height="match_parent">
     <ImageView
         android:id="@+id/bigimage"
+        android:layout_gravity="center_vertical"
+        android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/colorPrimaryDark"/>
+        android:layout_height="wrap_content"/>
 </FrameLayout>

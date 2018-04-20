@@ -35,6 +35,8 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
+import com.laocuo.biyeban.BiyebanApp;
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.bmob.BiyebanUser;
 import com.laocuo.biyeban.bmob.GraduClass;
@@ -168,6 +170,13 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             } else  if (CLEARCACHE.equals(key)) {
                 BmobUtils.clearCache();
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Glide.get(BiyebanApp.getInstance()).clearDiskCache();
+                    }
+                }).start();
+                Glide.get(BiyebanApp.getInstance()).clearMemory();
                 ToastUtils.showShortToast(getActivity(), "缓存已清除");
             } else if (ABOUT.equals(key)) {
                 showAbout();

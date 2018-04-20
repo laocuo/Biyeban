@@ -43,7 +43,8 @@
                 <data android:mimeType="image/*" />
             </intent-filter>
         </activity>
-        <activity android:name=".bigimage.BigImageActivity"/>
+        <activity android:name=".bigimage.BigImageActivity"
+                  android:theme="@style/FullScreenTheme"/>
         <activity android:name=".settings.HelpActivity"/>
         <activity
             android:name="cn.bmob.v3.update.UpdateDialogActivity"

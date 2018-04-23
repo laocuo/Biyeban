@@ -4,11 +4,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp">
+    android:layout_margin="4dp">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp">
+        android:padding="4dp">
         <ImageView
             android:id="@+id/tv_avatar"
             android:layout_width="50dp"
@@ -19,16 +19,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@+id/tv_avatar"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="4dp"
             android:id="@+id/tv_name"
             android:textSize="15sp"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textColor="@color/colorFreshNewsName"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/tv_name"
             android:id="@+id/tv_content"
-            android:layout_below="@id/tv_avatar"
+            android:layout_below="@id/tv_name"
             android:textSize="16sp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
@@ -36,39 +37,47 @@
 
         <ImageView
             android:id="@+id/image"
+            android:layout_alignStart="@+id/tv_name"
             android:transitionName="share_image"
             android:layout_marginTop="8dp"
             android:layout_below="@id/tv_content"
-            android:layout_width="300dp"
-            android:layout_centerHorizontal="true"
-            android:layout_height="300dp"/>
+            android:adjustViewBounds="true"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"/>
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/tv_time"
-            android:layout_below="@id/tv_name"
-            android:layout_alignStart="@+id/tv_name"
-            android:layout_marginTop="10dp"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray"/>
-
-        <Button
-            android:id="@+id/comment"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:id="@+id/comment_container"
+            android:orientation="horizontal"
             android:layout_below="@id/image"
             android:layout_marginTop="5dp"
-            android:layout_alignParentEnd="true"
-            android:background="@drawable/comment"/>
+            android:layout_alignStart="@+id/tv_name">
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_centerVertical="true"
+                android:textSize="13sp"
+                android:textColor="@android:color/darker_gray"/>
+
+            <Button
+                android:id="@+id/comment"
+                android:layout_centerVertical="true"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/comment"/>
+        </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/comment_list"
-            android:layout_width="240dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_alignStart="@+id/tv_name"
-            android:layout_below="@id/comment"
+            android:layout_below="@id/comment_container"
             android:background="#ddd"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>

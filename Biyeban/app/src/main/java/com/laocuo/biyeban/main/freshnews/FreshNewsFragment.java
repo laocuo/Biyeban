@@ -93,7 +93,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
     protected void doInit() {
         View v = LayoutInflater.from(mContext).inflate(R.layout.freshnews_popup_addcomment, null);
         mAddComment = new PopupWindow(v,
-                DensityUtil.dip2px(mContext, 80),
+                DensityUtil.dip2px(mContext, 120),
                 DensityUtil.dip2px(mContext, 30),
                 true);
         mAddComment.setOutsideTouchable(false);
@@ -212,6 +212,7 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         if (b == true) {
             if (mCommentLayout.getVisibility() != View.VISIBLE) {
                 mCommentLayout.setVisibility(View.VISIBLE);
+                mCommentLayout.requestFocus();
             }
         } else {
             if (mCommentLayout.getVisibility() == View.VISIBLE) {

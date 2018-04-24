@@ -212,12 +212,12 @@ public class FreshNewsFragment extends BaseFragment<FreshNewsPresenter>
         if (b == true) {
             if (mCommentLayout.getVisibility() != View.VISIBLE) {
                 mCommentLayout.setVisibility(View.VISIBLE);
-                mCommentLayout.requestFocus();
+                mCommentEditText.requestFocus();
             }
         } else {
             if (mCommentLayout.getVisibility() == View.VISIBLE) {
                 mCommentEditText.setText("");
-                mCommentLayout.setVisibility(View.INVISIBLE);
+                mCommentLayout.setVisibility(View.GONE);
             }
         }
     }

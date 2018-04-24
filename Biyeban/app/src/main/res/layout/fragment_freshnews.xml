@@ -9,37 +9,43 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/freshnews_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
         <include layout="@layout/layout_common_empty"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:id="@+id/ll_bottom"
-            android:orientation="horizontal"
-            android:background="@android:color/white"
-            android:padding="4dp"
-            android:visibility="invisible">
-            <EditText
-                android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/freshnews_list"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="内容"
-                android:minHeight="45dp"
-                android:maxLines="3"
-                android:imeOptions="actionSend"
-                android:textSize="14sp"
-                android:nextFocusRight="@+id/btn_send"
-                android:id="@+id/et_content"/>
-            <Button
-                android:id="@+id/btn_send"
-                style="@style/common_btn_style"
-                android:layout_marginBottom="3dp"
-                android:layout_gravity="bottom"
-                android:text="发送"/>
+                android:id="@+id/ll_bottom"
+                android:orientation="horizontal"
+                android:background="@android:color/white"
+                android:padding="4dp"
+                android:visibility="gone">
+                <EditText
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="内容"
+                    android:minHeight="45dp"
+                    android:maxLines="3"
+                    android:imeOptions="actionSend"
+                    android:textSize="14sp"
+                    android:nextFocusRight="@+id/btn_send"
+                    android:id="@+id/et_content"/>
+                <Button
+                    android:id="@+id/btn_send"
+                    style="@style/common_btn_style"
+                    android:layout_marginBottom="3dp"
+                    android:layout_gravity="bottom"
+                    android:text="发送"/>
+            </LinearLayout>
         </LinearLayout>
     </FrameLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

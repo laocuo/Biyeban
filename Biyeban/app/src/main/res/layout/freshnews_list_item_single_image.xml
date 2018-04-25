@@ -22,7 +22,7 @@
             android:layout_marginStart="4dp"
             android:id="@+id/tv_name"
             android:textSize="15sp"
-            android:textColor="@color/colorFreshNewsName"/>
+            android:textColor="@color/colorPrimaryLight"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -30,7 +30,7 @@
             android:layout_alignStart="@+id/tv_name"
             android:id="@+id/tv_content"
             android:layout_below="@id/tv_name"
-            android:textSize="16sp"
+            android:textSize="15sp"
             android:layout_marginTop="8dp"
             android:visibility="visible"
             android:textColor="@android:color/black"/>

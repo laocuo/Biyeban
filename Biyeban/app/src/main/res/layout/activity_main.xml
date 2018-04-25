@@ -7,7 +7,6 @@
     android:id="@+id/container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="false"
     tools:context="com.laocuo.biyeban.main.MainActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -19,7 +18,6 @@
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
-        android:fitsSystemWindows="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
@@ -35,14 +33,13 @@
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/fab_margin"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom|center_horizontal"
         android:layout_marginBottom="60dp"
         app:layout_behavior="@string/bye_burger_float_behavior"
         app:borderWidth="0dp"
-        app:backgroundTint="@color/colorPrimary"
+        app:backgroundTint="@color/colorPrimaryLight"
         app:srcCompat="@drawable/add"
         android:visibility="visible"/>
 </android.support.design.widget.CoordinatorLayout>

@@ -42,11 +42,6 @@ public class ChatRoomModule {
     }
 
     @Provides
-    String provideString() {
-        return BmobUtils.getCurrentUser().getObjectId();
-    }
-
-    @Provides
     IChatRoomView provideIChatRoomView() {
         return (IChatRoomView)mChatRoomFragment;
     }

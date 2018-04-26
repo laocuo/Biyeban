@@ -48,11 +48,12 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
     private BmobRealTimeData data = new BmobRealTimeData();
     private BiyebanUser user;
     private String chatRoomTableName;
-    private List<Chat> messages = new ArrayList<>();
-    private List<Chat> moreMessages = new ArrayList<>();
+    private List<ChatItem> messages = new ArrayList<>();
+    private List<ChatItem> moreMessages = new ArrayList<>();
     private boolean isListenTable = false;
     private ChatValueEventListener mChatValueEventListener = null;
     private int skip = 0;
+    private String mCurrentUserObjId;
 
     @Override
     public void loadData() {
@@ -73,10 +74,17 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                         JSONObject data;
                         try {
                             data = array.getJSONObject(len-1-i);
-                            Chat chat = new Chat(data.optString("userObjectId"),
+                            String objId = data.optString("userObjectId");
+                            int itemType;
+                            if (objId != null && objId.equals(mCurrentUserObjId)) {
+                                itemType = ChatItem.ITEM_TYPE_SEND;
+                            } else {
+                                itemType = ChatItem.ITEM_TYPE_RECV;
+                            }
+                            ChatItem chat = new ChatItem(itemType,
+                                    objId,
                                     data.optString("content"),
-                                    chatRoomTableName);
-                            chat.setTime(data.optString("time"));
+                                    data.optString("time"));
                             messages.add(chat);
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -113,10 +121,17 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                         JSONObject data;
                         try {
                             data = array.getJSONObject(i);
-                            Chat chat = new Chat(data.optString("userObjectId"),
+                            String objId = data.optString("userObjectId");
+                            int itemType;
+                            if (objId != null && objId.equals(mCurrentUserObjId)) {
+                                itemType = ChatItem.ITEM_TYPE_SEND;
+                            } else {
+                                itemType = ChatItem.ITEM_TYPE_RECV;
+                            }
+                            ChatItem chat = new ChatItem(itemType,
+                                    objId,
                                     data.optString("content"),
-                                    chatRoomTableName);
-                            chat.setTime(data.optString("time"));
+                                    data.optString("time"));
                             moreMessages.add(chat);
                         } catch (JSONException e1) {
                             e1.printStackTrace();
@@ -230,6 +245,10 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
         loadData();
     }
 
+    public void setCurrentUserObjId(String currentUserObjId) {
+        mCurrentUserObjId = currentUserObjId;
+    }
+
     private class ChatValueEventListener implements ValueEventListener {
 
         @Override
@@ -241,9 +260,15 @@ public class ChatRoomPresenter implements IChatRoomPresenter {
                 String content = data.optString("content");
                 String time = data.optString("time");
 //                    L.d("UPDATETABLE:name="+name+" content="+content);
-                Chat chat = new Chat(objId, content, chatRoomTableName);
+                int itemType;
+                if (objId != null && objId.equals(mCurrentUserObjId)) {
+                    itemType = ChatItem.ITEM_TYPE_SEND;
+                } else {
+                    itemType = ChatItem.ITEM_TYPE_RECV;
+                }
+                ChatItem chat = new ChatItem(itemType, objId, content, time);
                 //use remote time
-                chat.setTime(time);
+//                chat.setTime(time);
                 //use local time
 //                    chat.setTime(getCurrentTime());
                 mIChatRoomView.recvMessage(chat);

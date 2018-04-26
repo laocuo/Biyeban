@@ -21,136 +21,73 @@ package com.laocuo.biyeban.main.chatroom;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.laocuo.biyeban.R;
-import com.laocuo.biyeban.bmob.Chat;
 import com.laocuo.biyeban.greendao.DaoSession;
 import com.laocuo.biyeban.greendao.UserDao;
 import com.laocuo.biyeban.utils.BmobUtils;
+import com.laocuo.recycler.adapter.BaseMultiItemQuickAdapter;
+import com.laocuo.recycler.adapter.BaseViewHolder;
 
-import java.util.List;
 
 import javax.inject.Inject;
 
 
-public class ChatListAdapter extends BaseAdapter {
+public class ChatListAdapter extends BaseMultiItemQuickAdapter<ChatItem> {
 
-    private List<Chat> messages;
-    private ViewHolder holder;
     private Context mContext;
-    private String mCurrentUserObjId;
     private UserDao mUserDao;
 
-    public void setChatList(List<Chat> list) {
-        messages = list;
-    }
-
-    public List<Chat> getChatList() {
-        return messages;
-    }
-
-    public void addChat(Chat c) {
-        messages.add(c);
-    }
-
     @Inject
-    ChatListAdapter(Context context, String currentUserObjId, DaoSession daosession) {
+    ChatListAdapter(Context context, DaoSession daosession) {
+        super(context);
         this.mContext = context;
-        this.mCurrentUserObjId = currentUserObjId;
         mUserDao = daosession.getUserDao();
     }
 
-    public void setCurrentUserObjId(String currentUserObjId) {
-        mCurrentUserObjId = currentUserObjId;
+    @Override
+    protected void attachItemType() {
+        addItemType(ChatItem.ITEM_TYPE_SEND, R.layout.chat_list_item_send);
+        addItemType(ChatItem.ITEM_TYPE_RECV, R.layout.chat_list_item_recv);
     }
 
     @Override
-    public int getCount() {
-        // TODO Auto-generated method stub
-        return messages.size();
-    }
-
-    @Override
-    public Object getItem(int position) {
-        // TODO Auto-generated method stub
-        return messages.get(position);
-    }
-
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        String userObjId = messages.get(position).getUserObjectId();
-        if (userObjId != null && userObjId.equals(mCurrentUserObjId)) {
-            return 0;
-        } else {
-            return 1;
+    protected void convert(BaseViewHolder holder, ChatItem item) {
+        switch (item.getItemType()) {
+            case ChatItem.ITEM_TYPE_SEND:
+            case ChatItem.ITEM_TYPE_RECV:
+                _handleChatCommon(holder, item);
+                break;
         }
     }
 
-    @Override
-    public long getItemId(int position) {
-        // TODO Auto-generated method stub
-        return position;
-    }
+    private void _handleChatCommon(BaseViewHolder holder, ChatItem item) {
+        TextView tv_name = holder.getView(R.id.tv_name);
+        TextView tv_content = holder.getView(R.id.tv_content);
+        TextView tv_time = holder.getView(R.id.tv_time);
+        ImageView tv_avatar = holder.getView(R.id.tv_avatar);
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        // TODO Auto-generated method stub
-        if(convertView == null){
-            if (getItemViewType(position) == 0) {
-                convertView = LayoutInflater.from(mContext).inflate(
-                        R.layout.chat_list_item_send, null);
-            } else {
-                convertView = LayoutInflater.from(mContext).inflate(
-                        R.layout.chat_list_item_recv, null);
-            }
-            holder = new ViewHolder();
+        ChatItem chat = item;
 
-            holder.tv_name = (TextView) convertView.findViewById(R.id.tv_name);
-            holder.tv_content = (TextView) convertView.findViewById(R.id.tv_content);
-            holder.tv_time = (TextView) convertView.findViewById(R.id.tv_time);
-            holder.tv_avatar = (ImageView) convertView.findViewById(R.id.tv_avatar);
+        BmobUtils.bindUserItems(tv_name, tv_avatar, chat.getUserObjectId(), mUserDao, mContext);
 
-            convertView.setTag(holder);
-        }else {
-            holder = (ViewHolder) convertView.getTag();
-        }
-
-        Chat chat = messages.get(position);
-
-        BmobUtils.bindUserItems(holder.tv_name, holder.tv_avatar, chat.getUserObjectId(), mUserDao, mContext);
-
-        holder.tv_content.setText(chat.getContent());
+        tv_content.setText(chat.getContent());
         String time = chat.getTime();
         if (time != null && !TextUtils.isEmpty(time)) {
+            int position = getData().indexOf(item);
             if (position > 0 &&
                     chat.getTime() != null &&
-                    chat.getTime().equals(messages.get(position - 1).getTime())) {
-                holder.tv_time.setVisibility(View.GONE);
+                    chat.getTime().equals(((ChatItem) (getItem(position-1))).getTime())) {
+                tv_time.setVisibility(View.GONE);
             } else {
-                holder.tv_time.setText(chat.getTime());
-                holder.tv_time.setVisibility(View.VISIBLE);
+                tv_time.setText(chat.getTime());
+                tv_time.setVisibility(View.VISIBLE);
             }
         } else {
-            holder.tv_time.setVisibility(View.GONE);
+            tv_time.setVisibility(View.GONE);
         }
-        return convertView;
-    }
-
-    class ViewHolder{
-        TextView tv_name;
-        TextView tv_content;
-        TextView tv_time;
-        ImageView tv_avatar;
     }
 }

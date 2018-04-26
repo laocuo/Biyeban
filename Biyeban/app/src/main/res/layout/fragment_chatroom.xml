@@ -38,11 +38,10 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/ll_bottom">
         <include layout="@layout/layout_common_empty"/>
-        <ListView
+        <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/ll_bottom"
-            android:stackFromBottom="true"
             android:id="@+id/lv_data"/>
     </FrameLayout>
 </RelativeLayout>

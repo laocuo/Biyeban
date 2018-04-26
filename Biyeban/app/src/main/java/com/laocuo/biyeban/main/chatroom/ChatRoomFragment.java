@@ -22,24 +22,24 @@ package com.laocuo.biyeban.main.chatroom;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ContextMenu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import com.laocuo.biyeban.R;
 import com.laocuo.biyeban.base.BaseFragment;
 import com.laocuo.biyeban.bmob.BiyebanUser;
-import com.laocuo.biyeban.bmob.Chat;
 import com.laocuo.biyeban.utils.BmobUtils;
 import com.laocuo.biyeban.utils.L;
 import com.laocuo.biyeban.utils.SnackbarUtil;
+import com.laocuo.recycler.helper.RecyclerViewHelper;
 
 import java.util.List;
 
@@ -56,15 +56,17 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     private BiyebanUser user;
     private boolean isEnd = true;
 
+    private LinearLayoutManager layoutManager;
+
     @BindView(R.id.lv_data)
-    ListView lv_data;
+    RecyclerView lv_data;
     @BindView(R.id.et_content)
     EditText et_content;
     @BindView(R.id.ll_bottom)
     LinearLayout mLayout;
 
     @Inject
-    ChatListAdapter mChatListAdapter;
+    ChatListAdapter mAdapter;
 
     public static ChatRoomFragment newInstance() {
         ChatRoomFragment fragment = new ChatRoomFragment();
@@ -90,9 +92,11 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
         super.onResume();
         String username = user.getUsername();
         String currentusername = BmobUtils.getCurrentUser().getUsername();
+        mPresenter.setCurrentUserObjId(user.getObjectId());
         if (!username.equals(currentusername)) {
             user = BmobUtils.getCurrentUser();
-            mChatListAdapter.setCurrentUserObjId(user.getObjectId());
+            mPresenter.setCurrentUserObjId(user.getObjectId());
+//            mAdapter.setCurrentUserObjId(user.getObjectId());
             mPresenter.reload();
         }
         mPresenter.listenTable();
@@ -116,13 +120,17 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
         user = BmobUtils.getCurrentUser();
         getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         mProgressDialog = new ProgressDialog(mContext);
-        lv_data.setDividerHeight(0);
         registerForContextMenu(lv_data);
-        lv_data.setOnScrollListener(new AbsListView.OnScrollListener() {
+        RecyclerViewHelper.initRecyclerViewV(mContext, lv_data, false, mAdapter);
+        layoutManager = new LinearLayoutManager(getContext());
+        layoutManager.setStackFromEnd(true);
+        lv_data.setLayoutManager(layoutManager);
+        lv_data.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_IDLE) {
-                    if (lv_data.getFirstVisiblePosition() == 0 && isEnd == false) {
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    if (layoutManager.findFirstVisibleItemPosition() == 0 && isEnd == false) {
                         L.d("mPresenter.loadMoreData");
                         mPresenter.loadMoreData();
                     }
@@ -130,8 +138,8 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
             }
 
             @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
             }
         });
     }
@@ -159,7 +167,7 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     public boolean onContextItemSelected(MenuItem item) {
 //        return super.onContextItemSelected(item);
         AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-        String userObjId = mChatListAdapter.getChatList().get(menuInfo.position).getUserObjectId();
+        String userObjId = ((ChatItem)mAdapter.getData().get(menuInfo.position)).getUserObjectId();
         if (item.getItemId() == R.id.stopchat) {
             mPresenter.stopOrallowChat(false, userObjId);
         }
@@ -193,13 +201,13 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     }
 
     private void refrestList() {
-        mChatListAdapter.notifyDataSetChanged();
-        lv_data.smoothScrollToPosition(mChatListAdapter.getCount() - 1);
+        mAdapter.notifyDataSetChanged();
+        lv_data.smoothScrollToPosition(mAdapter.getItemCount() - 1);
     }
 
     @Override
-    public void recvMessage(Chat chat) {
-        mChatListAdapter.addChat(chat);
+    public void recvMessage(ChatItem chat) {
+        mAdapter.addLastItem(chat);
         refrestList();
     }
 
@@ -229,24 +237,18 @@ public class ChatRoomFragment extends BaseFragment<ChatRoomPresenter>
     }
 
     @Override
-    public void loadData(List<Chat> data) {
+    public void loadData(List<ChatItem> data) {
         L.d("loadData size="+data.size());
         checkEnd(data.size());
-        mChatListAdapter.setChatList(data);
-        lv_data.setAdapter(mChatListAdapter);
-        mChatListAdapter.notifyDataSetChanged();
+        mAdapter.updateItems(data);
     }
 
     @Override
-    public void loadMoreData(List<Chat> data) {
+    public void loadMoreData(List<ChatItem> data) {
         checkEnd(data.size());
         L.d("loadMoreData size="+data.size());
-        List<Chat> messages = mChatListAdapter.getChatList();
-        for (Chat c : data) {
-            messages.add(0, c);
-        }
-        mChatListAdapter.notifyDataSetChanged();
-        lv_data.setSelection(data.size());
+        mAdapter.addItems(data, 0);
+        layoutManager.scrollToPosition(data.size());
     }
 
     @Override

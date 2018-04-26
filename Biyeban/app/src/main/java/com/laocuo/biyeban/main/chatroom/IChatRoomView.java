@@ -20,12 +20,11 @@ package com.laocuo.biyeban.main.chatroom;
 
 
 import com.laocuo.biyeban.base.ILoadDataView;
-import com.laocuo.biyeban.bmob.Chat;
 
 import java.util.List;
 
-public interface IChatRoomView extends ILoadDataView<List<Chat>> {
-    void recvMessage(Chat chat);
+public interface IChatRoomView extends ILoadDataView<List<ChatItem>> {
+    void recvMessage(ChatItem chat);
     void stopOrallowChatResult(boolean b);
     void sendMsg(boolean b);
     void chatForbidden();
